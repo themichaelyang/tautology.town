@@ -1,0 +1,134 @@
+$base-font-family: --apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, Roboto, Arial, sans-serif;
+$base-font-size:   16px;
+$base-font-weight: 400;
+$background-color: white;
+
+$small-font-size:  $base-font-size * 0.875;
+$base-line-height: 1.4;
+$spacing-unit:     $base-font-size;
+
+$text-color:            black;
+$text-color-secondary:  #aaa;
+$link-color:            #2a7ae2;
+
+$navbar-bg-color: auto;
+$navbar-color: $link-color;
+$navbar-height: 3em;
+$navbar-item-padding: 2em;
+
+$solarized-base01: black;
+$solarized-base1: #93a1a1;
+$solarized-base3: #fdf6e3;
+$solarized-orange: #cb4b16;
+$solarized-red: #dc322f;
+$solarized-blue: #268bd2;
+$solarized-cyan: #2aa198;
+$solarized-green: #859900;
+$solarized-yellow: #B58900;
+
+/**
+* Reset some basic elements
+*/
+body, h1, h2, h3, h4, h5, h6,
+p, blockquote, pre, hr,
+dl, dd, ol, ul, figure {
+  margin: 0;
+  padding: 0;
+  font-family: $base-font-family;
+}
+
+/**
+* Basic styling
+*/
+body {
+  font: $base-font-weight #{$base-font-size}/#{$base-line-height} $base-font-family;
+  color: $text-color;
+  background-color: $background-color;
+  -webkit-text-size-adjust: 100%;
+  font-feature-settings: "kern" 1;
+  font-kerning: normal;
+  text-rendering: optimizeLegibility;
+  min-height: 100vh;
+  height: 100%;
+  max-width: 100vw;
+}
+
+.navbar {
+  height: $navbar-height;
+  width: 100%;
+  background-color: $navbar-bg-color;
+  top: 0; left: 0;
+  display: flex;
+  flex-direction: column;
+  margin-top: $spacing-unit / 2;
+}
+
+.navbar__inner {
+  @extend %list--reset;
+  @extend %container--centered;
+
+  flex: 1;
+  align-items: center;
+  flex-direction: row;
+  display: flex;
+}
+
+.navbar__text {
+  color: $navbar-color;
+
+  &:visited {
+    color: $navbar-color;
+  }
+}
+
+.navbar__item {
+  font-size: 0.8em;
+  letter-spacing: 0.02em;
+  font-weight: bold;
+  text-transform: uppercase;
+  padding: $navbar-item-padding;
+
+  &:first-child {
+    margin-left: -$navbar-item-padding;
+  }
+}
+
+main {
+  @extend %container--centered;
+  margin-top: $navbar-height;
+  padding-top: 2 * $spacing-unit;
+  padding-bottom: 2 * $spacing-unit;
+}
+
+.page-content {
+  padding: $spacing-unit 0;
+}
+
+.post-list {
+  margin-left: 0;
+  list-style: none;
+
+  > li {
+    margin-bottom: $spacing-unit;
+  }
+}
+
+.post-meta {
+  font-size: $small-font-size;
+  color: $text-color-secondary;
+}
+
+.post-link {
+  display: block;
+  font-size: 18px;
+}
+
+.post-header {
+  margin-bottom: $spacing-unit;
+}
+
+.post-title {
+  font-size: 24px;
+  margin-bottom: 0.25em;
+}
+
