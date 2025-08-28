@@ -97,7 +97,8 @@ main {
   @extend %container--centered;
   margin-top: $navbar-height;
   padding-top: 2 * $spacing-unit;
-  padding-bottom: 2 * $spacing-unit;
+  // padding-bottom: 12 * $spacing-unit;
+  padding-bottom: 50vh;
 }
 
 .page-content {
@@ -124,7 +125,7 @@ main {
 }
 
 .post-header {
-  margin-bottom: $spacing-unit;
+  margin-bottom: 3 * $spacing-unit;
 }
 
 .post-title {
@@ -132,3 +133,8 @@ main {
   margin-bottom: 0.25em;
 }
 
+hr {
+  margin: 2 * $spacing-unit 0 - $spacing-unit;
+  border-color: lightgrey;
+  border-style: solid;
+}
