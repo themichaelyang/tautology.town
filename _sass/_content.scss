@@ -1,4 +1,5 @@
 @use "sass:math";
+@use 'sass:color';
 
 /**
 * Set `margin-bottom` to maintain vertical rhythm
@@ -35,14 +36,18 @@ figure > img {
 }
 
 figcaption {
-  font-size: $small-font-size;
+  margin-bottom: 2 * $spacing-unit;
+  padding-top: $spacing-unit;
+  font-style: italic;
+  text-align: center;
+  // font-size: $small-font-size;
 }
 
 /**
 * Lists
 */
 ul, ol {
-  margin-left: $spacing-unit;
+  margin-left: 1.25 * $spacing-unit;
 }
 
 li {
@@ -52,12 +57,23 @@ li {
   }
 }
 
+li {
+  margin-bottom: 0.25 * $spacing-unit;
+}
+
 /**
 * Headings
 */
 h1, h2, h3, h4, h5, h6 {
   line-height: 1.2;
   font-weight: 500;
+}
+
+.post-content {
+  // Inline headings need spaces above
+  h1, h2, h3, h4, h5, h6 {
+    margin-top: $spacing-unit * 2;
+  }
 }
 
 /**
@@ -81,7 +97,7 @@ a {
 */
 blockquote {
   color: $text-color-secondary;
-  border-left: 2px solid $text-color-secondary;
+  border-left: 3px solid color.adjust($text-color-secondary, $lightness: 25%);
   padding-left: $spacing-unit;
   font-style: italic;
 
@@ -116,4 +132,10 @@ pre {
     padding-right: 0;
     padding-left: 0;
   }
+}
+
+.mermaid {
+  margin: 2 * $spacing-unit 0;
+  background-color: inherit;
+  border: inherit;
 }

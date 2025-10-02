@@ -6,9 +6,149 @@
 </description>
     <link>http://localhost:4000/</link>
     <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Wed, 17 Sep 2025 17:20:07 -0400</pubDate>
-    <lastBuildDate>Wed, 17 Sep 2025 17:20:07 -0400</lastBuildDate>
+    <pubDate>Thu, 02 Oct 2025 06:57:01 -0400</pubDate>
+    <lastBuildDate>Thu, 02 Oct 2025 06:57:01 -0400</lastBuildDate>
     <generator>Jekyll v4.3.4</generator>
+    
+      <item>
+        <title>Card networks 101: What do Visa and Mastercard do?</title>
+        <description>&lt;script src=&quot;https://unpkg.com/mermaid@11.12.0/dist/mermaid.min.js&quot;&gt;&lt;/script&gt;
+
+&lt;p&gt;Most people can recognize the Visa and Mastercard brands. If you do, chances are you use one of their cards to transact every day. You may have some notion that most places (in the US) take both, but some places only take Visa (e.g. Costco), and vice versa.&lt;/p&gt;
+
+&lt;p&gt;So what do they do? &lt;a href=&quot;https://www.youtube.com/watch?v=lnz2gRPDzrA&quot;&gt;Here’s Visa’s attempt&lt;/a&gt; to answer that question.&lt;/p&gt;
+
+&lt;p&gt;A few things they don’t do&lt;sup id=&quot;fnref:dont-do&quot;&gt;&lt;a href=&quot;#fn:dont-do&quot; class=&quot;footnote&quot; rel=&quot;footnote&quot; role=&quot;doc-noteref&quot;&gt;1&lt;/a&gt;&lt;/sup&gt;:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;They aren’t the company that provides the card. Nor are they a bank, though the card you have is probably issued by one (Chase, Capital One, BofA, etc). These are called &lt;strong&gt;“card issuers”&lt;/strong&gt;.&lt;/li&gt;
+  &lt;li&gt;They don’t distribute point of sale methods or online checkouts, which are done by &lt;strong&gt;payment processors&lt;/strong&gt;.&lt;/li&gt;
+  &lt;li&gt;They aren’t responsible for onboarding or underwriting stores and merchants. That is typically done by payment processors and banks, called &lt;strong&gt;“merchant acquirers”&lt;/strong&gt;.&lt;/li&gt;
+  &lt;li&gt;They don’t manufacture or print cards.&lt;/li&gt;
+  &lt;li&gt;Nor do they manufacture the point of sale hardware.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Instead, Visa and Mastercard are &lt;strong&gt;card networks&lt;/strong&gt;&lt;sup id=&quot;fnref:card-network-name&quot;&gt;&lt;a href=&quot;#fn:card-network-name&quot; class=&quot;footnote&quot; rel=&quot;footnote&quot; role=&quot;doc-noteref&quot;&gt;2&lt;/a&gt;&lt;/sup&gt;, facilitating card transactions by connecting the cardholders and issuers to the merchants and acquirers.&lt;/p&gt;
+
+&lt;p&gt;This forms a &lt;a href=&quot;https://en.wikipedia.org/wiki/Two-sided_market&quot;&gt;two-sided market&lt;/a&gt; of all the participants in a transaction&lt;sup id=&quot;fnref:or-four&quot;&gt;&lt;a href=&quot;#fn:or-four&quot; class=&quot;footnote&quot; rel=&quot;footnote&quot; role=&quot;doc-noteref&quot;&gt;3&lt;/a&gt;&lt;/sup&gt;:&lt;/p&gt;
+
+&lt;figure&gt;
+&lt;pre class=&quot;mermaid&quot;&gt;
+---
+config:
+  theme: &apos;neutral&apos;
+  fontFamily: system-ui, -apple-system, BlinkMacSystemFont, &apos;Segoe UI&apos;, Roboto, Oxygen, Ubuntu, Cantarell, &apos;Open Sans&apos;, &apos;Helvetica Neue&apos;, sans-serif;
+  nodeSpacing: 20
+  rankSpacing: 20
+  flowchart: 
+    subGraphTitleMargin: {bottom: 20}
+---
+%% For some reason arrows are still showing up in the Obsidian preview, but not in Mermaid online editor
+flowchart LR
+    subgraph Issuing[**Issuing**]
+        direction TB
+        CI[Card issuer] --- CH[Cardholder]
+    end
+    subgraph Acquiring[**Acquiring**]
+        direction TB
+        MA[Merchant acquirer] --- M[Merchant]
+    end
+    Issuing ---- CN[**Card network**]
+    CN ---- Acquiring
+&lt;/pre&gt;
+&lt;figcaption&gt;The key players in a card transaction.&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;The card network’s job is to enable card transactions, and also to spread the use of their card brands.&lt;/p&gt;
+
+&lt;p&gt;This boils down to four key responsibilities:&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;Run the physical network infrastructure to route transactions.&lt;/li&gt;
+  &lt;li&gt;Coordinate the banking network to settle transactions.&lt;/li&gt;
+  &lt;li&gt;Set the incentives to encourage the use of the network.&lt;/li&gt;
+  &lt;li&gt;Set and enforce rules of the network, including a mechanism for disputes.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;For the rest of the discussion, we’ll focus on Visa for simplicity, as it’s what I’m most familiar with, although Mastercard operates in more or less the same ways.&lt;/p&gt;
+
+&lt;h1 id=&quot;1-run-the-physical-infrastructure&quot;&gt;1. Run the physical infrastructure&lt;/h1&gt;
+
+&lt;p&gt;When we talk about networks in the context of telecommunications, we think of the Internet, a network of computers connected together by fiber and &lt;a href=&quot;https://www.submarinecablemap.com/&quot;&gt;deep sea cables&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Indeed, card networks are no different, but predate the Internet (although now part of it): they maintain massive data centers and lease physical cables to connect issuers and acquirers electronically.&lt;/p&gt;
+
+&lt;p&gt;The card network role’s in a transaction is &lt;em&gt;routing&lt;/em&gt;. Similar to IP addresses,&lt;sup id=&quot;fnref:pan-exhaustion&quot;&gt;&lt;a href=&quot;#fn:pan-exhaustion&quot; class=&quot;footnote&quot; rel=&quot;footnote&quot; role=&quot;doc-noteref&quot;&gt;4&lt;/a&gt;&lt;/sup&gt; card numbers, also known as Primary Account Numbers (PANs) are used to route requests from the merchant’s checkout to the issuing bank, where the transaction gets checked then approved or declined. The first 6 to 8 digits of the PAN is called a Bank Identification Number, or BIN, and identifies the issuing bank.&lt;/p&gt;
+
+&lt;!-- TODO: support sidenotes/asides https://kau.sh/blog/jekyll-footnote-tufte-sidenote/ --&gt;
+
+&lt;p&gt;Visa takes its data centers very seriously. They are highly secure, redundant, and fitted to survive all kinds of disasters. From &lt;a href=&quot;https://www.networkcomputing.com/data-center-networking/inside-visa-s-data-center&quot;&gt;Inside Visa’s Data Center (Network Computing, 2013)&lt;/a&gt;:&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;“The company’s flagship data center, dubbed Operations Center East, or OCE, is a 140,000-square-foot facility that Visa will only say is located “somewhere along the Eastern seaboard.”&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;“Not surprisingly, the facility, which is also designed to withstand earthquakes and gale-force winds up to 170 miles per hour, is locked down like a digital Fort Knox. The roads entering the complex have hydraulic bollards that can shoot up fast enough to stop a vehicle traveling up to 50 miles per hour dead in its tracks. (The road is too curvy to drive safely at higher speeds.) Visitors must pass through a security gate, be cleared by roving security teams, and then be subjected to a biometric scan before being admitted.”&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://web.archive.org/web/20120330102616/https://www.usatoday.com/tech/news/story/2012-03-25/visa-data-center/53774904/1/&quot;&gt;Another article&lt;/a&gt; claims Visa’s OCE is guarded by a a moat.&lt;/p&gt;
+
+&lt;p&gt;That top secret location? In &lt;a href=&quot;https://maps.app.goo.gl/tPEDWcTiY621sZz37&quot;&gt;Ashburn, Virginia&lt;/a&gt;, conveniently located by Trader Joe’s and Topgolf.&lt;/p&gt;
+
+&lt;div&gt;
+&lt;!-- From https://stackoverflow.com/a/19360305/7971276 --&gt;
+&lt;figure class=&quot;image&quot;&gt;
+&lt;!-- Need to | escape the description so I can include quotation marks --&gt;
+&lt;img src=&quot;/assets/2025/visa-oce-satellite.png&quot; alt=&quot;I think the &amp;quot;moat&amp;quot; is the pool of water on the top center-left.&quot; /&gt;
+  &lt;figcaption&gt;I think the &quot;moat&quot; is the pool of water on the top center-left.&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;/div&gt;
+
+&lt;h1 id=&quot;2-run-the-banking-network&quot;&gt;2. Run the banking network&lt;/h1&gt;
+
+&lt;h1 id=&quot;3-set-incentives&quot;&gt;3. Set incentives&lt;/h1&gt;
+
+&lt;h1 id=&quot;4-set-rules-and-handle-disputes&quot;&gt;4. Set rules and handle disputes&lt;/h1&gt;
+
+&lt;p&gt;More cards → more merchants. More merchants → more cards.&lt;/p&gt;
+
+&lt;p&gt;In another article, they claim to have &lt;a href=&quot;https://web.archive.org/web/20120330102616/https://www.usatoday.com/tech/news/story/2012-03-25/visa-data-center/53774904/1/&quot;&gt;a moat&lt;/a&gt; protecting the data center.&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;“Inside the pods, 376 servers, 277 switches, 85 routers and 42 firewalls–all connected by 3,000 miles of cable–hum around the clock, enabling transactions around the globe in near real-time and keeping Visa’s business running.”&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;“Inside the pods, 376 servers, 277 switches, 85 routers and 42 firewalls–all connected by 3,000 miles of cable–hum around the clock, enabling transactions around the globe in near real-time and keeping Visa’s business running.”&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://web.archive.org/web/20120330102616/https://www.usatoday.com/tech/news/story/2012-03-25/visa-data-center/53774904/1/&quot;&gt;Top secret Visa data center banks on security, even has moat (USA Today, 2013)&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;the crux of their operation is an electronic one, and&lt;/p&gt;
+&lt;div class=&quot;footnotes&quot; role=&quot;doc-endnotes&quot;&gt;
+  &lt;ol&gt;
+    &lt;li id=&quot;fn:dont-do&quot;&gt;
+      &lt;p&gt;Nowadays they may have product offerings for some of these, or own subsidiaries that do some of these, but these are not core to the business of being a card network. &lt;a href=&quot;#fnref:dont-do&quot; class=&quot;reversefootnote&quot; role=&quot;doc-backlink&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+    &lt;/li&gt;
+    &lt;li id=&quot;fn:card-network-name&quot;&gt;
+      &lt;p&gt;To be precise, they are the companies running the card networks. Colloquially, we call them the card networks. For example, VisaNet is technically the card network, Visa is the company/brand. Mastercard’s is called Banknet. They both own and operate subsidiary networks, such as specialized debit and ATM networks, like Visa’s Interlink and Plus, or Mastercard’s Cirrus and Maestro, although technically VisaNet and Banknet can process debit (this is a story for another time). &lt;a href=&quot;#fnref:card-network-name&quot; class=&quot;reversefootnote&quot; role=&quot;doc-backlink&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+    &lt;/li&gt;
+    &lt;li id=&quot;fn:or-four&quot;&gt;
+      &lt;p&gt;Or four, depending on how you count. &lt;a href=&quot;#fnref:or-four&quot; class=&quot;reversefootnote&quot; role=&quot;doc-backlink&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+    &lt;/li&gt;
+    &lt;li id=&quot;fn:pan-exhaustion&quot;&gt;
+      &lt;p&gt;Similar to IPv4, 16 digit PANs are rapidly exhausting due to the use of anonymized “token” PANs used by things like Apple/Google Pay and saved payment details. &lt;a href=&quot;#fnref:pan-exhaustion&quot; class=&quot;reversefootnote&quot; role=&quot;doc-backlink&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+    &lt;/li&gt;
+  &lt;/ol&gt;
+&lt;/div&gt;
+</description>
+        <pubDate>Thu, 02 Oct 2025 00:00:00 -0400</pubDate>
+        <link>http://localhost:4000/posts/2025/10/02/card-networks.html</link>
+        <guid isPermaLink="true">http://localhost:4000/posts/2025/10/02/card-networks.html</guid>
+        
+        
+      </item>
     
       <item>
         <title>Money, banking, and payments: a constructivist approach.</title>

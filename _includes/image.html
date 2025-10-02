@@ -1,0 +1,6 @@
+<!-- From https://stackoverflow.com/a/19360305/7971276 -->
+<figure class="image">
+<!-- Need to | escape the description so I can include quotation marks -->
+<img src="{{ include.url }}" alt="{{ include.description | escape}}">
+  <figcaption>{{ include.description }}</figcaption>
+</figure>
