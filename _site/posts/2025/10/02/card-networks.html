@@ -18,7 +18,7 @@
     <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
 
   <header class="post-header">
-    <h1 class="post-title" itemprop="name headline">Card networks primer: What do Visa and Mastercard do?</h1>
+    <h1 class="post-title" itemprop="name headline">(Draft) Card networks primer: What do Visa and Mastercard do?</h1>
     <p class="post-meta"><time datetime="2025-10-02T00:00:00-04:00" itemprop="datePublished">Oct 2, 2025</time></p>
   </header>
 
@@ -87,15 +87,17 @@ window.addEventListener('load', () => {
   <li>Set and enforce rules of the network, including a mechanism for disputes.</li>
 </ol>
 
-<p>For the rest of the discussion, we’ll focus on Visa, as it’s what I’m most familiar with, although the role of Mastercard is analgous.</p>
+<p>For the rest of the discussion, we’ll focus on Visa, as it’s what I’m most familiar with, although the role of Mastercard is analogous.</p>
 
 <h1 id="1-run-the-telecommunications-network">1. Run the telecommunications network</h1>
 
-<p>When we talk about telecommunication networks, we think of the Internet, a network of computers connected together by fiber and <a href="https://www.submarinecablemap.com/">deep sea cables</a>.</p>
+<p>When we talk about networks, we think of the Internet, computers connected together by fiber and <a href="https://www.submarinecablemap.com/">deep sea cables</a>.</p>
 
-<p>Card networks are no different, but predate the Internet (although now part of it): they maintain massive data centers and lease physical cables to connect issuers and acquirers electronically.</p>
+<p>Card networks are not so different. They maintain data centers and lease fiber optics cables that connect issuers and acquirers electronically.</p>
 
-<p>Indeed, the card network is primarily a <em>router</em>. When a card is used, the card network is responsible for routing transaction request messages, known as <strong>authorizations</strong>. Similar to IP addresses,<sup id="fnref:pan-exhaustion"><a href="#fn:pan-exhaustion" class="footnote" rel="footnote" role="doc-noteref">4</a></sup> card numbers, also known as Primary Account Numbers (PANs) are used to route requests from the merchant’s checkout to the issuer, where the authorization is approved or declined. The first 6 to 8 digits of the PAN is called a Bank Identification Number, or BIN, which identifies the issuing bank.</p>
+<p>During a</p>
+
+<p>When a card is used, the card network is responsible for routing transaction request messages, known as <strong>authorizations</strong>. Similar to IP addresses,<sup id="fnref:pan-exhaustion"><a href="#fn:pan-exhaustion" class="footnote" rel="footnote" role="doc-noteref">4</a></sup> card numbers, also known as Primary Account Numbers (PANs) are used to route requests from the merchant’s checkout to the issuer, where the authorization is approved or declined. The first 6 to 8 digits of the PAN is called a Bank Identification Number, or BIN, which identifies the issuing bank.</p>
 
 <!-- TODO: support sidenotes/asides https://kau.sh/blog/jekyll-footnote-tufte-sidenote/ -->
 

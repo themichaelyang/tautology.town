@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Card networks primer: What do Visa and Mastercard do?"
+title: "(Draft) Card networks primer: What do Visa and Mastercard do?"
 ---
 
 <script src="https://unpkg.com/mermaid@11.12.0/dist/mermaid.min.js"></script>
@@ -69,15 +69,17 @@ This boils down to four key responsibilities:
 3. Set the incentives to encourage the use of the network.
 4. Set and enforce rules of the network, including a mechanism for disputes.
 
-For the rest of the discussion, we'll focus on Visa, as it's what I'm most familiar with, although the role of Mastercard is analgous.
+For the rest of the discussion, we'll focus on Visa, as it's what I'm most familiar with, although the role of Mastercard is analogous.
 
 # 1. Run the telecommunications network
 
-When we talk about telecommunication networks, we think of the Internet, a network of computers connected together by fiber and [deep sea cables](https://www.submarinecablemap.com/).
+When we talk about networks, we think of the Internet, computers connected together by fiber and [deep sea cables](https://www.submarinecablemap.com/).
 
-Card networks are no different, but predate the Internet (although now part of it): they maintain massive data centers and lease physical cables to connect issuers and acquirers electronically.
+Card networks are not so different. They maintain data centers and lease fiber optics cables that connect issuers and acquirers electronically.
 
-Indeed, the card network is primarily a *router*. When a card is used, the card network is responsible for routing transaction request messages, known as **authorizations**. Similar to IP addresses,[^pan-exhaustion] card numbers, also known as Primary Account Numbers (PANs) are used to route requests from the merchant's checkout to the issuer, where the authorization is approved or declined. The first 6 to 8 digits of the PAN is called a Bank Identification Number, or BIN, which identifies the issuing bank.
+During a 
+
+When a card is used, the card network is responsible for routing transaction request messages, known as **authorizations**. Similar to IP addresses,[^pan-exhaustion] card numbers, also known as Primary Account Numbers (PANs) are used to route requests from the merchant's checkout to the issuer, where the authorization is approved or declined. The first 6 to 8 digits of the PAN is called a Bank Identification Number, or BIN, which identifies the issuing bank.
 
 <!-- TODO: support sidenotes/asides https://kau.sh/blog/jekyll-footnote-tufte-sidenote/ -->
 [^pan-exhaustion]: Similar to IPv4, 16 digit PANs are rapidly exhausting due to the use of anonymized "token" PANs used by things like Apple/Google Pay and saved payment details.
@@ -145,8 +147,8 @@ Let's walk through a typical credit card transaction in the US:
 
 1. A cardholder pays for a product at a merchant.
 2. The merchant pays 2.5% of the transaction to their payment processor or merchant acquirer. The 2.5% is the **merchant discount rate** or MDR.
-3. The payment processor keeps 0.35%, then pays 2.15% to the cardholder's issuing bank. The 2.15% is the *interchange fee*, commonly known as **interchange**.[^interchange-name]
-4. The issuing bank keeps 2%, then pays the card network 0.15% of the transaction. The 0.15% is the **network assessment fee**.
+3. The payment processor keeps 0.35%, then pays 2% to the cardholder's issuing bank and 0.15% to card network. The 2% is the *interchange fee*, commonly known as **interchange**. The 0.15% is the **network assessment fee**. [^interchange-name]
+4. The issuing bank keeps 2%!
 
 Surprisingly, the issuing bank keeps most and the network takes the least, by an order of magnitude! This is because the issuer is traditionally considered to take on most of the risk (although merchants are likely to disagree).
 

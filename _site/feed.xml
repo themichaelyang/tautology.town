@@ -6,12 +6,12 @@
 </description>
     <link>http://localhost:4000/</link>
     <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Thu, 02 Oct 2025 22:39:53 -0400</pubDate>
-    <lastBuildDate>Thu, 02 Oct 2025 22:39:53 -0400</lastBuildDate>
+    <pubDate>Fri, 03 Oct 2025 03:03:12 -0400</pubDate>
+    <lastBuildDate>Fri, 03 Oct 2025 03:03:12 -0400</lastBuildDate>
     <generator>Jekyll v4.3.4</generator>
     
       <item>
-        <title>Card networks primer: What do Visa and Mastercard do?</title>
+        <title>(Draft) Card networks primer: What do Visa and Mastercard do?</title>
         <description>&lt;script src=&quot;https://unpkg.com/mermaid@11.12.0/dist/mermaid.min.js&quot;&gt;&lt;/script&gt;
 
 &lt;p&gt;Most people can recognize the Visa and Mastercard brands. Chances are, you use one of their cards to transact every day. You may have some notion that most places (in the US) take both, but some places only take Visa (e.g. Costco), and vice versa.&lt;/p&gt;
@@ -76,15 +76,17 @@ window.addEventListener(&apos;load&apos;, () =&gt; {
   &lt;li&gt;Set and enforce rules of the network, including a mechanism for disputes.&lt;/li&gt;
 &lt;/ol&gt;
 
-&lt;p&gt;For the rest of the discussion, we’ll focus on Visa, as it’s what I’m most familiar with, although the role of Mastercard is analgous.&lt;/p&gt;
+&lt;p&gt;For the rest of the discussion, we’ll focus on Visa, as it’s what I’m most familiar with, although the role of Mastercard is analogous.&lt;/p&gt;
 
 &lt;h1 id=&quot;1-run-the-telecommunications-network&quot;&gt;1. Run the telecommunications network&lt;/h1&gt;
 
-&lt;p&gt;When we talk about telecommunication networks, we think of the Internet, a network of computers connected together by fiber and &lt;a href=&quot;https://www.submarinecablemap.com/&quot;&gt;deep sea cables&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;When we talk about networks, we think of the Internet, computers connected together by fiber and &lt;a href=&quot;https://www.submarinecablemap.com/&quot;&gt;deep sea cables&lt;/a&gt;.&lt;/p&gt;
 
-&lt;p&gt;Card networks are no different, but predate the Internet (although now part of it): they maintain massive data centers and lease physical cables to connect issuers and acquirers electronically.&lt;/p&gt;
+&lt;p&gt;Card networks are not so different. They maintain data centers and lease fiber optics cables that connect issuers and acquirers electronically.&lt;/p&gt;
 
-&lt;p&gt;Indeed, the card network is primarily a &lt;em&gt;router&lt;/em&gt;. When a card is used, the card network is responsible for routing transaction request messages, known as &lt;strong&gt;authorizations&lt;/strong&gt;. Similar to IP addresses,&lt;sup id=&quot;fnref:pan-exhaustion&quot;&gt;&lt;a href=&quot;#fn:pan-exhaustion&quot; class=&quot;footnote&quot; rel=&quot;footnote&quot; role=&quot;doc-noteref&quot;&gt;4&lt;/a&gt;&lt;/sup&gt; card numbers, also known as Primary Account Numbers (PANs) are used to route requests from the merchant’s checkout to the issuer, where the authorization is approved or declined. The first 6 to 8 digits of the PAN is called a Bank Identification Number, or BIN, which identifies the issuing bank.&lt;/p&gt;
+&lt;p&gt;During a&lt;/p&gt;
+
+&lt;p&gt;When a card is used, the card network is responsible for routing transaction request messages, known as &lt;strong&gt;authorizations&lt;/strong&gt;. Similar to IP addresses,&lt;sup id=&quot;fnref:pan-exhaustion&quot;&gt;&lt;a href=&quot;#fn:pan-exhaustion&quot; class=&quot;footnote&quot; rel=&quot;footnote&quot; role=&quot;doc-noteref&quot;&gt;4&lt;/a&gt;&lt;/sup&gt; card numbers, also known as Primary Account Numbers (PANs) are used to route requests from the merchant’s checkout to the issuer, where the authorization is approved or declined. The first 6 to 8 digits of the PAN is called a Bank Identification Number, or BIN, which identifies the issuing bank.&lt;/p&gt;
 
 &lt;!-- TODO: support sidenotes/asides https://kau.sh/blog/jekyll-footnote-tufte-sidenote/ --&gt;
 

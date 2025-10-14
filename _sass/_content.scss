@@ -151,4 +151,9 @@ sup {
 .wide {
   margin-right: -3 * $spacing-unit;
   margin-left: -3 * $spacing-unit;
+
+  @media (max-width: 800px) {
+    margin-left: inherit;
+    margin-right: inherit;
+  }
 }
