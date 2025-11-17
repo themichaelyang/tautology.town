@@ -6,325 +6,141 @@
 </description>
     <link>http://localhost:4000/</link>
     <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Fri, 03 Oct 2025 03:03:12 -0400</pubDate>
-    <lastBuildDate>Fri, 03 Oct 2025 03:03:12 -0400</lastBuildDate>
+    <pubDate>Mon, 17 Nov 2025 12:11:43 -0800</pubDate>
+    <lastBuildDate>Mon, 17 Nov 2025 12:11:43 -0800</lastBuildDate>
     <generator>Jekyll v4.3.4</generator>
     
       <item>
-        <title>(Draft) Card networks primer: What do Visa and Mastercard do?</title>
-        <description>&lt;script src=&quot;https://unpkg.com/mermaid@11.12.0/dist/mermaid.min.js&quot;&gt;&lt;/script&gt;
+        <title>Learning about: OAuth 2.0 authorization code grants</title>
+        <description>&lt;p&gt;Over the weekend, I learned how to integrate a client app with OAuth 2.0 to add “login with” functionality. Here’s how I understand it.&lt;/p&gt;
 
-&lt;p&gt;Most people can recognize the Visa and Mastercard brands. Chances are, you use one of their cards to transact every day. You may have some notion that most places (in the US) take both, but some places only take Visa (e.g. Costco), and vice versa.&lt;/p&gt;
+&lt;h2 id=&quot;basic-flow-for-a-web-app-with-a-backend&quot;&gt;Basic flow for a web app with a backend&lt;/h2&gt;
 
-&lt;p&gt;So what do they do? &lt;a href=&quot;https://www.youtube.com/watch?v=lnz2gRPDzrA&quot;&gt;Here’s Visa’s attempt&lt;/a&gt; to answer that question.&lt;/p&gt;
+&lt;p&gt;You have your app server, the OAuth client, and the service you want to log in with, the authorization server.&lt;/p&gt;
 
-&lt;p&gt;A few things they don’t do&lt;sup id=&quot;fnref:dont-do&quot;&gt;&lt;a href=&quot;#fn:dont-do&quot; class=&quot;footnote&quot; rel=&quot;footnote&quot; role=&quot;doc-noteref&quot;&gt;1&lt;/a&gt;&lt;/sup&gt;:&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;
+    &lt;p&gt;You register your app server and its redirect URI with the authorization server, and are given a client ID and client secret.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;When a user goes to “login with”, your app server redirects them to the authorization server’s &lt;a href=&quot;https://datatracker.ietf.org/doc/html/rfc6749#section-3.1&quot;&gt;authorization endpoint&lt;/a&gt;, typically at &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/oauth/authorize&lt;/code&gt;. Parameters are sent as query parameters to the authorization endpoint, including the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;client_id&lt;/code&gt; and &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;redirect_uri&lt;/code&gt;. This endpoint is where the authorization service first asks for login then shows a page asking the user if they want to grant permissions to your app server.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;If authorized, the authorization service redirects back to your app server at the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;redirect_uri&lt;/code&gt;, with a query parameter &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;code&lt;/code&gt; for the authorization code.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Your app server now exchanges the authorization code for an access token by making a POST request to the authorization server’s &lt;a href=&quot;https://datatracker.ietf.org/doc/html/rfc6749#section-3.2&quot;&gt;token endpoint&lt;/a&gt;, typically &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/oauth/token&lt;/code&gt;.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Now, your app server has an API access token to the authorization server. You can fetch profile information from the authorization server and handle login/sign up normally.&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
 
-&lt;ul&gt;
-  &lt;li&gt;They aren’t the company that provides the card. Nor are they a bank, though the card you have is probably issued by one (Chase, Capital One, BofA, etc). Those are called &lt;strong&gt;“card issuers”&lt;/strong&gt;.&lt;/li&gt;
-  &lt;li&gt;They don’t distribute point of sale methods or online checkouts, which are done by &lt;strong&gt;payment processors&lt;/strong&gt;.&lt;/li&gt;
-  &lt;li&gt;They aren’t responsible for onboarding or underwriting stores and merchants. That is typically done by payment processors and banks, called &lt;strong&gt;“merchant acquirers”&lt;/strong&gt;.&lt;/li&gt;
-  &lt;li&gt;They don’t manufacture or print cards.&lt;/li&gt;
-  &lt;li&gt;Nor do they manufacture the point of sale hardware.&lt;/li&gt;
-&lt;/ul&gt;
+&lt;script src=&quot;https://unpkg.com/mermaid@11.12.0/dist/mermaid.min.js&quot;&gt;&lt;/script&gt;
 
-&lt;p&gt;Instead, Visa and Mastercard are &lt;strong&gt;card networks&lt;/strong&gt;&lt;sup id=&quot;fnref:card-network-name&quot;&gt;&lt;a href=&quot;#fn:card-network-name&quot; class=&quot;footnote&quot; rel=&quot;footnote&quot; role=&quot;doc-noteref&quot;&gt;2&lt;/a&gt;&lt;/sup&gt;, facilitating card transactions by connecting the cardholders and issuers to the merchants and acquirers.&lt;/p&gt;
-
-&lt;p&gt;This forms a &lt;a href=&quot;https://en.wikipedia.org/wiki/Two-sided_market&quot;&gt;two-sided market&lt;/a&gt; of all the participants in a transaction&lt;sup id=&quot;fnref:or-four&quot;&gt;&lt;a href=&quot;#fn:or-four&quot; class=&quot;footnote&quot; rel=&quot;footnote&quot; role=&quot;doc-noteref&quot;&gt;3&lt;/a&gt;&lt;/sup&gt;:&lt;/p&gt;
-
-&lt;figure&gt;
-&lt;pre class=&quot;mermaid wide&quot; id=&quot;key-players&quot;&gt;
+&lt;pre class=&quot;mermaid&quot;&gt;
 ---
 config:
   theme: &apos;neutral&apos;
   fontFamily: system-ui, -apple-system, BlinkMacSystemFont, &apos;Segoe UI&apos;, Roboto, Oxygen, Ubuntu, Cantarell, &apos;Open Sans&apos;, &apos;Helvetica Neue&apos;, sans-serif;
   nodeSpacing: 20
   rankSpacing: 25
-  flowchart: 
-    subGraphTitleMargin: {bottom: 20}
-    useMaxWidth: true
 ---
-%% For some reason arrows are still showing up in the Obsidian preview, but not in Mermaid online editor
-flowchart LR
-    subgraph Issuing[**Issuing**]
-        direction TB
-        CI[Card issuer] --- CH[Cardholder]
-    end
-    subgraph Acquiring[**Acquiring**]
-        direction TB
-        MA[Merchant acquirer] --- M[Merchant]
-    end
-    Issuing ---- CN[**Card network**]
-    CN ---- Acquiring
+sequenceDiagram
+    participant Browser
+    participant App as App server
+    participant Auth as Auth server
+    Browser-&amp;gt;&amp;gt;App: GET {app}/login-with
+    App-&amp;gt;&amp;gt;Browser: 302 redirect {auth}/oauth/authorize
+    Browser-&amp;gt;&amp;gt;Auth: GET {auth}/oauth/authorize
+    Auth-&amp;gt;&amp;gt;Browser: Login and permissions page
+    Browser-&amp;gt;&amp;gt;Auth: Log in and grant permission to app
+    Auth-&amp;gt;&amp;gt;Browser: 302 redirect {app}/callback?code=...
+    Browser-&amp;gt;&amp;gt;App: GET {app}/callback?code=...
+    App-&amp;gt;&amp;gt;Auth: POST code to {auth}/oauth/token
+    Auth-&amp;gt;&amp;gt;App: Access token
+    App-&amp;gt;Auth: API calls with access token
+    App-&amp;gt;&amp;gt;Browser: Logged in with auth server
 &lt;/pre&gt;
-&lt;!-- For some horrible reason, Mermaid.js is fixing the max-width even if useMaxWidth is true --&gt;
-&lt;script&gt;
-window.addEventListener(&apos;load&apos;, () =&gt; {
-  document.querySelectorAll(&quot;.mermaid svg&quot;).forEach(el =&gt; el.style = &quot;&quot;)
-})
-&lt;/script&gt;
-&lt;figcaption&gt;The key players in a card transaction.&lt;/figcaption&gt;
-&lt;/figure&gt;
 
-&lt;p&gt;The card network’s job is to enable card transactions, and also to spread the use of their card brands.&lt;/p&gt;
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;require&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;sinatra/base&quot;&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;require&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;oauth2&quot;&lt;/span&gt;
 
-&lt;p&gt;This boils down to four key responsibilities:&lt;/p&gt;
-&lt;ol&gt;
-  &lt;li&gt;Run the telecommunications network to route transaction messages.&lt;/li&gt;
-  &lt;li&gt;Coordinate the banking network to route money and settle transactions.&lt;/li&gt;
-  &lt;li&gt;Set the incentives to encourage the use of the network.&lt;/li&gt;
-  &lt;li&gt;Set and enforce rules of the network, including a mechanism for disputes.&lt;/li&gt;
-&lt;/ol&gt;
+&lt;span class=&quot;n&quot;&gt;enable&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:sessions&lt;/span&gt;
 
-&lt;p&gt;For the rest of the discussion, we’ll focus on Visa, as it’s what I’m most familiar with, although the role of Mastercard is analogous.&lt;/p&gt;
+&lt;span class=&quot;n&quot;&gt;client&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;OAuth2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Client&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;new&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
+  &lt;span class=&quot;no&quot;&gt;ENV&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;OAUTH_CLIENT_ID&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt; 
+  &lt;span class=&quot;no&quot;&gt;ENV&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;OAUTH_CLIENT_SECRET&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt; 
+  &lt;span class=&quot;ss&quot;&gt;site: &lt;/span&gt;&lt;span class=&quot;no&quot;&gt;ENV&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;OAUTH_SERVICE_URL&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;
+  &lt;span class=&quot;ss&quot;&gt;authorize_url: &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;oauth/authorize&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# relative to service URL&lt;/span&gt;
+  &lt;span class=&quot;ss&quot;&gt;token_url: &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;oauth/token&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;         &lt;span class=&quot;c1&quot;&gt;# relative to service URL&lt;/span&gt;
+  &lt;span class=&quot;ss&quot;&gt;redirect_uri: &lt;/span&gt;&lt;span class=&quot;no&quot;&gt;ENV&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;APP_BASE_URL&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;/callback&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 
-&lt;h1 id=&quot;1-run-the-telecommunications-network&quot;&gt;1. Run the telecommunications network&lt;/h1&gt;
+&lt;span class=&quot;n&quot;&gt;get&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;/&quot;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;session&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:logged_in&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+    &lt;span class=&quot;s2&quot;&gt;&quot;&amp;lt;a href=/logout&amp;gt;log out&amp;lt;/a&amp;gt;&quot;&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt;
+    &lt;span class=&quot;s2&quot;&gt;&quot;&amp;lt;a href=/login-with&amp;gt;login with&amp;lt;/a&amp;gt;&quot;&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
 
-&lt;p&gt;When we talk about networks, we think of the Internet, computers connected together by fiber and &lt;a href=&quot;https://www.submarinecablemap.com/&quot;&gt;deep sea cables&lt;/a&gt;.&lt;/p&gt;
+&lt;span class=&quot;n&quot;&gt;get&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;/login-with&quot;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;redirect&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;client&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;auth_code&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;authorize_url&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
 
-&lt;p&gt;Card networks are not so different. They maintain data centers and lease fiber optics cables that connect issuers and acquirers electronically.&lt;/p&gt;
+&lt;span class=&quot;c1&quot;&gt;# Authorization server redirects here&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;get&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;/callback&quot;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;auth_code&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;params&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;code&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;access&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;client&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;auth_code&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;get_token&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;auth_code&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  
+  &lt;span class=&quot;c1&quot;&gt;# make API calls with `access.token` or use `access.get/post` helpers&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;session&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:logged_in&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kp&quot;&gt;true&lt;/span&gt;
 
-&lt;p&gt;During a&lt;/p&gt;
+  &lt;span class=&quot;n&quot;&gt;redirect&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;back&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
 
-&lt;p&gt;When a card is used, the card network is responsible for routing transaction request messages, known as &lt;strong&gt;authorizations&lt;/strong&gt;. Similar to IP addresses,&lt;sup id=&quot;fnref:pan-exhaustion&quot;&gt;&lt;a href=&quot;#fn:pan-exhaustion&quot; class=&quot;footnote&quot; rel=&quot;footnote&quot; role=&quot;doc-noteref&quot;&gt;4&lt;/a&gt;&lt;/sup&gt; card numbers, also known as Primary Account Numbers (PANs) are used to route requests from the merchant’s checkout to the issuer, where the authorization is approved or declined. The first 6 to 8 digits of the PAN is called a Bank Identification Number, or BIN, which identifies the issuing bank.&lt;/p&gt;
+&lt;span class=&quot;n&quot;&gt;get&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;/logout&quot;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;session&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;clear&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;redirect&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;back&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;!-- TODO: support sidenotes/asides https://kau.sh/blog/jekyll-footnote-tufte-sidenote/ --&gt;
+&lt;h2 id=&quot;protecting-against-redirect-csrf-with-state&quot;&gt;Protecting against redirect CSRF with &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;state&lt;/code&gt;&lt;/h2&gt;
 
-&lt;p&gt;Visa takes its data centers very seriously. They are highly secure, redundant, and fitted to survive all kinds of disasters. From &lt;a href=&quot;https://www.networkcomputing.com/data-center-networking/inside-visa-s-data-center&quot;&gt;Inside Visa’s Data Center (Network Computing, 2013)&lt;/a&gt;:&lt;/p&gt;
+&lt;p&gt;Because the authorization code is passed as a query parameter, there’s a possibility of a &lt;a href=&quot;https://www.rfc-editor.org/rfc/rfc6819#section-4.4.1.8&quot;&gt;cross site request forgery (CSRF) attack&lt;/a&gt;. For example, the victim could click a link to the app server redirect URI but with an attacker’s authorization code and be logged in with a different account.&lt;/p&gt;
 
-&lt;blockquote&gt;
-  &lt;p&gt;“The company’s flagship data center, dubbed Operations Center East, or OCE, is a 140,000-square-foot facility that Visa will only say is located “somewhere along the Eastern seaboard.”&lt;/p&gt;
-&lt;/blockquote&gt;
+&lt;p&gt;To prevent this, we can generate a non-guessable “state” value and save it to the user’s local session cookies. Then we pass it along in a &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;state&lt;/code&gt; parameter to the authorization server’s authorization endpoint.&lt;/p&gt;
 
-&lt;blockquote&gt;
-  &lt;p&gt;“Not surprisingly, the facility, which is also designed to withstand earthquakes and gale-force winds up to 170 miles per hour, is locked down like a digital Fort Knox. The roads entering the complex have hydraulic bollards that can shoot up fast enough to stop a vehicle traveling up to 50 miles per hour dead in its tracks. (The road is too curvy to drive safely at higher speeds.) Visitors must pass through a security gate, be cleared by roving security teams, and then be subjected to a biometric scan before being admitted.”&lt;/p&gt;
-&lt;/blockquote&gt;
+&lt;p&gt;OAuth specifies query parameters must be passed along, so we verify that it matches the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;state&lt;/code&gt; on the session when redirected to our app server’s &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;redirect_uri&lt;/code&gt;.&lt;/p&gt;
 
-&lt;p&gt;&lt;a href=&quot;https://web.archive.org/web/20120330102616/https://www.usatoday.com/tech/news/story/2012-03-25/visa-data-center/53774904/1/&quot;&gt;Another article&lt;/a&gt; claims Visa’s OCE is guarded by a a moat.&lt;/p&gt;
+&lt;p&gt;This StackExchange &lt;a href=&quot;https://security.stackexchange.com/a/278235/241664&quot;&gt;answer from Andy&lt;/a&gt; does a good job explaining the attack and mitigation.&lt;/p&gt;
 
-&lt;p&gt;That top secret location? In &lt;a href=&quot;https://maps.app.goo.gl/tPEDWcTiY621sZz37&quot;&gt;Ashburn, Virginia&lt;/a&gt;, conveniently located by Trader Joe’s and Topgolf.&lt;/p&gt;
+&lt;h2 id=&quot;protecting-against-authorization-code-theft-with-pkce&quot;&gt;Protecting against authorization code theft with PKCE&lt;/h2&gt;
 
-&lt;div&gt;
-&lt;!-- From https://stackoverflow.com/a/19360305/7971276 --&gt;
-&lt;figure class=&quot;image&quot;&gt;
-&lt;!-- Need to | escape the description so I can include quotation marks --&gt;
-&lt;img src=&quot;/assets/2025/visa-oce-satellite.png&quot; alt=&quot;I think the &amp;quot;moat&amp;quot; is the pool of water on the top center-left.&quot; /&gt;
-  &lt;figcaption&gt;I think the &quot;moat&quot; is the pool of water on the top center-left.&lt;/figcaption&gt;
-&lt;/figure&gt;
+&lt;p&gt;Proof Key for Code Exchange, or PKCE (“pixy”), protects against authorization code theft and is required for OAuth 2.1. It verifies that the origin of the OAuth request is the same that uses the authorization code.&lt;/p&gt;
 
-&lt;/div&gt;
+&lt;p&gt;To do PKCE, the app generates an unguessable code verifier, and a code challenge which is the BASE64, URL-encoded SHA-256 hash of the verifier.&lt;/p&gt;
 
-&lt;h1 id=&quot;2-coordinate-the-banking-network&quot;&gt;2. Coordinate the banking network&lt;/h1&gt;
+&lt;p&gt;These are passed in &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;code_challenge&lt;/code&gt; to the authorization endpoint and &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;code_verifier&lt;/code&gt; to the token endpoint. The &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;code_challenge_method&lt;/code&gt; must also be passed as &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;S256&lt;/code&gt;.&lt;/p&gt;
 
-&lt;p&gt;After a transaction is approved, money on both ends must move to fulfill the transaction, known as &lt;strong&gt;settlement&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;The authorization server will verify that the code challenge and code verifier SHA-256 match before granting the access token.&lt;/p&gt;
 
-&lt;p&gt;Visa’s second job as a router is to &lt;em&gt;route money&lt;/em&gt; for settlement, which it does by having a banking relationship with each party: collecting money from one and transfering to another.&lt;/p&gt;
+&lt;p&gt;PKCE is also used for browser-only or mobile-only apps &lt;em&gt;without&lt;/em&gt; backends that can’t securely store OAuth client secrets. These are known as “public” &lt;a href=&quot;https://oauth.net/2/client-types/&quot;&gt;OAuth 2.0 client types&lt;/a&gt;.&lt;/p&gt;
 
-&lt;p&gt;To be more efficient, Visa does “net settlement”. Every day, each network participant’s debits and credits are totalled, and at the end of the day the net money is moved once, to or from each participant.&lt;/p&gt;
+&lt;h2 id=&quot;how-i-learned&quot;&gt;How I learned&lt;/h2&gt;
 
-&lt;p&gt;For domestic transactions, moving money is &lt;a href=&quot;https://gendal.me/2013/11/24/a-simple-explanation-of-how-money-moves-around-the-banking-system/&quot;&gt;relatively straightforward, thanks to central banks&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;I learned this by using the Ruby &lt;a href=&quot;https://github.com/ruby-oauth/oauth2&quot;&gt;oauth2&lt;/a&gt; gem and reading the &lt;a href=&quot;https://github.com/ruby-oauth/oauth2?tab=readme-ov-file#common-flows-end-to-end&quot;&gt;sample code&lt;/a&gt; and the Recurse Center API OAuth documentation. I used &lt;a href=&quot;https://sinatrarb.com/&quot;&gt;Sinatra&lt;/a&gt; for the backend.&lt;/p&gt;
 
-&lt;p&gt;Crucially, Visa is also able to settle internationally, even &lt;a href=&quot;https://usa.visa.com/travel-with-visa/dynamic-currency-conversion.html&quot;&gt;handling currency conversion&lt;/a&gt;. Visa acts as an &lt;a href=&quot;https://www.bis.org/cpmi/publ/d213.pdf&quot;&gt;adapter between banking systems&lt;/a&gt; with its global banking relationships. This greatly simplifies international money movement for participants in the network – without Visa, each participant would need to manage their own international banking relationships.&lt;/p&gt;
+&lt;p&gt;ChatGPT suggested &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;state&lt;/code&gt; and PKCE, which lead me to read more. PKCE is described &lt;a href=&quot;https://blog.postman.com/what-is-pkce/&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;
 
-&lt;figure&gt;
-&lt;pre class=&quot;mermaid wide&quot;&gt;
----
-config:
-  theme: &apos;neutral&apos;
-  fontFamily: system-ui, -apple-system, BlinkMacSystemFont, &apos;Segoe UI&apos;, Roboto, Oxygen, Ubuntu, Cantarell, &apos;Open Sans&apos;, &apos;Helvetica Neue&apos;, sans-serif;
-  nodeSpacing: 20
-  rankSpacing: 60
-  flowchart: 
-    subGraphTitleMargin: {bottom: 20}
-    diagramPadding: 10
-    useMaxWidth: true
----
-flowchart LR
-    CI[Issuer in Country A] --&amp;gt; VisaA[&quot;Visa&apos;s bank in A&quot;]
-    VisaB[Visa&apos;s bank in B] --&amp;gt; MA[Acquirer in Country B] 
-    subgraph **Visa**
-        VisaA -.-VisaB
-    end
-&lt;/pre&gt;
-&lt;figcaption&gt;Visa as an adapter&lt;/figcaption&gt;
-&lt;/figure&gt;
+&lt;p&gt;When writing this post, I also found Aaron Parecki’s &lt;a href=&quot;https://aaronparecki.com/oauth-2-simplified/&quot;&gt;OAuth 2 Simplified blog post&lt;/a&gt; to be very clear yet concise. He also publishes a longer and more comprehensive &lt;a href=&quot;https://www.o#{auth}/&quot;&gt;microsite&lt;/a&gt;, but I rather like the blog version.&lt;/p&gt;
 
-&lt;p&gt;Shuffling this amount of money around and timing everything right is no easy feat. Visa faces non-payment risk in addition to maintaining a significant balance to cover payouts while waiting to receive settlement payments. From &lt;a href=&quot;https://investor.visa.com/SEC-Filings/default.aspx#annual-filings&quot;&gt;Visa’s 2024 annual SEC report&lt;/a&gt;:&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;Most U.S. dollar settlements are settled within the same day and do not result in a receivable or payable balance, while settlements in currencies other than the U.S. dollar generally remain outstanding for one to two business days, which is consistent with industry practice for such transactions. … As of September 30, 2024, we held $11.2 billion of our total available liquidity to fund daily settlement in the event one or more of our financial institution clients are unable to settle, with the remaining liquidity available to support our working capital and other liquidity needs.&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;The Company’s settlement exposure is limited to the amount of unsettled Visa payment transactions at any point in time, which vary significantly day to day. For fiscal 2024, the Company’s maximum daily settlement exposure was $137.4 billion and the average daily settlement exposure was $84.3 billion.&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;h1 id=&quot;3-set-incentives&quot;&gt;3. Set incentives&lt;/h1&gt;
-
-&lt;p&gt;The key to this whole arrangement are the fees required to participate in the network, largely set by the network.&lt;/p&gt;
-
-&lt;p&gt;Let’s walk through a typical credit card transaction in the US:&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;A cardholder pays for a product at a merchant.&lt;/li&gt;
-  &lt;li&gt;The merchant pays 2.5% of the transaction to their payment processor or merchant acquirer. The 2.5% is the &lt;strong&gt;merchant discount rate&lt;/strong&gt; or MDR.&lt;/li&gt;
-  &lt;li&gt;The payment processor keeps 0.35%, then pays 2.15% to the cardholder’s issuing bank. The 2.15% is the &lt;em&gt;interchange fee&lt;/em&gt;, commonly known as &lt;strong&gt;interchange&lt;/strong&gt;.&lt;sup id=&quot;fnref:interchange-name&quot;&gt;&lt;a href=&quot;#fn:interchange-name&quot; class=&quot;footnote&quot; rel=&quot;footnote&quot; role=&quot;doc-noteref&quot;&gt;5&lt;/a&gt;&lt;/sup&gt;&lt;/li&gt;
-  &lt;li&gt;The issuing bank keeps 2%, then pays the card network 0.15% of the transaction. The 0.15% is the &lt;strong&gt;network assessment fee&lt;/strong&gt;.&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;Surprisingly, the issuing bank keeps most and the network takes the least, by an order of magnitude! This is because the issuer is traditionally considered to take on most of the risk (although merchants are likely to disagree).&lt;/p&gt;
-
-&lt;p&gt;In addition to &lt;a href=&quot;https://www.consumerfinance.gov/rules-policy/regulations/1005/6/&quot;&gt;regulatory requirements&lt;/a&gt;, Visa and Mastercard offer zero-liability protection. This means that the issuing bank, not the cardholder, is liable for any charges made on a card if it is lost or stolen.&lt;sup id=&quot;fnref:friendly-fraud&quot;&gt;&lt;a href=&quot;#fn:friendly-fraud&quot; class=&quot;footnote&quot; rel=&quot;footnote&quot; role=&quot;doc-noteref&quot;&gt;6&lt;/a&gt;&lt;/sup&gt; The issuing bank also takes on &lt;a href=&quot;https://en.wikipedia.org/wiki/Credit_risk&quot;&gt;credit risk&lt;/a&gt;, and must always pay for an approved transaction even if a cardholder cannot pay off their balance.&lt;/p&gt;
-
-&lt;p&gt;Because of how much is given to the issuers, there are a lot of incentives for issuers to acquire customers and fund lavish rewards programs to encourage spending. This split also explains the recent rise of &lt;strong&gt;issuing processors&lt;/strong&gt;, which make it easier for neobanks and fintechs to issue cards to access a more lucrative end of the market.&lt;/p&gt;
-
-&lt;p&gt;Why do merchants pay this fee? The idea is that accepting card payments yields higher spending and increased volume, in part due to credit card rewards.&lt;/p&gt;
-
-&lt;figure&gt;
-&lt;pre class=&quot;mermaid wide&quot;&gt;
----
-config:
-  theme: &apos;neutral&apos;
-  fontFamily: system-ui, -apple-system, BlinkMacSystemFont, &apos;Segoe UI&apos;, Roboto, Oxygen, Ubuntu, Cantarell, &apos;Open Sans&apos;, &apos;Helvetica Neue&apos;, sans-serif;
-  nodeSpacing: 10
-  rankSpacing: 100
-  flowchart: 
-    subGraphTitleMargin: {bottom: 20}
-    diagramPadding: 10
-    useMaxWidth: true
----
-graph LR
-    I[Issuers get more interchange] --&amp;gt; R[&quot;Issuers more rewards and cards&quot;]
-    R --&amp;gt; C
-    C[People spend more on cards] --&amp;gt; M[More merchants accept cards]
-    M --&amp;gt; I
-    %% invisible connections to make it more round
-    C ~~~ I
-    R ~~~ M
-    R ~~~ I
-    R ~~~ C
-&lt;/pre&gt;
-&lt;figcaption&gt;The virtuous cycle of spending&lt;/figcaption&gt;
-&lt;/figure&gt;
-
-&lt;p&gt;Out of these, the network sets the interchange and network assessment fee. Interchange fees vary dramatically based on the kind of card, category of spend, and even the metadata attached to a transaction. The networks goal is to set fees that incentivize desired behaviors on their network, including using more secure payment methods (lowering interchange fees for merchants), or for companies to do more business spending (higher interchange fees on commercial credit cards).&lt;/p&gt;
-
-&lt;p&gt;More cards means more merchants, more merchants mean more cards. In theory, the network benefits through fees, the merchants benefit through more purchases, and the consumer benefits through convenience.&lt;/p&gt;
-
-&lt;p&gt;In the EU, &lt;a href=&quot;https://www.psr.org.uk/our-work/card-payments/the-ifr/&quot;&gt;interchange fees are restricted to 0.3%&lt;/a&gt;, which explains the lack of rewards cards and wider acceptance of alternative payment methods like bank payments.&lt;/p&gt;
-
-&lt;h1 id=&quot;4-set-rules-and-handle-disputes&quot;&gt;4. Set rules and handle disputes&lt;/h1&gt;
-
-&lt;p&gt;In another article, they claim to have &lt;a href=&quot;https://web.archive.org/web/20120330102616/https://www.usatoday.com/tech/news/story/2012-03-25/visa-data-center/53774904/1/&quot;&gt;a moat&lt;/a&gt; protecting the data center.&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;“Inside the pods, 376 servers, 277 switches, 85 routers and 42 firewalls–all connected by 3,000 miles of cable–hum around the clock, enabling transactions around the globe in near real-time and keeping Visa’s business running.”&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;“Inside the pods, 376 servers, 277 switches, 85 routers and 42 firewalls–all connected by 3,000 miles of cable–hum around the clock, enabling transactions around the globe in near real-time and keeping Visa’s business running.”&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://web.archive.org/web/20120330102616/https://www.usatoday.com/tech/news/story/2012-03-25/visa-data-center/53774904/1/&quot;&gt;Top secret Visa data center banks on security, even has moat (USA Today, 2013)&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;the crux of their operation is an electronic one, and&lt;/p&gt;
-
-&lt;p&gt;In a typical transaction, the merchant pays 2.5% of the transaction to the payment processor. This actually the &lt;strong&gt;merchant discount rate&lt;/strong&gt;, and includes the payment processor’s cut on top of the interchange.&lt;/p&gt;
-
-&lt;p&gt;The payment processor keeps 0.35%, then pays 2.15%&lt;/p&gt;
-
-&lt;p&gt;https://www.complexsystemspodcast.com/episodes/credit-card-rewards-interchange/&lt;/p&gt;
-&lt;div class=&quot;footnotes&quot; role=&quot;doc-endnotes&quot;&gt;
-  &lt;ol&gt;
-    &lt;li id=&quot;fn:dont-do&quot;&gt;
-      &lt;p&gt;Nowadays they may have product offerings for some of these, or own subsidiaries that do some of these, but these are not core to the business of being a card network. &lt;a href=&quot;#fnref:dont-do&quot; class=&quot;reversefootnote&quot; role=&quot;doc-backlink&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
-    &lt;/li&gt;
-    &lt;li id=&quot;fn:card-network-name&quot;&gt;
-      &lt;p&gt;To be precise, we use “card networks” to colloqially refer to the companies operating their own card payment networks / schemes. For example, &lt;em&gt;VisaNet&lt;/em&gt; is technically the network, Visa is the company/brand. Mastercard’s network is called &lt;em&gt;Banknet&lt;/em&gt;. Both companies also own and operate specialized subsidiary networks for things like debit cards and ATMs, like Visa’s Interlink and Plus, or Mastercard’s Cirrus and Maestro, although technically VisaNet and Banknet can process debit (this is a story for another time). There are further terms to distinguish the telecommunications network with the bank network, and even subsets of each. Visa even thinks of itself as a &lt;a href=&quot;https://annualreport.visa.com/business-overview/default.aspx#:~:text=Our%20network%20of%20networks%20strategy,transactions%2C%20no%20matter%20the%20network.&quot;&gt;“network of networks”&lt;/a&gt;. Turtles all the way down. &lt;a href=&quot;#fnref:card-network-name&quot; class=&quot;reversefootnote&quot; role=&quot;doc-backlink&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
-    &lt;/li&gt;
-    &lt;li id=&quot;fn:or-four&quot;&gt;
-      &lt;p&gt;Or &lt;a href=&quot;https://www.marqeta.com/uk/demystifying-cards-guide/card-payments-ecosystem&quot;&gt;four&lt;/a&gt;, depending on how you count. &lt;a href=&quot;#fnref:or-four&quot; class=&quot;reversefootnote&quot; role=&quot;doc-backlink&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
-    &lt;/li&gt;
-    &lt;li id=&quot;fn:pan-exhaustion&quot;&gt;
-      &lt;p&gt;Similar to IPv4, 16 digit PANs are rapidly exhausting due to the use of anonymized “token” PANs used by things like Apple/Google Pay and saved payment details. &lt;a href=&quot;#fnref:pan-exhaustion&quot; class=&quot;reversefootnote&quot; role=&quot;doc-backlink&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
-    &lt;/li&gt;
-    &lt;li id=&quot;fn:interchange-name&quot;&gt;
-      &lt;p&gt;Although &lt;em&gt;interchange&lt;/em&gt; is short for &lt;em&gt;interchange fee&lt;/em&gt;, technically &lt;em&gt;interchange&lt;/em&gt; refers to the payment messages being routed by the card networks, and the fee is provided for that data. But, you almost never hear &lt;em&gt;interchange&lt;/em&gt; used to mean payment messages except in technical specs. &lt;a href=&quot;#fnref:interchange-name&quot; class=&quot;reversefootnote&quot; role=&quot;doc-backlink&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
-    &lt;/li&gt;
-    &lt;li id=&quot;fn:friendly-fraud&quot;&gt;
-      &lt;p&gt;Although this creates trust in card payments, it has opened the doors to &lt;em&gt;friendly fraud&lt;/em&gt;, where legitimate purchases are reported as fraudulent. Not to mention a &lt;a href=&quot;https://en.wikipedia.org/wiki/Moral_hazard&quot;&gt;moral hazard&lt;/a&gt;. &lt;a href=&quot;#fnref:friendly-fraud&quot; class=&quot;reversefootnote&quot; role=&quot;doc-backlink&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
-    &lt;/li&gt;
-  &lt;/ol&gt;
-&lt;/div&gt;
+&lt;p&gt;&lt;a href=&quot;https://www.rfc-editor.org/rfc/rfc6819#section-3.6&quot;&gt;RFC 6819&lt;/a&gt; discusses security considerations of OAuth 2.0. When researching for this post, I referenced the RFCs, linked &lt;a href=&quot;https://oauth.net/&quot;&gt;here&lt;/a&gt; (also due to Aaron Parecki).&lt;/p&gt;
 </description>
-        <pubDate>Thu, 02 Oct 2025 00:00:00 -0400</pubDate>
-        <link>http://localhost:4000/posts/2025/10/02/card-networks.html</link>
-        <guid isPermaLink="true">http://localhost:4000/posts/2025/10/02/card-networks.html</guid>
-        
-        
-      </item>
-    
-      <item>
-        <title>Money, banking, and payments: a constructivist approach.</title>
-        <description>&lt;p&gt;Not too long ago, my perception of money was cash.&lt;/p&gt;
-
-&lt;p&gt;In my view, if you went to a bank and deposited a dollar, at the end of the day, the dollar would be placed neatly next to a stack of gold bricks, in a vault deep beneath the bank. In this imagining, if you sent a wire, the dollar (or another like it) would be aboard an armored car to the other bank, or a armored plane if you paid more for same day.&lt;/p&gt;
-
-&lt;p&gt;This mostly wrong. But I suspect the banking and payments, and money generally, are a mystery to most people. Like:&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;What does Visa do? What does Mastercard do? Why are they different?&lt;/li&gt;
-  &lt;li&gt;Or: How does a dollar get around, if not by armored car?&lt;/li&gt;
-  &lt;li&gt;Or even: Wait, you’re telling me there’s no vault of gold bricks?&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;To answer these questions, and more, I invite the reader to close their eyes and imagine a time before money, to see how we can invent these systems from scratch.&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;p&gt;You are &lt;a href=&quot;https://monoskop.org/images/9/96/Le_Guin_Ursula_K_1986_1989_The_Carrier_Bag_Theory_of_Fiction.pdf&quot;&gt;Boog&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;You have recently invented Agriculture. On paper (not yet invented), settling down near your food is a devious scheme, but you were far busier than expected and eating oats all day &lt;a href=&quot;https://en.wikipedia.org/wiki/Neolithic_Revolution#Diet_and_health&quot;&gt;has not felt great&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;So, you go to Grob, your hunter buddy, to get some wooly mammoth.&lt;/p&gt;
-
-&lt;p&gt;“For Rock-god’s sake!” cries Grob. “This is the sixth time this rock-week. What’s in it for me?”&lt;/p&gt;
-
-&lt;p&gt;And so, you agree to exchange 3 bowls of oatmeal for a delicious mammoth-steak, and thus Commerce is born (Altruism begins its endless demise).&lt;/p&gt;
-
-&lt;p&gt;Things are going well. Your oat fields grow large and bounteous. Others settle down near you for oats, and you exchange oats for Goods and Services. Eventually, enough people settle down, inventing Civilization.&lt;/p&gt;
-
-&lt;p&gt;Problems quickly emerge.&lt;/p&gt;
-
-&lt;p&gt;You are sick and tired of oats. You are happy to trade vast sums of oats for modern indulgences like Clothing, Bronze, and Stone Tablets. But oats have become so commonplace that the oat-rate for these luxuries has reached the hundreds of bushels (this is called Inflation). This is too much for you to carry around, and far too many oats for anyone to eat at once.&lt;/p&gt;
-
-&lt;p&gt;You devise another devious schemes: instead of exchanging oats directly, you write down how many oats you owe to who in a ledger. This way people can redeem their oats in smaller quantities, and you don’t need to carry anything around.&lt;/p&gt;
-
-&lt;p&gt;The system is pretty good. So good, that people start coming to you to ask you to move their numerical-oats from their oat-account to another when trading with others. It works so well that everything is priced in oats, even as fewer and fewer people are redeeming their numerical-oats for physical-oats.&lt;/p&gt;
-
-&lt;p&gt;This is called the “Money of Account”.&lt;/p&gt;
-
-&lt;p&gt;To make this easier so you don’t need to be involved in every transaction, you design an oat-redemption-token made of pocketable circles of Bronze. “This is a COIN – Contains Oats In Numbers,” you say, holding up a Bronze circle. “You can use this as a Unit of Exchange. Now please stop bothering me.”&lt;/p&gt;
-
-&lt;p&gt;This is called “Cash”.&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;p&gt;Okay, we’ve been having too much fun here. Let’s break down what we’ve uncovered:&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;Money can be a number, like the “money of account”.&lt;/li&gt;
-  &lt;li&gt;Money can be a thing, like cash, or oats.&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;And in fact, a number is much more portable than a thing.&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;p&gt;&lt;em&gt;Next time: banks.&lt;/em&gt;&lt;/p&gt;
-</description>
-        <pubDate>Thu, 28 Aug 2025 00:00:00 -0400</pubDate>
-        <link>http://localhost:4000/posts/2025/08/28/money.html</link>
-        <guid isPermaLink="true">http://localhost:4000/posts/2025/08/28/money.html</guid>
+        <pubDate>Mon, 17 Nov 2025 00:00:00 -0800</pubDate>
+        <link>http://localhost:4000/posts/2025/11/17/til-oauth2.html</link>
+        <guid isPermaLink="true">http://localhost:4000/posts/2025/11/17/til-oauth2.html</guid>
         
         
       </item>

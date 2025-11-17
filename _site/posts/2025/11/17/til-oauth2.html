@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title></title>
+  <meta name="description" content="">
+  <link rel="stylesheet" href="/stylesheets/style.css">
+</head>
+<body>
+  <nav class="navbar">
+    <ul class="navbar__inner">
+      <li class="navbar__item"><a class="navbar__text" href="/">Home</a></li>
+      <li class="navbar__item"><a class="navbar__text" href="/about">About</a></li>
+    </ul>
+  </nav>
+  <main>
+    <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">Learning about: OAuth 2.0 authorization code grants</h1>
+    <p class="post-meta"><time datetime="2025-11-17T00:00:00-08:00" itemprop="datePublished">Nov 17, 2025</time></p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    <p>Over the weekend, I learned how to integrate a client app with OAuth 2.0 to add “login with” functionality. Here’s how I understand it.</p>
+
+<h2 id="basic-flow-for-a-web-app-with-a-backend">Basic flow for a web app with a backend</h2>
+
+<p>You have your app server, the OAuth client, and the service you want to log in with, the authorization server.</p>
+
+<ol>
+  <li>
+    <p>You register your app server and its redirect URI with the authorization server, and are given a client ID and client secret.</p>
+  </li>
+  <li>
+    <p>When a user goes to “login with”, your app server redirects them to the authorization server’s <a href="https://datatracker.ietf.org/doc/html/rfc6749#section-3.1">authorization endpoint</a>, typically at <code class="language-plaintext highlighter-rouge">/oauth/authorize</code>. Parameters are sent as query parameters to the authorization endpoint, including the <code class="language-plaintext highlighter-rouge">client_id</code> and <code class="language-plaintext highlighter-rouge">redirect_uri</code>. This endpoint is where the authorization service first asks for login then shows a page asking the user if they want to grant permissions to your app server.</p>
+  </li>
+  <li>
+    <p>If authorized, the authorization service redirects back to your app server at the <code class="language-plaintext highlighter-rouge">redirect_uri</code>, with a query parameter <code class="language-plaintext highlighter-rouge">code</code> for the authorization code.</p>
+  </li>
+  <li>
+    <p>Your app server now exchanges the authorization code for an access token by making a POST request to the authorization server’s <a href="https://datatracker.ietf.org/doc/html/rfc6749#section-3.2">token endpoint</a>, typically <code class="language-plaintext highlighter-rouge">/oauth/token</code>.</p>
+  </li>
+  <li>
+    <p>Now, your app server has an API access token to the authorization server. You can fetch profile information from the authorization server and handle login/sign up normally.</p>
+  </li>
+</ol>
+
+<script src="https://unpkg.com/mermaid@11.12.0/dist/mermaid.min.js"></script>
+
+<pre class="mermaid">
+---
+config:
+  theme: 'neutral'
+  fontFamily: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  nodeSpacing: 20
+  rankSpacing: 25
+---
+sequenceDiagram
+    participant Browser
+    participant App as App server
+    participant Auth as Auth server
+    Browser-&gt;&gt;App: GET {app}/login-with
+    App-&gt;&gt;Browser: 302 redirect {auth}/oauth/authorize
+    Browser-&gt;&gt;Auth: GET {auth}/oauth/authorize
+    Auth-&gt;&gt;Browser: Login and permissions page
+    Browser-&gt;&gt;Auth: Log in and grant permission to app
+    Auth-&gt;&gt;Browser: 302 redirect {app}/callback?code=...
+    Browser-&gt;&gt;App: GET {app}/callback?code=...
+    App-&gt;&gt;Auth: POST code to {auth}/oauth/token
+    Auth-&gt;&gt;App: Access token
+    App-&gt;Auth: API calls with access token
+    App-&gt;&gt;Browser: Logged in with auth server
+</pre>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">require</span> <span class="s2">"sinatra/base"</span>
+<span class="nb">require</span> <span class="s2">"oauth2"</span>
+
+<span class="n">enable</span> <span class="ss">:sessions</span>
+
+<span class="n">client</span> <span class="o">=</span> <span class="no">OAuth2</span><span class="o">::</span><span class="no">Client</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span>
+  <span class="no">ENV</span><span class="p">[</span><span class="s2">"OAUTH_CLIENT_ID"</span><span class="p">],</span> 
+  <span class="no">ENV</span><span class="p">[</span><span class="s2">"OAUTH_CLIENT_SECRET"</span><span class="p">],</span> 
+  <span class="ss">site: </span><span class="no">ENV</span><span class="p">[</span><span class="s2">"OAUTH_SERVICE_URL"</span><span class="p">],</span>
+  <span class="ss">authorize_url: </span><span class="s2">"oauth/authorize"</span><span class="p">,</span> <span class="c1"># relative to service URL</span>
+  <span class="ss">token_url: </span><span class="s2">"oauth/token"</span><span class="p">,</span>         <span class="c1"># relative to service URL</span>
+  <span class="ss">redirect_uri: </span><span class="no">ENV</span><span class="p">[</span><span class="s2">"APP_BASE_URL"</span><span class="p">]</span> <span class="o">+</span> <span class="s2">"/callback"</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">get</span> <span class="s2">"/"</span> <span class="k">do</span>
+  <span class="k">if</span> <span class="n">session</span><span class="p">[</span><span class="ss">:logged_in</span><span class="p">]</span>
+    <span class="s2">"&lt;a href=/logout&gt;log out&lt;/a&gt;"</span>
+  <span class="k">else</span>
+    <span class="s2">"&lt;a href=/login-with&gt;login with&lt;/a&gt;"</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="n">get</span> <span class="s2">"/login-with"</span> <span class="k">do</span>
+  <span class="n">redirect</span> <span class="n">client</span><span class="p">.</span><span class="nf">auth_code</span><span class="p">.</span><span class="nf">authorize_url</span>
+<span class="k">end</span>
+
+<span class="c1"># Authorization server redirects here</span>
+<span class="n">get</span> <span class="s2">"/callback"</span> <span class="k">do</span>
+  <span class="n">auth_code</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s2">"code"</span><span class="p">]</span>
+  <span class="n">access</span> <span class="o">=</span> <span class="n">client</span><span class="p">.</span><span class="nf">auth_code</span><span class="p">.</span><span class="nf">get_token</span><span class="p">(</span><span class="n">auth_code</span><span class="p">)</span>
+  
+  <span class="c1"># make API calls with `access.token` or use `access.get/post` helpers</span>
+  <span class="n">session</span><span class="p">[</span><span class="ss">:logged_in</span><span class="p">]</span> <span class="o">=</span> <span class="kp">true</span>
+
+  <span class="n">redirect</span> <span class="n">back</span>
+<span class="k">end</span>
+
+<span class="n">get</span> <span class="s2">"/logout"</span> <span class="k">do</span>
+  <span class="n">session</span><span class="p">.</span><span class="nf">clear</span>
+  <span class="n">redirect</span> <span class="n">back</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<h2 id="protecting-against-redirect-csrf-with-state">Protecting against redirect CSRF with <code class="language-plaintext highlighter-rouge">state</code></h2>
+
+<p>Because the authorization code is passed as a query parameter, there’s a possibility of a <a href="https://www.rfc-editor.org/rfc/rfc6819#section-4.4.1.8">cross site request forgery (CSRF) attack</a>. For example, the victim could click a link to the app server redirect URI but with an attacker’s authorization code and be logged in with a different account.</p>
+
+<p>To prevent this, we can generate a non-guessable “state” value and save it to the user’s local session cookies. Then we pass it along in a <code class="language-plaintext highlighter-rouge">state</code> parameter to the authorization server’s authorization endpoint.</p>
+
+<p>OAuth specifies query parameters must be passed along, so we verify that it matches the <code class="language-plaintext highlighter-rouge">state</code> on the session when redirected to our app server’s <code class="language-plaintext highlighter-rouge">redirect_uri</code>.</p>
+
+<p>This StackExchange <a href="https://security.stackexchange.com/a/278235/241664">answer from Andy</a> does a good job explaining the attack and mitigation.</p>
+
+<h2 id="protecting-against-authorization-code-theft-with-pkce">Protecting against authorization code theft with PKCE</h2>
+
+<p>Proof Key for Code Exchange, or PKCE (“pixy”), protects against authorization code theft and is required for OAuth 2.1. It verifies that the origin of the OAuth request is the same that uses the authorization code.</p>
+
+<p>To do PKCE, the app generates an unguessable code verifier, and a code challenge which is the BASE64, URL-encoded SHA-256 hash of the verifier.</p>
+
+<p>These are passed in <code class="language-plaintext highlighter-rouge">code_challenge</code> to the authorization endpoint and <code class="language-plaintext highlighter-rouge">code_verifier</code> to the token endpoint. The <code class="language-plaintext highlighter-rouge">code_challenge_method</code> must also be passed as <code class="language-plaintext highlighter-rouge">S256</code>.</p>
+
+<p>The authorization server will verify that the code challenge and code verifier SHA-256 match before granting the access token.</p>
+
+<p>PKCE is also used for browser-only or mobile-only apps <em>without</em> backends that can’t securely store OAuth client secrets. These are known as “public” <a href="https://oauth.net/2/client-types/">OAuth 2.0 client types</a>.</p>
+
+<h2 id="how-i-learned">How I learned</h2>
+
+<p>I learned this by using the Ruby <a href="https://github.com/ruby-oauth/oauth2">oauth2</a> gem and reading the <a href="https://github.com/ruby-oauth/oauth2?tab=readme-ov-file#common-flows-end-to-end">sample code</a> and the Recurse Center API OAuth documentation. I used <a href="https://sinatrarb.com/">Sinatra</a> for the backend.</p>
+
+<p>ChatGPT suggested <code class="language-plaintext highlighter-rouge">state</code> and PKCE, which lead me to read more. PKCE is described <a href="https://blog.postman.com/what-is-pkce/">here</a>.</p>
+
+<p>When writing this post, I also found Aaron Parecki’s <a href="https://aaronparecki.com/oauth-2-simplified/">OAuth 2 Simplified blog post</a> to be very clear yet concise. He also publishes a longer and more comprehensive <a href="https://www.o#{auth}/">microsite</a>, but I rather like the blog version.</p>
+
+<p><a href="https://www.rfc-editor.org/rfc/rfc6819#section-3.6">RFC 6819</a> discusses security considerations of OAuth 2.0. When researching for this post, I referenced the RFCs, linked <a href="https://oauth.net/">here</a> (also due to Aaron Parecki).</p>
+
+  </div>
+
+</article>
+
+  </main>
+</body>
+</html>
