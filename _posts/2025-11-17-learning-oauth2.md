@@ -7,7 +7,9 @@ Over the weekend, I learned how to integrate a client app with OAuth 2.0 to add 
 
 ## Basic flow for a web app with a backend
 
-You have your app server, the OAuth client, and the service you want to log in with, the authorization server.
+You have your app server as the OAuth client, and an authorization server you want to login with.
+
+The flow works as follows:
 
 1. You register your app server and its redirect URI with the authorization server, and are given a client ID and client secret.
 

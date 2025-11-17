@@ -27,7 +27,9 @@
 
 <h2 id="basic-flow-for-a-web-app-with-a-backend">Basic flow for a web app with a backend</h2>
 
-<p>You have your app server, the OAuth client, and the service you want to log in with, the authorization server.</p>
+<p>You have your app server as the OAuth client, and an authorization server you want to login with.</p>
+
+<p>The flow works as follows:</p>
 
 <ol>
   <li>
@@ -135,15 +137,17 @@ sequenceDiagram
 
 <p>These are passed in <code class="language-plaintext highlighter-rouge">code_challenge</code> to the authorization endpoint and <code class="language-plaintext highlighter-rouge">code_verifier</code> to the token endpoint. The <code class="language-plaintext highlighter-rouge">code_challenge_method</code> must also be passed as <code class="language-plaintext highlighter-rouge">S256</code>.</p>
 
-<p>The authorization server will verify that the code challenge and code verifier SHA-256 match before granting the access token.</p>
+<p>If the authorization server implements PKCE, it will verify that the code challenge and code verifier SHA-256 match before granting the access token.</p>
 
 <p>PKCE is also used for browser-only or mobile-only apps <em>without</em> backends that can’t securely store OAuth client secrets. These are known as “public” <a href="https://oauth.net/2/client-types/">OAuth 2.0 client types</a>.</p>
+
+<p>PKCE is described in detail <a href="https://blog.postman.com/what-is-pkce/">here</a>.</p>
 
 <h2 id="how-i-learned">How I learned</h2>
 
 <p>I learned this by using the Ruby <a href="https://github.com/ruby-oauth/oauth2">oauth2</a> gem and reading the <a href="https://github.com/ruby-oauth/oauth2?tab=readme-ov-file#common-flows-end-to-end">sample code</a> and the Recurse Center API OAuth documentation. I used <a href="https://sinatrarb.com/">Sinatra</a> for the backend.</p>
 
-<p>ChatGPT suggested <code class="language-plaintext highlighter-rouge">state</code> and PKCE, which lead me to read more. PKCE is described <a href="https://blog.postman.com/what-is-pkce/">here</a>.</p>
+<p>ChatGPT suggested <code class="language-plaintext highlighter-rouge">state</code> and PKCE, which lead me to read more.</p>
 
 <p>When writing this post, I also found Aaron Parecki’s <a href="https://aaronparecki.com/oauth-2-simplified/">OAuth 2 Simplified blog post</a> to be very clear yet concise. He also publishes a longer and more comprehensive <a href="https://www.o#{auth}/">microsite</a>, but I rather like the blog version.</p>
 
