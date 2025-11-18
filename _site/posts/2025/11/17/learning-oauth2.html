@@ -76,10 +76,16 @@ sequenceDiagram
     App-&gt;&gt;Browser: Logged in with auth server
 </pre>
 
-<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">require</span> <span class="s2">"sinatra/base"</span>
+<p>Here’s the entire client flow in Ruby:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">require</span> <span class="s2">"sinatra"</span>
 <span class="nb">require</span> <span class="s2">"oauth2"</span>
 
 <span class="n">enable</span> <span class="ss">:sessions</span>
+
+<span class="no">REDIRECT_PATH</span> <span class="o">=</span> <span class="s2">"/oauth2/redirect"</span>
+<span class="c1"># If testing locally, be consistent with localhost or 127.0.0.1 for sameSite cookie!</span>
+<span class="no">REDIRECT_URI</span> <span class="o">=</span> <span class="no">ENV</span><span class="p">[</span><span class="s2">"APP_BASE_URL"</span><span class="p">]</span> <span class="o">+</span> <span class="no">REDIRECT_PATH</span>
 
 <span class="n">client</span> <span class="o">=</span> <span class="no">OAuth2</span><span class="o">::</span><span class="no">Client</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span>
   <span class="no">ENV</span><span class="p">[</span><span class="s2">"OAUTH_CLIENT_ID"</span><span class="p">],</span> 
@@ -87,11 +93,12 @@ sequenceDiagram
   <span class="ss">site: </span><span class="no">ENV</span><span class="p">[</span><span class="s2">"OAUTH_SERVICE_URL"</span><span class="p">],</span>
   <span class="ss">authorize_url: </span><span class="s2">"oauth/authorize"</span><span class="p">,</span> <span class="c1"># relative to service URL</span>
   <span class="ss">token_url: </span><span class="s2">"oauth/token"</span><span class="p">,</span>         <span class="c1"># relative to service URL</span>
-  <span class="ss">redirect_uri: </span><span class="no">ENV</span><span class="p">[</span><span class="s2">"APP_BASE_URL"</span><span class="p">]</span> <span class="o">+</span> <span class="s2">"/callback"</span><span class="p">,</span>
+  <span class="ss">redirect_uri: </span><span class="no">REDIRECT_URI</span><span class="p">,</span>
 <span class="p">)</span>
 
 <span class="n">get</span> <span class="s2">"/"</span> <span class="k">do</span>
-  <span class="k">if</span> <span class="n">session</span><span class="p">[</span><span class="ss">:logged_in</span><span class="p">]</span>
+  <span class="k">if</span> <span class="n">session</span><span class="p">[</span><span class="ss">:access_token</span><span class="p">]</span>
+    <span class="s2">"&lt;p&gt;Token: </span><span class="si">#{</span><span class="n">session</span><span class="p">[</span><span class="ss">:access_token</span><span class="p">]</span><span class="si">}</span><span class="s2">&lt;/p&gt;"</span> <span class="o">+</span> <span class="p">\</span>
     <span class="s2">"&lt;a href=/logout&gt;log out&lt;/a&gt;"</span>
   <span class="k">else</span>
     <span class="s2">"&lt;a href=/login-with&gt;login with&lt;/a&gt;"</span>
@@ -103,12 +110,12 @@ sequenceDiagram
 <span class="k">end</span>
 
 <span class="c1"># Authorization server redirects here</span>
-<span class="n">get</span> <span class="s2">"/callback"</span> <span class="k">do</span>
+<span class="n">get</span> <span class="no">REDIRECT_PATH</span> <span class="k">do</span>
   <span class="n">auth_code</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s2">"code"</span><span class="p">]</span>
-  <span class="n">access</span> <span class="o">=</span> <span class="n">client</span><span class="p">.</span><span class="nf">auth_code</span><span class="p">.</span><span class="nf">get_token</span><span class="p">(</span><span class="n">auth_code</span><span class="p">)</span>
+  <span class="n">access</span> <span class="o">=</span> <span class="n">client</span><span class="p">.</span><span class="nf">auth_code</span><span class="p">.</span><span class="nf">get_token</span><span class="p">(</span><span class="n">auth_code</span><span class="p">,</span> <span class="ss">redirect_uri: </span><span class="no">REDIRECT_URI</span><span class="p">)</span>
   
   <span class="c1"># make API calls with `access.token` or use `access.get/post` helpers</span>
-  <span class="n">session</span><span class="p">[</span><span class="ss">:logged_in</span><span class="p">]</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="n">session</span><span class="p">[</span><span class="ss">:access_token</span><span class="p">]</span> <span class="o">=</span> <span class="n">access</span><span class="p">.</span><span class="nf">token</span>
 
   <span class="n">redirect</span> <span class="n">back</span>
 <span class="k">end</span>
@@ -142,6 +149,10 @@ sequenceDiagram
 <p>PKCE is also used for browser-only or mobile-only apps <em>without</em> backends that can’t securely store OAuth client secrets. These are known as “public” <a href="https://oauth.net/2/client-types/">OAuth 2.0 client types</a>.</p>
 
 <p>PKCE is described in detail <a href="https://blog.postman.com/what-is-pkce/">here</a>.</p>
+
+<h2 id="other-things">Other things</h2>
+
+<p>Access tokens are short lived, so there are also refresh tokens.</p>
 
 <h2 id="how-i-learned">How I learned</h2>
 

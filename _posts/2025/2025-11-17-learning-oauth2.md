@@ -47,6 +47,8 @@ sequenceDiagram
     App->>Browser: Logged in with auth server
 </pre>
 
+Here's the entire client flow in Ruby:
+
 ```ruby
 require "sinatra"
 require "oauth2"
