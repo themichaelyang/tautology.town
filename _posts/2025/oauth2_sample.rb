@@ -4,7 +4,7 @@ require "oauth2"
 enable :sessions
 
 REDIRECT_PATH = "/oauth2/redirect"
-# If testing locally, take care to be consistent with localhost or 127.0.0.1 because of sameSite cookies!
+# If testing locally, be consistent with localhost or 127.0.0.1 for sameSite cookie!
 REDIRECT_URI = ENV["APP_BASE_URL"] + REDIRECT_PATH
 
 client = OAuth2::Client.new(
