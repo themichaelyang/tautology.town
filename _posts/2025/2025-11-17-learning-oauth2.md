@@ -48,10 +48,14 @@ sequenceDiagram
 </pre>
 
 ```ruby
-require "sinatra/base"
+require "sinatra"
 require "oauth2"
 
 enable :sessions
+
+REDIRECT_PATH = "/oauth2/redirect"
+# If testing locally, take care to be consistent with localhost or 127.0.0.1 because of sameSite cookies!
+REDIRECT_URI = ENV["APP_BASE_URL"] + REDIRECT_PATH
 
 client = OAuth2::Client.new(
   ENV["OAUTH_CLIENT_ID"], 
@@ -59,11 +63,12 @@ client = OAuth2::Client.new(
   site: ENV["OAUTH_SERVICE_URL"],
   authorize_url: "oauth/authorize", # relative to service URL
   token_url: "oauth/token",         # relative to service URL
-  redirect_uri: ENV["APP_BASE_URL"] + "/callback",
+  redirect_uri: REDIRECT_URI,
 )
 
 get "/" do
-  if session[:logged_in]
+  if session[:access_token]
+    "<p>Token: #{session[:access_token]}</p>" + \
     "<a href=/logout>log out</a>"
   else
     "<a href=/login-with>login with</a>"
@@ -75,12 +80,12 @@ get "/login-with" do
 end
 
 # Authorization server redirects here
-get "/callback" do
+get REDIRECT_PATH do
   auth_code = params["code"]
-  access = client.auth_code.get_token(auth_code)
+  access = client.auth_code.get_token(auth_code, redirect_uri: REDIRECT_URI)
   
   # make API calls with `access.token` or use `access.get/post` helpers
-  session[:logged_in] = true
+  session[:access_token] = access.token
 
   redirect back
 end
@@ -114,6 +119,10 @@ If the authorization server implements PKCE, it will verify that the code challe
 PKCE is also used for browser-only or mobile-only apps _without_ backends that can't securely store OAuth client secrets. These are known as "public" [OAuth 2.0 client types](https://oauth.net/2/client-types/).
 
 PKCE is described in detail [here](https://blog.postman.com/what-is-pkce/).
+
+## Other things
+
+Access tokens are short lived, so there are also refresh tokens.
 
 ## How I learned
 
