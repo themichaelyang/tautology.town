@@ -112,7 +112,7 @@ blockquote {
 pre,
 code {
   font-size: 0.9em;
-  border: 1px solid darken($solarized-base3, 20%);
+  border: 1px solid color.adjust($solarized-base3, $lightness: -20%);
   border-radius: 3px;
   background-color: $solarized-base3;
   color: $solarized-base01;
