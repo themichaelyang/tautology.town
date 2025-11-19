@@ -47,7 +47,7 @@ sequenceDiagram
     App->>Browser: Logged in with auth server
 </pre>
 
-Here's the entire client flow in Ruby:
+Here's the entire client flow in Ruby, with the `oauth2` and Sinatra gems:
 
 ```ruby
 require "sinatra"
@@ -107,6 +107,28 @@ To prevent this, we can generate a non-guessable "state" value and save it to th
 OAuth specifies query parameters must be passed along, so we verify that it matches the `state` on the session when redirected to our app server's `redirect_uri`. 
 
 This StackExchange [answer from Andy](https://security.stackexchange.com/a/278235/241664) does a good job explaining the attack and mitigation.
+
+Here's the updated code:
+
+```ruby
+get "/login" do
+  oauth2_state = SecureRandom.hex(32)
+  session[:oauth2_state] = oauth2_state
+  redirect client.auth_code.authorize_url(state: oauth2_state)
+end
+
+get REDIRECT_PATH do 
+  halt 400, "Invalid OAuth2 state" unless params[:state] == session[:oauth2_state]
+
+  auth_code = params["code"]
+  access = client.auth_code.get_token(auth_code, redirect_uri: REDIRECT_URI)
+  
+  # make API calls with `access.token` or use `access.get/post` helpers
+  session[:access_token] = access.token
+
+  redirect back
+end
+```
 
 ## Protecting against authorization code theft with PKCE
 
