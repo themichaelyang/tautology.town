@@ -122,9 +122,13 @@ PKCE is also used for browser-only or mobile-only apps _without_ backends that c
 
 PKCE is described in detail [here](https://blog.postman.com/what-is-pkce/).
 
-## Other things
+## Refresh tokens
 
-Access tokens are short lived, so there are also refresh tokens.
+Access tokens are short lived, so there are also long lived "refresh tokens", typically granted new every refresh. In theory, if the access token is stolen, the blast radius is limited, although I would imagine an attack that steals the access token would also get the refresh token. 
+
+If the refresh token is stolen, when your app eventually refreshes using the original refresh token (maybe you do this automatically), then the authorization server can detect reuse and invalidate all associated access and refresh tokens.
+
+---
 
 ## How I learned
 

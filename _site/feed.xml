@@ -6,9 +6,34 @@
 </description>
     <link>http://localhost:4000/</link>
     <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Tue, 18 Nov 2025 02:39:40 -0800</pubDate>
-    <lastBuildDate>Tue, 18 Nov 2025 02:39:40 -0800</lastBuildDate>
+    <pubDate>Tue, 18 Nov 2025 16:08:26 -0800</pubDate>
+    <lastBuildDate>Tue, 18 Nov 2025 16:08:26 -0800</lastBuildDate>
     <generator>Jekyll v4.3.4</generator>
+    
+      <item>
+        <title>Learning about: signed cookies</title>
+        <description>&lt;p&gt;While I was &lt;a href=&quot;/posts/2025/11/17/learning-oauth2.html&quot;&gt;implementing OAuth 2.0 authorization&lt;/a&gt;, I learned about &lt;a href=&quot;https://sinatrarb.com/intro.html#session-secret-security&quot;&gt;Sinatra’s signed cookie sessions&lt;/a&gt;. Sinatra session data is stored in an HMAC-SHA256 signed user cookie and is only accessible if the signature is verified. Data is set and fetched on the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;session&lt;/code&gt; hash. The secret is set via &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;set :session_secret&lt;/code&gt;, or is randomly generated at startup if not provided.&lt;/p&gt;
+
+&lt;p&gt;Sinatra sessions use the &lt;a href=&quot;https://github.com/sinatra/sinatra/blob/4062e3669c7dff0f59ca1d0b0bfa67f7eef444af/sinatra.gemspec#L53&quot;&gt;v2&lt;/a&gt; &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Rack::Session&lt;/code&gt; &lt;a href=&quot;https://en.wikipedia.org/wiki/Rack_(web_server_interface)&quot;&gt;middleware&lt;/a&gt;. &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Rack::Session&lt;/code&gt; v3 uses &lt;a href=&quot;https://github.com/rack/rack-session/blob/dadcfe60f193e8d8540bec6b95ca75bed8e5fd7e/lib/rack/session/encryptor.rb#L166C32-L166C43&quot;&gt;AES 256 CTR&lt;/a&gt; encryption.&lt;/p&gt;
+
+&lt;p&gt;Signed cookies are the same idea as &lt;a href=&quot;https://www.jwt.io/introduction#what-is-json-web-token&quot;&gt;JWTs&lt;/a&gt; (which also commonly use HMAC signatures), in that you can trust signed state stored with the user. This can be useful for lightweight stateless sessions on OAuth login apps, although &lt;a href=&quot;https://ianlondon.github.io/posts/dont-use-jwts-for-sessions/&quot;&gt;most apps should use regular database-backed session cookies&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;This security measure is also in place because &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Rack::Session&lt;/code&gt; treats session cookie data as trusted input. &lt;a href=&quot;https://martinfowler.com/articles/session-secret.html&quot;&gt;This article&lt;/a&gt; describes an interesting remote code execution (RCE) attack against a Rack app with a weak session secret, exploiting the fact that &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Rack::Session&lt;/code&gt; can deserialize Ruby objects.&lt;/p&gt;
+
+&lt;p&gt;Signed (or encrypted) cookies are a standard feature in server-side web frameworks. They were included in every framework I checked: &lt;a href=&quot;https://api.rubyonrails.org/classes/ActionDispatch/Session/CookieStore.html&quot;&gt;Rails&lt;/a&gt;, &lt;a href=&quot;https://github.com/expressjs/cookie-parser&quot;&gt;Express.js&lt;/a&gt;, &lt;a href=&quot;https://docs.djangoproject.com/en/5.2/topics/http/sessions/#using-cookie-based-sessions&quot;&gt;Django&lt;/a&gt;, and &lt;a href=&quot;https://hexdocs.pm/plug/Plug.Session.COOKIE.html&quot;&gt;Phoenix/Plug&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Learning about signed/encrypted cookies, I found it odd how synonymous JWTs have become widespread instead of being regarded as an implementation detail of the web framework. A signed cookie can be implemented with a JWT in a cookie, but using them directly can be &lt;a href=&quot;https://semgrep.dev/blog/2020/hardcoded-secrets-unverified-tokens-and-other-common-jwt-mistakes/&quot;&gt;prone to mistakes&lt;/a&gt;. My hunch is that JWTs became popular because frontend frameworks like React leave these to the application developer.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;For this topic, I Googled, read blog posts and framework docs, and looked over &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Rack::Session&lt;/code&gt; and Sinatra source code.&lt;/p&gt;
+</description>
+        <pubDate>Tue, 18 Nov 2025 00:00:00 -0800</pubDate>
+        <link>http://localhost:4000/posts/2025/11/18/signed-cookies.html</link>
+        <guid isPermaLink="true">http://localhost:4000/posts/2025/11/18/signed-cookies.html</guid>
+        
+        
+      </item>
     
       <item>
         <title>Learning about: OAuth 2.0 authorization code grants</title>
@@ -139,9 +164,13 @@ sequenceDiagram
 
 &lt;p&gt;PKCE is described in detail &lt;a href=&quot;https://blog.postman.com/what-is-pkce/&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;
 
-&lt;h2 id=&quot;other-things&quot;&gt;Other things&lt;/h2&gt;
+&lt;h2 id=&quot;refresh-tokens&quot;&gt;Refresh tokens&lt;/h2&gt;
 
-&lt;p&gt;Access tokens are short lived, so there are also refresh tokens.&lt;/p&gt;
+&lt;p&gt;Access tokens are short lived, so there are also long lived “refresh tokens”, typically granted new every refresh. In theory, if the access token is stolen, the blast radius is limited, although I would imagine an attack that steals the access token would also get the refresh token.&lt;/p&gt;
+
+&lt;p&gt;If the refresh token is stolen, when your app eventually refreshes using the original refresh token (maybe you do this automatically), then the authorization server can detect reuse and invalidate all associated access and refresh tokens.&lt;/p&gt;
+
+&lt;hr /&gt;
 
 &lt;h2 id=&quot;how-i-learned&quot;&gt;How I learned&lt;/h2&gt;
 

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title></title>
+  <meta name="description" content="">
+  <link rel="stylesheet" href="/stylesheets/style.css">
+</head>
+<body>
+  <nav class="navbar">
+    <ul class="navbar__inner">
+      <li class="navbar__item"><a class="navbar__text" href="/">Home</a></li>
+      <li class="navbar__item"><a class="navbar__text" href="/about">About</a></li>
+    </ul>
+  </nav>
+  <main>
+    <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">Learning about: signed cookies</h1>
+    <p class="post-meta"><time datetime="2025-11-18T00:00:00-08:00" itemprop="datePublished">Nov 18, 2025</time></p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    <p>While I was <a href="/posts/2025/11/17/learning-oauth2.html">implementing OAuth 2.0 authorization</a>, I learned about <a href="https://sinatrarb.com/intro.html#session-secret-security">Sinatra’s signed cookie sessions</a>. Sinatra session data is stored in an HMAC-SHA256 signed user cookie and is only accessible if the signature is verified. Data is set and fetched on the <code class="language-plaintext highlighter-rouge">session</code> hash. The secret is set via <code class="language-plaintext highlighter-rouge">set :session_secret</code>, or is randomly generated at startup if not provided.</p>
+
+<p>Sinatra sessions use the <a href="https://github.com/sinatra/sinatra/blob/4062e3669c7dff0f59ca1d0b0bfa67f7eef444af/sinatra.gemspec#L53">v2</a> <code class="language-plaintext highlighter-rouge">Rack::Session</code> <a href="https://en.wikipedia.org/wiki/Rack_(web_server_interface)">middleware</a>. <code class="language-plaintext highlighter-rouge">Rack::Session</code> v3 uses <a href="https://github.com/rack/rack-session/blob/dadcfe60f193e8d8540bec6b95ca75bed8e5fd7e/lib/rack/session/encryptor.rb#L166C32-L166C43">AES 256 CTR</a> encryption.</p>
+
+<p>Signed cookies are the same idea as <a href="https://www.jwt.io/introduction#what-is-json-web-token">JWTs</a> (which also commonly use HMAC signatures), in that you can trust signed state stored with the user. This can be useful for lightweight stateless sessions on OAuth login apps, although <a href="https://ianlondon.github.io/posts/dont-use-jwts-for-sessions/">most apps should use regular database-backed session cookies</a>.</p>
+
+<p>This security measure is also in place because <code class="language-plaintext highlighter-rouge">Rack::Session</code> treats session cookie data as trusted input. <a href="https://martinfowler.com/articles/session-secret.html">This article</a> describes an interesting remote code execution (RCE) attack against a Rack app with a weak session secret, exploiting the fact that <code class="language-plaintext highlighter-rouge">Rack::Session</code> can deserialize Ruby objects.</p>
+
+<p>Signed (or encrypted) cookies are a standard feature in server-side web frameworks. They were included in every framework I checked: <a href="https://api.rubyonrails.org/classes/ActionDispatch/Session/CookieStore.html">Rails</a>, <a href="https://github.com/expressjs/cookie-parser">Express.js</a>, <a href="https://docs.djangoproject.com/en/5.2/topics/http/sessions/#using-cookie-based-sessions">Django</a>, and <a href="https://hexdocs.pm/plug/Plug.Session.COOKIE.html">Phoenix/Plug</a>.</p>
+
+<p>Learning about signed/encrypted cookies, I found it odd how synonymous JWTs have become widespread instead of being regarded as an implementation detail of the web framework. A signed cookie can be implemented with a JWT in a cookie, but using them directly can be <a href="https://semgrep.dev/blog/2020/hardcoded-secrets-unverified-tokens-and-other-common-jwt-mistakes/">prone to mistakes</a>. My hunch is that JWTs became popular because frontend frameworks like React leave these to the application developer.</p>
+
+<hr />
+
+<p>For this topic, I Googled, read blog posts and framework docs, and looked over <code class="language-plaintext highlighter-rouge">Rack::Session</code> and Sinatra source code.</p>
+
+  </div>
+
+</article>
+
+  </main>
+  <footer>
+    <p id="footer-blurb"><i>see you 'round<br>tautology.town</i></p><img id="footer-frog" src="/assets/frog.svg" />
+  </footer>
+</body>
+</html>

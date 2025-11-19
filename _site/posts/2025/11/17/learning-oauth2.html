@@ -150,9 +150,13 @@ sequenceDiagram
 
 <p>PKCE is described in detail <a href="https://blog.postman.com/what-is-pkce/">here</a>.</p>
 
-<h2 id="other-things">Other things</h2>
+<h2 id="refresh-tokens">Refresh tokens</h2>
 
-<p>Access tokens are short lived, so there are also refresh tokens.</p>
+<p>Access tokens are short lived, so there are also long lived “refresh tokens”, typically granted new every refresh. In theory, if the access token is stolen, the blast radius is limited, although I would imagine an attack that steals the access token would also get the refresh token.</p>
+
+<p>If the refresh token is stolen, when your app eventually refreshes using the original refresh token (maybe you do this automatically), then the authorization server can detect reuse and invalidate all associated access and refresh tokens.</p>
+
+<hr />
 
 <h2 id="how-i-learned">How I learned</h2>
 
