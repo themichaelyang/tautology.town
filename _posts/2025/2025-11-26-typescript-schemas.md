@@ -1,14 +1,14 @@
 ---
 layout: post
-title: "Typescript schema definitions"
+title: "Typing Typescript schemas"
 ---
 
 Typescript has no runtime for types, so something that comes up frequently is getting a schema defined 
 in runtime code to produce useful static types at compile time.
 
-Libraries manage just fine, although each looks slightly different.
+Many libraries manage to do this, although they each look slightly different.
 
-[Zod](https://zod.dev/) is a classic example for validating objects: 
+[Zod](https://zod.dev/) is a classic example for validating objects, using schemas with Zod-defined types: 
 
 ```typescript
 import * as z from "zod"
@@ -23,9 +23,17 @@ type UserType = z.infer<typeof User>
 //   email: string,
 //   age: number | undefined,
 // }
+
+let result = User.safeParse({ email: 'example@example.com' })
+
+if (!result.success) {
+  result.error   // ZodError instance
+} else {
+  result.data    // UserType
+}
 ```
 
-[Mongoose](https://mongoosejs.com/docs/typescript/schemas.html) uses [primitive type wrapper classes](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Data_structures#primitive_values) to declare types for MongoDB database schemas:
+[Mongoose](https://mongoosejs.com/docs/typescript/schemas.html) uses [primitive type wrapper classes](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Data_structures#primitive_values) to declare types for its MongoDB database schemas:
 
 ```typescript
 import { Schema, model } from 'mongoose'
@@ -45,13 +53,15 @@ const user = new UserModel({
 // }
 ```
 
-This is extrodinarily useful and convenient, but involves a bit of advanced Typescript to implement.
+These are just two examples, and there are many others, like [Arktype](https://arktype.io/). But you can already imagine many more use cases like API definitions, binary codec definitions, automatic [RPCs](https://en.wikipedia.org/wiki/Remote_procedure_call), etc.
 
-Luckily for you, I've learned how to do this. To demonstrate, let's make a simple validation library like Zod.
+Perhaps you'd like to implement your own. Doing this is extrodinarily useful and convenient, but involves a bit of advanced Typescript to implement.
+
+Luckily for you, I've learned how to do this. To demonstrate, let's make a simple validation library similar to our examples. I'll assume you have working knowledge of [basic Typescript](https://www.typescriptlang.org/docs/handbook/typescript-in-5-minutes.html), and maybe even seen [a generic or two](https://www.typescriptlang.org/docs/handbook/2/generics.html).
 
 ## Making of a typed validator
 
-Let's start by seeing how it's used:
+Let's start by seeing how it will be used:
 
 ```typescript
 let userValidator = new Validator({
@@ -81,9 +91,9 @@ As you can see, the validator returns either the typed validated object or retur
 
 If you want preview the finished code, [⏩ click here skip ahead to the end](#all-together-now).
 
-### Validator literal type with `const` and generics
+## Validator literal type with `const` and generics
 
-Let's start with a type for the object literal defining a single validator field, with `required` and `kind` properties. 
+Let's start with a type for the object literal defining a single validator field with `required` and `kind` properties. 
 
 ```typescript
 type ValidatorFieldDef = {
@@ -139,7 +149,7 @@ let example = new Validator({
 type ExampleLiteralType = typeof example.literal 
 ```
 
-### Field validation interface
+## Field validation interface
 
 Next, we define a `ValidatorFieldKind` interface with a generic for the validated type, and a `validate` method that returns either the validated type or an error. We update `kind` to use this definition. `ValidatorFieldDef` shares this by declaring its own generic variable and passing it through. Lifting the variable in this way will help us extract the type from `ValidatorFieldDef` later. 
 
@@ -258,14 +268,14 @@ type ValidatorLiteral = {
 }
 ```
 
-### Validated object type
+## Validated object type
 
 Finally, the magic. We use a [*mapped type*](https://www.typescriptlang.org/docs/handbook/2/mapped-types.html) with a [conditional](https://www.typescriptlang.org/docs/handbook/2/mapped-types.html#further-exploration).
 
 ```typescript
 type ValidatorLiteralToObject<C> = {
   -readonly [K in keyof C]: C[K] extends ValidatorFieldDef<infer R, infer D> ? 
-    (R extends true ? D : D | null )
+    (R extends true ? D : D | null)
     : never
 }
 ```
@@ -343,7 +353,7 @@ type ExampleObjectType = ValidatorLiteralToObject<typeof example.literal>
 
 Let's break down what's happening in `ValidatorLiteralToObject`.
 
-#### Mapped types
+### Mapped types
 
 First, we use a mapped type. For `ValidatorLiteralToObject<typeof example.literal>`, `C` is `typeof example.literal`,
 `keyof C` is `"email" | "age"`. `K in keyof C` iterates each key in the union, so `K` is `email`, then `age`.
@@ -415,7 +425,7 @@ type ExampleNestedMutable = MakeNestedMutable<typeof example.literal>
 // }
 ```
 
-#### Conditional types and the `infer` keyword
+### Conditional types and the `infer` keyword
 
 Next, we add [conditional types](https://www.typescriptlang.org/docs/handbook/2/conditional-types.html). `ValidatorLiteralToObject` makes use of two conditionals, one nested in the other.
 
@@ -488,7 +498,9 @@ type UnwrappedFieldExampleType = UnwrapInnerType<typeof fieldExample>
 
 Now you see why we needed to add a generic to `ValidatorFieldDef` that matched `ValidatorFieldKind`, so Typescript can `infer` the return type of `.kind.validate()`.
 
-### Type predicates for narrowing
+Putting it all together, we `ValidatorLiteralToObject` is mapping each key `K` of the validator literal `C` to a nested conditional type that `infer`s the return value of `C[K].kind.validate()` as `D` and adds `| null` if `required` is `false`.
+
+## Type predicates for narrowing
 
 Let's also add [type predicates](https://www.typescriptlang.org/docs/handbook/2/narrowing.html#using-type-predicates) to preserve our typing but narrow it if an object passes or fails validation.
 
@@ -502,7 +514,7 @@ function isValid<T>(obj: T | Error[]): obj is T {
 }
 ```
 
-### All together now
+## All together now
 
 Hope you found this helpful. I myself learned a lot about Typescript writing this!
 
@@ -634,7 +646,7 @@ type ValidUser = Expand<ReturnType<typeof userValidator.validate>>
 // type ValidUser = Error[] | { email: string, age: number | null }
 ```
 
-### And the illustrative examples
+## And the illustrative examples
 
 For your copying pleasure.
 
