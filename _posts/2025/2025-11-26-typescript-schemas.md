@@ -498,7 +498,7 @@ type UnwrappedFieldExampleType = UnwrapInnerType<typeof fieldExample>
 
 Now you see why we needed to add a generic to `ValidatorFieldDef` that matched `ValidatorFieldKind`, so Typescript can `infer` the return type of `.kind.validate()`.
 
-Putting it all together, we `ValidatorLiteralToObject` is mapping each key `K` of the validator literal `C` to a nested conditional type that `infer`s the return value of `C[K].kind.validate()` as `D` and adds `| null` if `required` is `false`.
+Putting it all together: `ValidatorLiteralToObject` is mapping each key `K` of the validator literal `C` to a nested conditional type that `infer`s the return value of `C[K].kind.validate()` as `D` and adds `| null` if `required` is `false`.
 
 ## Type predicates for narrowing
 
