@@ -516,9 +516,11 @@ function isValid<T>(obj: T | Error[]): obj is T {
 
 ## All together now
 
-Hope you found this helpful. I myself learned a lot about Typescript writing this!
-
 Here's the final code, all in one place.
+
+As an exercise to the reader, how would we change this to allow nested validators? (hint: `validate()`)
+
+Hope you found this helpful. I myself learned a lot about Typescript writing this!
 
 Did you skip ahead? [⏮️ Click here](#making-of-a-typed-validator) to go back to the start.
 

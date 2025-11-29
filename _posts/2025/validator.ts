@@ -1,7 +1,7 @@
 /// <reference lib="esnext" />
 
 interface ValidatorFieldKind<D> {
-  validate(value: any): D | Error
+  validate(value: any): D | Error[]
 }
 
 type ValidatorFieldDef<R extends boolean, D> = {
@@ -18,7 +18,7 @@ class ValidInteger implements ValidatorFieldKind<number> {
     if (typeof value === 'number' && Number.isInteger(value)) {
       return value
     } else {
-      return new Error(`${value} is not an integer`)
+      return [new Error(`${value} is not an integer`)]
     }
   }
 }
@@ -28,7 +28,7 @@ class ValidEmail implements ValidatorFieldKind<string> {
     if (typeof value === 'string' && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
       return value
     } else {
-      return new Error(`${value} is not an email`)
+      return [new Error(`${value} is not an email`)]
     }
   }
 }
@@ -39,16 +39,20 @@ type ValidatorLiteralToObject<C> = {
     : never
 }
 
-class Validator<const T extends ValidatorLiteral> {
+class Validator<const T extends ValidatorLiteral> implements ValidatorFieldKind<ValidatorLiteralToObject<T>> {
   literal: T
 
   constructor(defn: T) {
     this.literal = defn
   }
 
-  validate(obj: Record<any, any>): ValidatorLiteralToObject<T> | Error[] {
+  validate(obj: any): ValidatorLiteralToObject<T> | Error[] {
     let errors: Error[] = []
     let copy: Record<any, any> = {} 
+
+    if (typeof obj !== 'object') {
+      return [new Error('not an object')]
+    }
 
     for (let key of Object.keys(this.literal)) {
       let field = this.literal[key]
@@ -58,8 +62,10 @@ class Validator<const T extends ValidatorLiteral> {
 
       if (key in obj) {
         let coerced = field.kind.validate(obj[key])
-        if (coerced instanceof Error) {
-          errors.push(new Error(`key ${key} has error: ${coerced.message}`))
+        if (hasErrors(coerced)) {
+          for (let error of coerced) {
+            errors.push(new Error(`key ${key} has error: ${error.message}`))
+          }
         } else {
           copy[key] = coerced
         }
