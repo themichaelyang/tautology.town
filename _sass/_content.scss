@@ -91,7 +91,7 @@ a {
   color: $link-color;
   text-decoration: none;
   // don't break up words in links or a url can look like it has a dash
-  white-space: nowrap;
+  hyphens: none;
 
   &:visited {
     color: $link-color;

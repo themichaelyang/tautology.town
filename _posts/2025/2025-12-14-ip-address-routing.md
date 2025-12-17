@@ -35,7 +35,7 @@ A routing table says "to reach the IPs in this range, the next IP in the path is
 When you send a packet, it's [passed from router to router](https://en.wikipedia.org/wiki/IP_routing#Routing_algorithm):
 
 1. When a packet arrives at a router, the router looks up its routing table for a prefix matching the destination IP address.
-2. The router fowards the packet to the "next hop" IP address for that prefix. I think the next hop IP address is usually the local IP interface to a connected router.
+2. The router forwards the packet to the "next hop" IP address for that prefix. I think the next hop IP address is usually the local IP interface to a connected router.
 4. The process repeats, until the destination is reached.
 
 On my home network, the ISP assigns me a public IP address. The process works the same in reverse when receiving a response, until a packet reaches my router via my public IP and my router forwards the packet to my computer somehow.
@@ -47,13 +47,13 @@ By design, the Internet is decentralized. The hop-by-hop nature of routing means
 A few things to notice:
 
 1. Autonomous Systems have full discretion with what they announce with BGP and could [lie about the ASN path](https://blog.apnic.net/2021/05/24/a-tool-to-detect-bgp-lies/).
-2. Routing information is propogated throughout the network.
+2. Routing information is propagated throughout the network.
 3. Any router along the routing path can [man-in-the-middle (MITM)](https://en.wikipedia.org/wiki/Man-in-the-middle_attack) a packet.
 4. Routers have discretion in deciding how to route a packet.
 
-Any rouge router along the path could respond or tamper with a packet. You place a lot of trust into your ISP! 
+Any rogue router along the path could respond or tamper with a packet. You place a lot of trust into your ISP! 
 
-The rouge router could have a fake shorter or more specific route advertised with BGP, leading to traffic being consistently routed to it. This is exactly what BGP hijacking is. On top of hacks, this happens at lot by accident (e.g. [route leaks](https://blog.apnic.net/2025/05/06/analysis-of-a-route-leak/)), causing some famous outages. 
+The rogue router could have a fake shorter or more specific route advertised with BGP, leading to traffic being consistently routed to it. This is exactly what BGP hijacking is. On top of hacks, this happens at lot by accident (e.g. [route leaks](https://blog.apnic.net/2025/05/06/analysis-of-a-route-leak/)), causing some famous outages. 
 
 It's a big enough problem that Cloudflare has a dedicated microsite: [isbgpsafeyet.com](https://isbgpsafeyet.com/). 
 
@@ -120,6 +120,6 @@ I looked up the ASNs associated with each IP by looking it up on [bgp.tools](htt
 - `192.168.226.131`: Not found anywhere, 192.168.0.0/16 is a private address space.
 - `23.192.228.84`: Overlapping Prefixes Detected, both under [AS20940](https://bgp.tools/prefix-selector?ip=23.192.228.84) (Akamai).
 
-For the unannounced ASNs, I assume these are part of the private network of DigitalOcean as the request finds its way out of the VPS network. I assume the private address spaces are related to that, and that Akamai and DigitalOcean are connected somewhere in an [Internet Exchange Point (IXP)](https://en.wikipedia.org/wiki/Internet_exchange_point) with physical links corresponding to the two private IP addresses.
+For the unannounced ASNs, I assume these are part of the private network of DigitalOcean as the request finds its way out of the VPS network. I assume the private address spaces are related to that, and that Akamai and DigitalOcean are connected somewhere in an [Internet Exchange Point (IXP)](https://en.wikipedia.org/wiki/Internet_exchange_point) with some internal infrastucture corresponding to the two private IP addresses.
 
 To learn more, you might like [this post](https://jvns.ca/blog/2021/10/05/tools-to-look-at-bgp-routes/) from Julia Evans.
