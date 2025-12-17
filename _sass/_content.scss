@@ -90,6 +90,8 @@ h4, h5, h6 {
 a {
   color: $link-color;
   text-decoration: none;
+  // don't break up words in links or a url can look like it has a dash
+  white-space: nowrap;
 
   &:visited {
     color: $link-color;

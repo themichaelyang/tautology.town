@@ -3,7 +3,7 @@ layout: post
 title: "Ruby's object model: eigenclasses, metaclasses, and more"
 ---
 
-*Or: a Class class class masterclass*
+*Or, a Class class masterclass.*
 
 One way or another, a famous question will cross every Rubyist's mind, probably many times: *what's an eigenclass?*
 
@@ -320,7 +320,7 @@ irb(main):010> A.singleton_class.instance_methods.include?(:on_the_class_singlet
 => true
 ```
 
-The class singleton class inherits from the singleton classes of its ancestors, which is how you can call class methods defined on a parent class on a child class. 
+The class singleton class always inherits from the singleton classes of its ancestors, which is how you can call class methods defined on a parent class on a child class. 
 
 ```ruby
 irb(main):001* class A
