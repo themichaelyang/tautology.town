@@ -12,6 +12,6 @@ Style guides suggest finding and removing tautologies from writing. I agree — 
 
 The catch with writing very little is that you don't get very good at writing. I want to write a lot, publish more, and get better.
 
-To err on the side of do, the tautology.town will inevitably be home to drafts, scraps and, of course, tautologies. 
+To err on the side of do, [tautology.town](https://tautology.town) will inevitably be home to drafts, scraps and, of course, tautologies. 
 
 And, I hope, some good stuff too.

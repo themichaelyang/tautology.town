@@ -1,21 +1,20 @@
 ---
 layout: post
-title: "Learning about: IP address routing"
+title: "Learning about IP address routing"
 ---
 
-What makes a destination IP address authoritative? 
+One question I had for a long time: What makes a destination IP address authoritative? 
 
-I know it's trivial to spoof an IP address as a sender, but you won't receive a response because it would be routed
-back to the spoofed address. This had me wondering:
+I know you can [spoof sending a message as a different IP address](https://www.cloudflare.com/learning/ddos/glossary/ip-spoofing/), but even if your ISP didn't prevent you, you wouldn't receive a response because it would be routed to the actual location of the address you spoofed. This had me wondering:
 
 - What prevents a destination IP address from being spoofed?
 - How do we know an IP address we connect to is legitimate?
 
 ## The short answer
 
-"Spoofing a destination IP address" is possible, and is known as *IP hijacking*. 
+The destination of an IP address is determined through decentralized routing, a protocol called BGP, loose coordination between large computer networks, regional registries for IP address ranges, and lots of trust!
 
-One way this can happen is if a malicious or misconfigured Autonomous System advertises incorrect routing, known as [BGP hijacking](https://www.cloudflare.com/learning/security/glossary/what-is-bgp/#learning-content-h2). This can cause a packet to be forwarded to the wrong destination.
+"Spoofing a destination IP address" is possible, and is known as *IP hijacking*. One way this can happen is if a malicious or misconfigured actor advertises incorrect routing to the rest of the network, known as [BGP hijacking](https://www.cloudflare.com/learning/security/glossary/what-is-bgp/#learning-content-h2).
 
 ----
 
@@ -71,9 +70,9 @@ A few things to notice:
 
 Any rouge router along the path could respond or tamper with a packet. You place a lot of trust into your ISP! 
 
-The rouge router could have a fake shorter route be advertised with BGP, leading to traffic being consistently routed to it. This is exactly what BGP hijacking is. On top of hacks, this probably happens more by accident (e.g. [route leaks](https://blog.apnic.net/2025/05/06/analysis-of-a-route-leak/)), causing some famous outages.
+The rouge router could have a fake shorter route be advertised with BGP, leading to traffic being consistently routed to it. This is exactly what BGP hijacking is. On top of hacks, this happens at lot by accident (e.g. [route leaks](https://blog.apnic.net/2025/05/06/analysis-of-a-route-leak/)), causing some famous outages.
 
-The RIRs do have the ASN and IP information, so there are efforts to improve upon the security of BGP, with cryptographic signing of route announcements and checking against public databases for route ownership. In practice, large ISPs will be selective with who they accept BGP messages from and have [different peering arrangements](https://www.cloudflare.com/learning/network-layer/what-is-peering/).
+The RIRs do have the ASN and IP information, so there are efforts to improve upon the security of BGP, with cryptographic signing of route announcements and checking against public databases for route ownership. In practice, large ISPs will be selective with who they accept BGP messages from and have [different peering arrangements](https://www.cloudflare.com/learning/network-layer/what-is-peering/), and probably have ways of detecting and responding quickly.
 
 It's a big enough problem that Cloudflare has a dedicated microsite for this problem: [isbgpsafeyet.com](https://isbgpsafeyet.com/). No, not yet.
 
@@ -85,7 +84,7 @@ Even with BGP security improvements, we still have the man-in-the-middle problem
 
 We can use `traceroute` (or `mtr`) to look at the path that a packet can take.
 
-Because no single router knows the full path of a request, [`traceroute` works by repeatedly making the request and incrementing the max hops from 1](https://en.wikipedia.org/wiki/Traceroute) then using the source IP of the returned error message and hop limit to infer the path of a request. (Interestingly, `traceroute` to this blog does not work, possibly because the Github Pages CDN does not reply)
+Because no single router knows the full path of a request, [`traceroute` works by repeatedly making the request and incrementing the max hops from 1](https://en.wikipedia.org/wiki/Traceroute) then using the source IP of the returned error message and hop limit to infer the path of a request. (Interestingly, `traceroute` to this blog does not work, possibly because the Github Pages CDN does not reply, although `mtr` works.)
 
 Here's a `traceroute` from a DigitalOcean droplet to "example.com" (`-q 1` so only 1 IP is sampled per hop count):
 

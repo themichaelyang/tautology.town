@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Typing Typescript schemas"
+title: "How to typecheck schemas in Typescript"
 ---
 
 Typescript has no runtime for types, so something that comes up frequently is getting a schema defined 

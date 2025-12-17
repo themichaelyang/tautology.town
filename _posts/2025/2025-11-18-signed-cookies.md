@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Learning about: signed cookies"
+title: "Learning about signed cookies"
 ---
 
 While I was [implementing OAuth 2.0 authorization]({% post_url 2025-11-17-learning-oauth2 %}), I learned about [Sinatra's signed cookie sessions](https://sinatrarb.com/intro.html#session-secret-security). Sinatra session data is stored in an HMAC-SHA256 signed user cookie and is only accessible if the signature is verified. Data is set and fetched on the `session` hash. The secret is set via `set :session_secret`, or is randomly generated at startup if not provided.

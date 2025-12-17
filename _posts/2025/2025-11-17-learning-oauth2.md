@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Learning about: OAuth 2.0 authorization code grants"
+title: "Learning about OAuth 2.0 authorization code grants"
 ---
 
 Over the weekend, I learned how to integrate a client app with OAuth 2.0 to add "login with" functionality. Here's how I understand it.

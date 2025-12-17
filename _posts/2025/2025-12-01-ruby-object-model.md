@@ -1,7 +1,9 @@
 ---
 layout: post
-title: "Ruby's object model"
+title: "Ruby's object model: eigenclasses, metaclasses, and more"
 ---
+
+*Or: a Class class class masterclass*
 
 One way or another, a famous question will cross every Rubyist's mind, probably many times: *what's an eigenclass?*
 
@@ -30,7 +32,7 @@ In the Ruby docs, there's a tremendous diagram under [the page for `class Class`
 obj--->OtherClass---------->(OtherClass)-----------...
 ```
 
-I thought I more or less understood Ruby classes, eigenclasses, and what have you, until I came across this. I don't know about you, but this made very little sense to me. 
+I thought I more or less understood Ruby classes, eigenclasses, and what have you, until I came across this. I don't know about you, but this made very little sense to me. Is a metaclass the same as an eigenclass?
 
 This Question is famous and Frequently Asked enough that Ruby has [an official FAQ answer](https://www.ruby-lang.org/en/documentation/faq/8/#:~:text=What%20is%20a%20singleton%20class%3F) (also: why is this in an FAQ instead of [having better docs](https://gds.blog.gov.uk/2013/07/25/faqs-why-we-dont-have-them/)?).
 
@@ -408,7 +410,7 @@ irb(main):008> A.singleton_class.singleton_class.singleton_class.ancestors
  BasicObject]
 ```
 
-`#<Class:A>>` is the singleton class of class `A` (not the singleton class of an instance of `A`).
+`#<Class:A>` is the singleton class of class `A` (not the singleton class of an instance of `A`).
 
 Because it is a class singleton class, it inherits the singleton classes of the ancestors of `A`, so the singleton classes of `Object` (`#<Class:Object>`) and `BasicObject` (`#<Class:BasicObject>`).
 
@@ -420,7 +422,7 @@ In the diagram, the horizontal arrows going right should be labeled "is of class
 
 Finally, "metaclass" means "class of a class". Only singleton classes of classes are metaclasses, what you use to you define a class method. A singleton class of a class instance is not a metaclass (in the past this terminology was conflated). 
 
-In this case, `#<Class:A>>` is a metaclass. Metaclasses eventually inherit from `Class`, since they are classes.
+In this case, `#<Class:A>` is a metaclass. Metaclasses eventually inherit from `Class`, since they are classes.
 
 In summary:
 
