@@ -44,10 +44,13 @@ The operations of a monad satisfy three laws:
 `bind(unit(a), f) == f(a)`
 
 2. **Right unit.** Compute `m`, bind the result to `a`, and return `a`. The result is the same as `m`:   
-`bind(m, (a) => unit(a)) == m`
+`bind(m, (a) => unit(a)) == m`  
+`bind(m, unit) = m` 
 
 3. **Associative.** Compute `m`, bind the result to `a`, compute `n`, bind the result to `b`, compute `o`. The order of parentheses in such a computation is irrelevant:  
 `bind(m, (a) => bind(n(a), (b) => o(b)))` `==` `bind(bind(m, (a) => n(a)), (b) => o(b))`
+
+`bind(m, a => bind(n(a), o)) == bind(bind(m, n), o)`
 
 {% endcard %}
 

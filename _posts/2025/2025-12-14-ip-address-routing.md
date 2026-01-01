@@ -46,14 +46,13 @@ By design, the Internet is decentralized. The hop-by-hop nature of routing means
 
 A few things to notice:
 
-1. Autonomous Systems have full discretion with what they announce with BGP and could [lie about the ASN path](https://blog.apnic.net/2021/05/24/a-tool-to-detect-bgp-lies/).
-2. Routing information is propagated throughout the network.
-3. Any router along the routing path can [man-in-the-middle (MITM)](https://en.wikipedia.org/wiki/Man-in-the-middle_attack) a packet.
-4. Routers have discretion in deciding how to route a packet.
+1. Autonomous Systems have full discretion with what they announce with BGP.
+2. Reachability information from one node is propagated throughout the network.
+3. Routers have full discretion to decide how to route a packet they're forwarded.
 
-Any rogue router along the path could respond or tamper with a packet. You place a lot of trust into your ISP! 
+Any router along the forwarded path could respond or tamper with a packet ([man-in-the-middle (MITM) attack](https://en.wikipedia.org/wiki/Man-in-the-middle_attack)). You place a lot of trust into your ISP!
 
-The rogue router could have a fake shorter or more specific route advertised with BGP, leading to traffic being consistently routed to it. This is exactly what BGP hijacking is. On top of hacks, this happens at lot by accident (e.g. [route leaks](https://blog.apnic.net/2025/05/06/analysis-of-a-route-leak/)), causing some famous outages. 
+The rogue router could [lie about the ASN path](https://blog.apnic.net/2021/05/24/a-tool-to-detect-bgp-lies/) to advertise a fake shorter or more specific route with BGP, leading to traffic consistently being routed to it. This is exactly what BGP hijacking is. On top of malicious hacks, this happens at lot by accident (e.g. [route leaks](https://blog.apnic.net/2025/05/06/analysis-of-a-route-leak/)), causing some famous outages.
 
 It's a big enough problem that Cloudflare has a dedicated microsite: [isbgpsafeyet.com](https://isbgpsafeyet.com/). 
 
