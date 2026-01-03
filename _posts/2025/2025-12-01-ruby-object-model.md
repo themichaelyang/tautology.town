@@ -139,7 +139,7 @@ Everything in Ruby is an object.
 
 Every object in Ruby has a class.
 
-Even classes are objects. So they have a class too. They are objects with class `Class`.
+Even classes are objects. So they have a class too. They are objects with class `Class` (uppercase).
 
 ```ruby
 irb(main):001* class A
@@ -239,9 +239,9 @@ irb(main):005> a.singleton_class.ancestors
 
 Importantly, because this singleton class is created per instance, any methods set on the object's singleton class do not modify the object's regular class. 
 
-When we call a method, we look up the method name on the instance-specific singleton class first. In Ruby internals, an object's class is secretly the singleton class, which inherits from the class the object was instantiated from, which allows method resolution to work down the ancestor chain as expected.
+When we call a method, we look up the method name on the instance-specific singleton class first. In Ruby internals, an object's class is [secretly actually the singleton class](https://noelrappin.com/blog/2025/03/better-know-a-ruby-thing-method-lookup/#but-i-thought-we-said-something-about-singleton-classes), which inherits from the class the object was instantiated from and allows method resolution to work down the ancestor chain as expected.
 
-This is the point of the singleton class! It allows us to add or override methods at the object level without affecting other instances of the object class.
+This is the point of the singleton class! It allows us to add or override methods at the object level without affecting other instances of the object's class.
 
 We can use the `def {obj}.{method_name}` or `class << {obj}` syntax to define a method on the singleton class for that instance.
 
@@ -429,11 +429,11 @@ In summary:
 1. Everything is an object
 2. Objects have a class
 3. Classes have methods
-4. Classes have ancestors classes
-5. Methods are found on classes and their ancestors
+4. Classes have ancestor classes
+5. Methods are looked up on a class and its ancestors
 6. Classes are objects
 7. Classes have a class
-8. Objects create a singleton class that inherit from their usual class
+8. Objects create a singleton class that inherits from their regular class
 9. Objects look up methods on their singleton class first
 10. Class methods are methods on the singleton class of a class
 11. Singleton classes have a singleton class
