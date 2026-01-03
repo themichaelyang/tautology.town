@@ -185,16 +185,3 @@ Let's hope I'm wrong. Trust is easy to lose and hard to gain back.
 You might also find interesting the WHATWG specs for named properties:
 - [7.2.2.3 Named access on the Window object](https://html.spec.whatwg.org/multipage/nav-history-apis.html#named-access-on-the-window-object:window-3)
 - [3.1.6 DOM tree accessors](https://html.spec.whatwg.org/multipage/dom.html#dom-document-namedItem-which)
-
-<!--
->Some elements in the document are also exposed as properties:
->
->For each \<embed>, \<form>, \<iframe>, \<img>, and \<object> element, its name (if non-empty) is exposed. For example, if the document contains \<form name="my_form">, then document\["my_form"] (and its equivalent document.my_form) returns a reference to that element.
->
->For each \<object> element, its id (if non-empty) is exposed.
->
->For each \<img> element with non-empty name, its id (if non-empty) is exposed.
->
->If a property corresponds to a single element, that element is directly returned. If that single element is an iframe, then its contentWindow is returned instead. If the property corresponds to multiple elements, then an HTMLCollection is returned containing all of them.
-
--->
