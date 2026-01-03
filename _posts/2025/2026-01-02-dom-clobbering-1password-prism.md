@@ -15,7 +15,7 @@ Skip to the [breakdown](#payload), or read on.
 
 ## Backstory
 
-About two weeks ago, I noticed that this blog's code block syntax highlighting stopped working. This blog ([tautology.town](https://tautology.town)) uses [Jekyll](https://jekyllrb.com/), which comes with [Rouge](https://github.com/rouge-ruby/rouge) syntax highlighting out of the box.
+About two weeks ago, I noticed that this blog's code syntax highlighting stopped working. This blog ([tautology.town](https://tautology.town)) uses [Jekyll](https://jekyllrb.com/), which comes with [Rouge](https://github.com/rouge-ruby/rouge) syntax highlighting out of the box.
 
 Eventually, I discovered that 1Password's browser extension was inadvertently overriding syntax highlighting in all websites ([bug report](https://www.1password.community/discussions/developers/1password-chrome-extension-is-incorrectly-manipulating--blocks/165639/replies/165982)). In a recent update, 1Password added [Prism.js](https://prismjs.com/) to support code highlighting for [secure rich text snippets](https://1password.com/blog/product-update-features-and-security-q3-2024#:~:text=In%20labs%3A%20Generate%20and%20fill%20formatted%20content%20with%20secure%20snippets).
 
@@ -53,21 +53,31 @@ While we wait, we can take matters into our own hands.
 
 Web extension content scripts get access to the DOM (to do stuff) but run in an [isolated Javascript context](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Content_scripts#dom_access) to prevent web content from accessing or overriding their behavior. Without this, they could be vulnerable to something like [prototype pollution](https://developer.mozilla.org/en-US/docs/Web/Security/Attacks/Prototype_pollution).
 
-However, scripts with DOM access are still susceptible to an attack called *DOM clobbering*. 
+However, scripts with DOM access are still susceptible to *DOM clobbering*. DOM clobbering is using the DOM to define/redefine things expected by the running Javascript.
 
-The HTML standard allows for "named property access" on `window` ([docs](https://developer.mozilla.org/en-US/docs/Web/API/Window#named_properties)) and `document` ([docs](https://developer.mozilla.org/en-US/docs/Web/API/Document#named_properties)), which means HTML DOM elements with `id` or `name` set can be accessed as properties. For `window`:
+The HTML standard allows for "named property access" on `window` ([docs](https://developer.mozilla.org/en-US/docs/Web/API/Window#named_properties)) and `document` ([docs](https://developer.mozilla.org/en-US/docs/Web/API/Document#named_properties)), which means HTML DOM elements with `id` or `name` set can be accessed as if they were Javascript properties. For `window`:
 
-> For each \<embed>, \<form>, \<iframe>, \<img>, and \<object> element, its name (if non-empty) is exposed. For example, if the document contains \<form name="my_form">, then window\["my_form"] (and its equivalent window.my_form) returns a reference to that element.  
+> For each \<embed>, \<form>, \<iframe>, \<img>, and \<object> element, its name (if non-empty) is exposed. For example, if the document contains \<form name="my_form">, then window\["my_form"] **(and its equivalent window.my_form) returns a reference to that element.**  
 >
 > For each HTML element, its id (if non-empty) is exposed.  
 >
 > If a property corresponds to a single element, that element is directly returned. If the property corresponds to multiple elements, then an HTMLCollection is returned containing all of them. If any of the elements is a navigable \<iframe> or \<object>, then the contentWindow of first such iframe is returned instead.
 
+Recall that properties of `window` are implicitly global, so in the example `my_form` also returns a form.
+
 Even DOM APIs like `document.addEventListener` can be [overridden in this way](https://domclob.xyz/domc_wiki/browsers/browserAPIs.html).
+
+```html
+<form name="addEventListener"></form>
+<script>
+console.log(document.addEventListener) 
+/* prints <form name="addEventListener"></form> */
+</script>
+```
 
 There are some limitations to this attack:
 - It only works if the corresponding value is not already defined by the Javascript context.
-- You can only return HTML elements or an `HTMLCollection`, not arbitrary values.
+- You can only return an HTML element or an `HTMLCollection`, not arbitrary values.
 
 Still, you can take advantage of things like:
 - `HTMLCollection` access by id/name to [DOM clobber nested properties](https://aszx87410.github.io/beyond-xss/en/ch3/dom-clobbering/#nested-dom-clobbering).
@@ -79,7 +89,7 @@ We can use the first two tricks to clobber 1Password's Prism.js.
 
 ## Clobbering Prism.js
 
-If Prism.js was injected unsafely, it would be sufficient to use this snippet from their docs to disable auto-highlighting:
+The [Prism.js docs](https://prismjs.com/#manual-highlighting) show how to normally disable automatic highlighting:
 
 ```html
 <script>
@@ -88,9 +98,9 @@ window.Prism.manual = true;
 </script>
 ```
 
-Since 1Password's content script is in an isolated context, this script won't affect it and its Prism.js won't ever see  `window.Prism.manual = true`.
+Since 1Password's content script is in an isolated context, including this script on a site won't affect the content script. Its Prism.js won't ever see  `window.Prism.manual = true`.
 
-Let's look at the Prism.js source to see how this is evaluated. On [line 51 of](https://github.com/PrismJS/prism/blob/298b75f1764c4abfe76d997394b7b149845f685a/components/prism-core.js#L51) `prism-core.js`: 
+Let's look at the Prism.js source to see how this setting is evaluated. On [line 51 of](https://github.com/PrismJS/prism/blob/298b75f1764c4abfe76d997394b7b149845f685a/components/prism-core.js#L51) `prism-core.js`: 
 
 ```javascript
 manual: _self.Prism && _self.Prism.manual,
@@ -114,7 +124,7 @@ var _self = (typeof window !== 'undefined')
 	);
 ```
 
-So, `manual` is set to `window.Prism.manual` and can be DOM clobbered! Note that this would also work with `Prism.manual`, since `window` is implicit.
+So, `manual` is set to `window.Prism.manual` and can be DOM clobbered!
 
 ### Payload
 
@@ -153,9 +163,9 @@ And it works! This is the fix currently deployed to this site, if you need furth
 
 You may be (rightfully) concerned about other ways 1Password could be DOM clobbered via Prism.js. 
 
-In fact, I learned about DOM clobbering when checking the security implications of this leak. 
+In fact, I learned about DOM clobbering when checking the security implications of Prism.
 
-[CVE-2024-53382](https://nvd.nist.gov/vuln/detail/CVE-2024-53382) for Prism.js 1.29.0 describes an XSS using DOM clobbering. The [original report](https://gist.github.com/jackfromeast/aeb128e44f05f95828a1a824708df660) gives a great summary of the vulnerability. At a high level, Prism's autoloader plugin uses `document.currentScript` to dynamically load language definitions that an attacker could clobber to load their own script. It was patched in 1.30 by checking if `document.currentScript.tagName` equals `'SCRIPT'`.
+[CVE-2024-53382](https://nvd.nist.gov/vuln/detail/CVE-2024-53382) describes an XSS on Prism.js 1.29.0 using DOM clobbering. The [original report](https://gist.github.com/jackfromeast/aeb128e44f05f95828a1a824708df660) gives a great summary of the vulnerability. At a high level, Prism's autoloader plugin uses `document.currentScript` to dynamically load language definitions that an attacker could clobber to load their own script. It was patched in 1.30 by checking if `document.currentScript.tagName` equals `'SCRIPT'`.
 
 Thankfully, as far as I could tell, the version deployed by 1Password is not vulnerable to XSS via Prism. The `manual` parameter is designed to be overridden, which inadvertently allows for DOM clobbering. Other things on Prism don't appear to be clobberable.
 
@@ -165,13 +175,13 @@ I did discover some potential XSS vulnerabilities in v2 of Prism.js and will sub
 
 The bigger question is what this signals about 1Password, the company.
 
-I've historically trusted 1Password over other password managers due to their [secret key](https://support.1password.com/secret-key-security/) based security model and nicer design (especially over [LastPass](https://en.wikipedia.org/wiki/LastPass#Security_Criticism), which regularly has security incidents). They have a good reputation from publishing their approach to security.
+I've historically trusted 1Password over other password managers due to their [secret key](https://support.1password.com/secret-key-security/) based security model (especially over [LastPass](https://en.wikipedia.org/wiki/LastPass#Security_Criticism), which is not safe at all). 1Password has a good reputation from publishing about security and their approach.
 
-This incident has me second guessing. I don't think it should have been addressed so slowly (2+ weeks), nor should it have passed code review. Adding stuff to the content script is a big deal for extension development.
+This incident has me second guessing. It shouldn't have been addressed so slowly (2+ weeks), nor should it have passed code review. Adding stuff to the content script is a big deal for extension development.
 
-Security is largely a function of [organizational culture](https://google.github.io/building-secure-and-reliable-systems/raw/ch21.html). I worry they've [prioritized growth](https://1password.com/press/2025/nov/1password-strengthens-leadership-amid-growth-milestone) over security and product. We'll find out more if/when they publish the postmortem.
+Security is largely a function of [organizational culture](https://google.github.io/building-secure-and-reliable-systems/raw/ch21.html). I worry they're [prioritizing growth](https://1password.com/press/2025/nov/1password-strengthens-leadership-amid-growth-milestone) over product. We'll find out more if/when they publish the postmortem.
 
-Let's hope I'm wrong. Trust is easy to lose and hard to gain back.
+Let's hope I'm wrong. Trust is hard to gain, easy to lose, and harder to get back.
 
 ---
 
