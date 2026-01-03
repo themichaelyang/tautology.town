@@ -19,7 +19,7 @@ About two weeks ago, I noticed that this blog's code block syntax highlighting s
 
 Eventually, I discovered that 1Password's browser extension was inadvertently overriding syntax highlighting in all websites ([bug report](https://www.1password.community/discussions/developers/1password-chrome-extension-is-incorrectly-manipulating--blocks/165639/replies/165982)). In a recent update, 1Password added [Prism.js](https://prismjs.com/) to support code highlighting for [secure rich text snippets](https://1password.com/blog/product-update-features-and-security-q3-2024#:~:text=In%20labs%3A%20Generate%20and%20fill%20formatted%20content%20with%20secure%20snippets).
 
-Prism.js [highlights everything by default](https://prismjs.com/#manual-highlighting), so bundling it into a content script without `Prism.manual = true` means it will automatically run on every `.language-*` class code blocks on every website (since 1Password injects the content script on every site).
+Prism.js [highlights everything by default](https://prismjs.com/#manual-highlighting), so bundling it into the content script without `Prism.manual = true` means it will automatically run on any `.language-*` class code blocks on every website (since 1Password injects the content script on every site).
 
 The immediate fix for 1Password is simple: `Prism.manual = true` and manually invoke Prism.
 
@@ -69,11 +69,11 @@ There are some limitations to this attack:
 - It only works if the corresponding value is not already defined by the Javascript context.
 - You can only return HTML elements or an `HTMLCollection`, not arbitrary values.
 
-Still, you can take advantange of things like:
+Still, you can take advantage of things like:
 - `HTMLCollection` access by id/name to [DOM clobber nested properties](https://aszx87410.github.io/beyond-xss/en/ch3/dom-clobbering/#nested-dom-clobbering).
 - HTML elements are truthy, so you can override false values.
 - `<a>` tags `toString()` gives the `href` value, and can be coerced with concatenation.
-- Convenient property access that matches HTML elements: e.g. if `value` is accessed you can clobber with an `<input>` you can override that access with a string.
+- Convenient property access that matches HTML elements: e.g. if `value` is accessed you can clobber with an `<input value="overridden-value">`
 
 We can use the first two tricks to clobber 1Password's Prism.js.
 
@@ -114,7 +114,7 @@ var _self = (typeof window !== 'undefined')
 	);
 ```
 
-So, `manual` is set to `window.Prism.manual` and can be DOM clobbered! Note that this would also work with`Prism.manual`, since `window` is implicit.
+So, `manual` is set to `window.Prism.manual` and can be DOM clobbered! Note that this would also work with `Prism.manual`, since `window` is implicit.
 
 ### Payload
 
