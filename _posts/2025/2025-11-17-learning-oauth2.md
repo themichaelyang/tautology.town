@@ -3,6 +3,8 @@ layout: post
 title: "Learning about OAuth 2.0 authorization code grants"
 ---
 
+{% include mermaid.html %}
+
 Over the weekend, I learned how to integrate a client app with OAuth 2.0 to add "login with" functionality. Here's how I understand it.
 
 ## Basic flow for a web app with a backend
@@ -21,11 +23,9 @@ The flow works as follows:
 
 5. Now, your app server has an API access token to the authorization server. You can fetch profile information from the authorization server and handle login/sign up normally.
 
-<script src="https://unpkg.com/mermaid@11.12.0/dist/mermaid.min.js"></script>
 <pre class="mermaid">
 ---
 config:
-  theme: 'neutral'
   fontFamily: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   nodeSpacing: 20
   rankSpacing: 25

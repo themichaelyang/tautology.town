@@ -1,0 +1,17 @@
+<script src="https://unpkg.com/mermaid@11.12.0/dist/mermaid.min.js"></script>
+<script>
+  let isDark = window.matchMedia('(prefers-color-scheme: dark)').matches
+  let mermaidTheme = (isDark) ? 'dark' : 'neutral'
+  let mermaidConfig = {
+    theme: mermaidTheme
+  }
+
+  let render = async () => {
+    mermaid.initialize(mermaidConfig)
+    await mermaid.run()
+  }
+  render()
+
+  // dark/light theme isn't reloaded automatically by browser anyways
+  // isDark.onchange = render
+</script>
