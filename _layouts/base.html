@@ -3,8 +3,14 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title></title>
-  <meta name="description" content="">
+  <title>
+    {% if page.title %}
+      {{ page.title }} @ tautology.town
+    {% else %}
+      tautology.town
+    {% endif %}
+  </title>
+  <meta name="description" content="tautology.town is a blog that contains tautologies.">
   <link rel="stylesheet" href="/stylesheets/style.css">
 </head>
 <body>
