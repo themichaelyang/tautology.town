@@ -157,7 +157,7 @@ In fact, I learned about DOM clobbering when checking the security implications 
 
 [CVE-2024-53382](https://nvd.nist.gov/vuln/detail/CVE-2024-53382) for Prism.js 1.29.0 describes an XSS using DOM clobbering. The [original report](https://gist.github.com/jackfromeast/aeb128e44f05f95828a1a824708df660) gives a great summary of the vulnerability. At a high level, Prism's autoloader plugin uses `document.currentScript` to dynamically load language definitions that an attacker could clobber to load their own script. It was patched in 1.30 by checking if `document.currentScript.tagName` equals `'SCRIPT'`.
 
-As far as I could tell, the version deployed by 1Password is not vulnerable to XSS via Prism. The `manual` parameter is designed to be overridden, which inadvertently allows for DOM clobbering. Other things on Prism don't appear to be clobberable.
+Thankfully, as far as I could tell, the version deployed by 1Password is not vulnerable to XSS via Prism. The `manual` parameter is designed to be overridden, which inadvertently allows for DOM clobbering. Other things on Prism don't appear to be clobberable.
 
 I did discover some potential XSS vulnerabilities in v2 of Prism.js and will submit a fix or issue. That version has been in development [since 2022](https://github.com/orgs/PrismJS/discussions/3531) and is the [default branch on GitHub](https://github.com/PrismJS/prism), but isn't yet released.
 
@@ -165,13 +165,13 @@ I did discover some potential XSS vulnerabilities in v2 of Prism.js and will sub
 
 The bigger question is what this signals about 1Password, the company.
 
-I've historically trusted 1Password over other password managers due to their [secret key](https://support.1password.com/secret-key-security/) based security model and nicer design (especially over [LastPass](https://en.wikipedia.org/wiki/LastPass#Security_Criticism), which regularly has security incidents).
+I've historically trusted 1Password over other password managers due to their [secret key](https://support.1password.com/secret-key-security/) based security model and nicer design (especially over [LastPass](https://en.wikipedia.org/wiki/LastPass#Security_Criticism), which regularly has security incidents). They have a good reputation from publishing their approach to security.
 
-This incident has made me reconsider. I don't think it should have been addressed so slowly (2+ weeks), nor should it have passed code review. Adding stuff to the content script is a pretty big deal for extension development.
+This incident has me second guessing. I don't think it should have been addressed so slowly (2+ weeks), nor should it have passed code review. Adding stuff to the content script is a big deal for extension development.
 
-Security is largely a function of [organizational culture](https://google.github.io/building-secure-and-reliable-systems/raw/ch21.html) and this does not reflect well on that. We'll find out more if/when they publish the postmortem.
+Security is largely a function of [organizational culture](https://google.github.io/building-secure-and-reliable-systems/raw/ch21.html). I worry they've [prioritized growth](https://1password.com/press/2025/nov/1password-strengthens-leadership-amid-growth-milestone) over security and product. We'll find out more if/when they publish the postmortem.
 
-Let's hope I'm wrong. Trust is easy to lose but hard to gain back.
+Let's hope I'm wrong. Trust is easy to lose and hard to gain back.
 
 ---
 
