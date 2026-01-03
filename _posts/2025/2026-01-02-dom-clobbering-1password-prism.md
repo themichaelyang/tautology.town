@@ -17,7 +17,7 @@ Skip to the [breakdown](#payload), or read on.
 
 About two weeks ago, I noticed that this blog's code syntax highlighting stopped working. This blog ([tautology.town](https://tautology.town)) uses [Jekyll](https://jekyllrb.com/), which comes with [Rouge](https://github.com/rouge-ruby/rouge) syntax highlighting out of the box.
 
-Eventually, I discovered that 1Password's browser extension was inadvertently overriding syntax highlighting in all websites ([bug report](https://www.1password.community/discussions/developers/1password-chrome-extension-is-incorrectly-manipulating--blocks/165639/replies/165982)). In a recent update, 1Password added [Prism.js](https://prismjs.com/) to support code highlighting for [secure rich text snippets](https://1password.com/blog/product-update-features-and-security-q3-2024#:~:text=In%20labs%3A%20Generate%20and%20fill%20formatted%20content%20with%20secure%20snippets).
+Eventually, I discovered that 1Password's browser extension was inadvertently overriding syntax highlighting in all websites ([bug report](https://www.1password.community/discussions/developers/1password-chrome-extension-is-incorrectly-manipulating--blocks/165639/replies/165982)). In a recent update, 1Password added [Prism.js](https://prismjs.com/) when adding [stored text snippets](https://1password.com/blog/product-update-features-and-security-q3-2024#:~:text=In%20labs%3A%20Generate%20and%20fill%20formatted%20content%20with%20secure%20snippets).
 
 Prism.js [highlights everything by default](https://prismjs.com/#manual-highlighting), so bundling it into the content script without `Prism.manual = true` means it will automatically run on any `.language-*` class code blocks on every website (since 1Password injects the content script on every site).
 
@@ -25,7 +25,9 @@ The immediate fix for 1Password is simple: `Prism.manual = true` and manually in
 
 More importantly, *Prism.js should not be in the content script at all*. The feature is restricted to the 1Password vault, so Prism should be moved to the [extension's popup script](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/user_interface/Popups). It seems like a major oversight for this to have been included.
 
-I assumed this would be fixed quickly.
+To make matters worse, I couldn't even find the snippet feature in the browser extension anywhere. Even on the desktop app, the snippet feature doesn't appear to highlight code. I think Prism.js is only used as a dependency of [@lexical/code](https://github.com/facebook/lexical/blob/5bbbe849bd229e1db0e7b536e6a919520ada7bb2/packages/lexical-code/src/FacadePrism.ts), part of the text editor used for snippets. So this could probably be excluded from the extension entirely.
+
+I assumed this would be [fixed quickly](https://www.1password.community/discussions/developers/1password-chrome-extension-is-incorrectly-manipulating--blocks/165639/replies/165687).
 
 ## Some time later...
 
@@ -45,7 +47,7 @@ Evan You (@youyuxi) is the creator of Vue and Vite.
 
 I think this was the push for 1Password to act. They are finally [deploying a fix](https://www.1password.community/discussions/developers/1password-chrome-extension-is-incorrectly-manipulating--blocks/165639/replies/165982) and promise a postmortem.
 
-At the time of writing, the fix is not yet live for me. I see an update in the Chrome store, but not in Firefox or Safari.
+At the time of writing, the fix is not yet live for me. I see an update in the Chrome store, but not in Firefox or Safari (both iOS and MacOS).
 
 While we wait, we can take matters into our own hands.
 
@@ -63,7 +65,7 @@ The HTML standard allows for "named property access" on `window` ([docs](https:/
 >
 > If a property corresponds to a single element, that element is directly returned. If the property corresponds to multiple elements, then an HTMLCollection is returned containing all of them. If any of the elements is a navigable \<iframe> or \<object>, then the contentWindow of first such iframe is returned instead.
 
-Recall that properties of `window` are implicitly global, so in the example `my_form` also returns a form.
+Recall that properties of `window` are implicitly global, so in the example `my_form` also returns the form.
 
 Even DOM APIs like `document.addEventListener` can be [overridden in this way](https://domclob.xyz/domc_wiki/browsers/browserAPIs.html).
 
@@ -163,13 +165,13 @@ And it works! This is the fix currently deployed to this site, if you need furth
 
 You may be (rightfully) concerned about other ways 1Password could be DOM clobbered via Prism.js. 
 
-In fact, I learned about DOM clobbering when checking the security implications of Prism.
+In fact, I learned about DOM clobbering when looking into Prism.js.
 
 [CVE-2024-53382](https://nvd.nist.gov/vuln/detail/CVE-2024-53382) describes an XSS on Prism.js 1.29.0 using DOM clobbering. The [original report](https://gist.github.com/jackfromeast/aeb128e44f05f95828a1a824708df660) gives a great summary of the vulnerability. At a high level, Prism's autoloader plugin uses `document.currentScript` to dynamically load language definitions that an attacker could clobber to load their own script. It was patched in 1.30 by checking if `document.currentScript.tagName` equals `'SCRIPT'`.
 
 Thankfully, as far as I could tell, the version deployed by 1Password is not vulnerable to XSS via Prism. The `manual` parameter is designed to be overridden, which inadvertently allows for DOM clobbering. Other things on Prism don't appear to be clobberable.
 
-I did discover some potential XSS vulnerabilities in v2 of Prism.js and will submit a fix or issue. That version has been in development [since 2022](https://github.com/orgs/PrismJS/discussions/3531) and is the [default branch on GitHub](https://github.com/PrismJS/prism), but isn't yet released.
+I did discover XSS vulnerabilities in v2 of Prism.js and will submit a fix or issue. That version has been in development [since 2022](https://github.com/orgs/PrismJS/discussions/3531) and is the [default branch on GitHub](https://github.com/PrismJS/prism), but isn't yet released.
 
 ### 1Password, the company
 
@@ -179,7 +181,9 @@ I've historically trusted 1Password over other password managers due to their [s
 
 This incident has me second guessing. It shouldn't have been addressed so slowly (2+ weeks), nor should it have passed code review. Adding stuff to the content script is a big deal for extension development.
 
-Security is largely a function of [organizational culture](https://google.github.io/building-secure-and-reliable-systems/raw/ch21.html). I worry they're [prioritizing growth](https://1password.com/press/2025/nov/1password-strengthens-leadership-amid-growth-milestone) over product. We'll find out more if/when they publish the postmortem.
+It also appears to stem from a bundling issue with the shared code between the Electron desktop app and the browser extension. [Moving from native to Electron](https://pxlnv.com/linklog/1password-goes-electron/) already seemed like a cost-saving measure.
+
+Security is largely a function of [organizational culture](https://google.github.io/building-secure-and-reliable-systems/raw/ch21.html). I worry they're [prioritizing business and growth](https://1password.com/press/2025/nov/1password-strengthens-leadership-amid-growth-milestone) over product and security. We'll find out more if/when they publish the postmortem.
 
 Let's hope I'm wrong. Trust is hard to gain, easy to lose, and harder to get back.
 
