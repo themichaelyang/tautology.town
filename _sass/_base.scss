@@ -1,30 +1,104 @@
+@use 'sass:color';
+
 $base-font-family: --apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, Roboto, Arial, sans-serif;
 $base-font-size:   16px;
 $base-font-weight: 400;
-$background-color: white;
 
 $small-font-size:  $base-font-size * 0.875;
 $base-line-height: 1.42;
 $spacing-unit:     $base-font-size;
 
-$text-color:            black;
-$text-color-secondary:  #aaa;
-$link-color:            #2a7ae2;
-
-$navbar-bg-color: auto;
-$navbar-color: $link-color;
 $navbar-height: 3em;
 $navbar-item-padding: 2em;
 
-$solarized-base01: black;
-$solarized-base1: #93a1a1;
-$solarized-base3: #fdf6e3;
-$solarized-orange: #cb4b16;
-$solarized-red: #dc322f;
-$solarized-blue: #268bd2;
-$solarized-cyan: #2aa198;
-$solarized-green: #859900;
-$solarized-yellow: #B58900;
+// Solarized palette
+$solarized-base03:  #002b36; // dark bg
+$solarized-base02:  #073642; // dark bg highlights
+$solarized-base01:  #586e75; // dark secondary text / light comments
+$solarized-base00:  #657b83; // light text
+$solarized-base0:   #839496; // dark text
+$solarized-base1:   #93a1a1; // dark secondary text / light comments
+$solarized-base2:   #eee8d5; // light bg highlights
+$solarized-base3:   #fdf6e3; // light bg
+
+$solarized-yellow:  #b58900;
+$solarized-orange:  #cb4b16;
+$solarized-red:     #dc322f;
+$solarized-magenta: #d33682;
+$solarized-violet:  #6c71c4;
+$solarized-blue:    #268bd2;
+$solarized-cyan:    #2aa198;
+$solarized-green:   #859900;
+
+// Light theme (standard with Solarized code)
+$light-bg: white;
+$light-text: black;
+$light-text-secondary: #aaa;
+$light-link: #2a7ae2;
+$light-code-bg: $solarized-base3;
+
+// Dark theme (Solarized Dark)
+$dark-bg: #001e26; // slightly darker than base03 for contrast
+/* $dark-bg: oklch(0.2 0.04 218.16); */
+$dark-text: $solarized-base0;
+/* $dark-text: #bbb; */
+$dark-text-secondary: $solarized-base01;
+/* $dark-link: $solarized-blue; */
+/* $dark-link: #529ed4; */
+$dark-link: #2e7bb1;
+/* $dark-bg: oklch(0.22 0 0); */
+$dark-code-bg: $solarized-base03;
+
+// CSS custom properties for theming
+:root {
+  --background-color: #{$light-bg};
+  --text-color: #{$light-text};
+  --text-color-secondary: #{$light-text-secondary};
+  --blockquote-border: #{color.adjust($light-text-secondary, $lightness: 25%)};
+  --link-color: #{$light-link};
+  --hr-color: lightgrey;
+  --card-border-color: #{color.adjust($light-text, $lightness: 50%)};
+  --card-border-width: 1px;
+  --card-shadow: rgba(0, 0, 0, 0.14);
+
+  // Solarized Light code
+  --code-bg: #{$light-code-bg};
+  --code-text: #{$light-text};
+  --code-border: #{color.adjust($light-code-bg, $lightness: -20%)};
+  --code-comment: #{$solarized-base1};
+  --code-keyword: #{$solarized-green};
+  --code-string: #{$solarized-cyan};
+  --code-constant: #{$solarized-orange};
+  --code-type: #{$solarized-red};
+  --code-function: #{$solarized-blue};
+  --code-builtin: #{$solarized-yellow};
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background-color: #{$dark-bg};
+    --text-color: #{$dark-text};
+    --text-color-secondary: #{$dark-text-secondary};
+    --blockquote-border: #{color.adjust($dark-code-bg, $lightness: 5%, $saturation: -30%)};
+    --link-color: #{$dark-link};
+    --hr-color: #{color.adjust($dark-code-bg, $lightness: 5%, $saturation: -30%)};
+    --card-border-color: #{color.adjust($dark-code-bg, $lightness: 5%, $saturation: -30%)};
+    --card-border-width: 1.5px;
+    --card-shadow: rgba(0, 0, 0, 0.2);
+
+    // Solarized Dark code
+    --code-bg: #{$dark-code-bg};
+    --code-text: #{$dark-text};
+    --code-border: #{color.adjust($dark-code-bg, $lightness: 5%)};
+    --code-comment: #{$solarized-base01};
+    --code-keyword: #{$solarized-green};
+    --code-string: #{$solarized-cyan};
+    --code-constant: #{$solarized-orange};
+    --code-type: #{$solarized-red};
+    --code-function: #{$solarized-blue};
+    --code-builtin: #{$solarized-yellow};
+  }
+}
 
 /**
 * Reset some basic elements
@@ -46,8 +120,8 @@ body {
   font-size: $base-font-size;
   line-height: $base-line-height;
   font-family: $base-font-family;
-  color: $text-color;
-  background-color: $background-color;
+  color: var(--text-color);
+  background-color: var(--background-color);
   -webkit-text-size-adjust: 100%;
   font-feature-settings: "kern" 1;
   font-kerning: normal;
@@ -61,7 +135,6 @@ body {
 .navbar {
   height: $navbar-height;
   width: 100%;
-  background-color: $navbar-bg-color;
   top: 0; left: 0;
   display: flex;
   flex-direction: column;
@@ -79,10 +152,10 @@ body {
 }
 
 .navbar__text {
-  color: $navbar-color;
+  color: var(--link-color);
 
   &:visited {
-    color: $navbar-color;
+    color: var(--link-color);
   }
 }
 
@@ -112,7 +185,7 @@ footer {
   padding-top: 15vh;
   padding-bottom: 10vh;
   font-size: $small-font-size;
-  color: $solarized-base1;
+  color: var(--text-color-secondary);
   display: flex;
   // justify-content: center;
 }
@@ -123,6 +196,10 @@ footer {
 }
 
 #footer-frog {
+  /* #93a1a1 */
+  @media (prefers-color-scheme: dark) {
+    opacity: 0.6;
+  }
 }
 
 .page-content {
@@ -140,7 +217,7 @@ footer {
 
 .post-meta {
   font-size: $small-font-size;
-  color: $text-color-secondary;
+  color: var(--text-color-secondary);
 }
 
 .post-link {
@@ -159,6 +236,6 @@ footer {
 
 hr {
   margin: 2 * $spacing-unit 0 - $spacing-unit;
-  border-color: lightgrey;
+  border-color: var(--hr-color);
   border-style: solid;
 }

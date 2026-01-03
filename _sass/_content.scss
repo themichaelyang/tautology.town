@@ -91,13 +91,13 @@ h4, h5, h6 {
 * Links
 */
 a {
-  color: $link-color;
+  color: var(--link-color);
   text-decoration: none;
   // don't break up words in links or a url can look like it has a dash
   hyphens: none;
 
   &:visited {
-    color: $link-color;
+    color: var(--link-color);
   }
 
   &:hover {
@@ -109,8 +109,8 @@ a {
 * Blockquotes
 */
 blockquote {
-  color: $text-color-secondary;
-  border-left: 3px solid color.adjust($text-color-secondary, $lightness: 25%);
+  color: var(--text-color-secondary);
+  border-left: 3px solid var(--blockquote-border);
   padding-left: $spacing-unit;
   font-style: italic;
 
@@ -129,10 +129,10 @@ blockquote {
 pre,
 code {
   font-size: 0.9em;
-  border: 1px solid color.adjust($solarized-base3, $lightness: -20%);
+  border: 1px solid var(--code-border);
   border-radius: 3px;
-  background-color: $solarized-base3;
-  color: $solarized-base01;
+  background-color: var(--code-bg);
+  color: var(--code-text);
   font-family: Menlo, Consolas, Monaco, monospace;
   tab-size: 2;
 }
@@ -182,11 +182,10 @@ sup {
 }
 
 .card {
-  /* border: 1px solid color.adjust($text-color-secondary, $lightness: 15%, $space: oklab); */
-  border: 1px solid color.adjust($text-color, $lightness: 50%, $space: oklab);
+  border: var(--card-border-width) solid var(--card-border-color);
   padding: $spacing-unit * 1.5 $spacing-unit * 2;
   padding-bottom: $spacing-unit * 0.75;
   border-radius: 8px; /* see code blocks */
   @extend %vertical-rhythm;
-  box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.14);
+  box-shadow: 2px 2px 2px var(--card-shadow);
 }
