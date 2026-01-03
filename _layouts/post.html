@@ -13,7 +13,7 @@ layout: base
         DOM clobber 1Password Prism.js to fix syntax highlighting -_-"
         This is possible because Prism looks for the setting on window.Prism.manual before overwriting with actual Prism object (clobbering won't work if Prism is already defined).
     -->
-    <a style="display:none;"id="Prism"><a style="display:none;" id="Prism" name="manual"></a></a>
+    <a hidden id="Prism"></a><a hidden id="Prism" name="manual"></a>
     {{ content }}
   </div>
 

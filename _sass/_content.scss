@@ -13,6 +13,9 @@ ul, ol, dl, figure, table,
 
 p {
   hyphens: auto;
+  /* https://designforhackers.com/blog/justify-text-html-css/ */
+  /* text-align: justify; */
+  /* text-justify: inter-word; */
 }
 
 table {
@@ -111,6 +114,10 @@ blockquote {
   padding-left: $spacing-unit;
   font-style: italic;
 
+  p {
+    hyphens: none;
+  }
+
   > :last-child {
     margin-bottom: 0;
   }
@@ -127,6 +134,7 @@ code {
   background-color: $solarized-base3;
   color: $solarized-base01;
   font-family: Menlo, Consolas, Monaco, monospace;
+  tab-size: 2;
 }
 
 code {
