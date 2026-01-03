@@ -133,12 +133,13 @@ Let's craft our payload and put it in our HTML:
 
 We can check in the console:
 
-```javascript
+<!--bash looks better than javascript or html for this devtools block-->
+```bash
 > window.Prism
-HTMLCollection(2) [a#Prism, a#Prism, Prism: a#Prism, manual: a#Prism]
+HTMLCollection(2) [a#Prism, a#Prism, Prism: a#Prism, manual: a#Prism]
 
 > window.Prism.manual
-<a hidden id=​"Prism" name=​"manual">​</a>​
+<a hidden id="Prism" name="manual"></a>
 
 > !window.Prism.manual
 false
