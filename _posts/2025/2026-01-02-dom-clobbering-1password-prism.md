@@ -45,7 +45,7 @@ Evan You (@youyuxi) is the creator of Vue and Vite.
 
 I think this was the push for 1Password to act. They are finally [deploying a fix](https://www.1password.community/discussions/developers/1password-chrome-extension-is-incorrectly-manipulating--blocks/165639/replies/165982) and promise a postmortem.
 
-At time of writing, the fix is not yet live for me. I see an update in the Chrome store, but not in Firefox or Safari.
+At the time of writing, the fix is not yet live for me. I see an update in the Chrome store, but not in Firefox or Safari.
 
 While we wait, we can take matters into our own hands.
 

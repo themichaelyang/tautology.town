@@ -55,7 +55,7 @@ const user = new UserModel({
 
 These are just two examples, and there are many others, like [Arktype](https://arktype.io/). But you can already imagine many more use cases like API definitions, binary codec definitions, automatic [RPCs](https://en.wikipedia.org/wiki/Remote_procedure_call), etc.
 
-Perhaps you'd like to implement your own. Doing this is extrodinarily useful and convenient, but involves a bit of advanced Typescript to implement.
+Perhaps you'd like to implement your own. Doing this is extraordinarily useful and convenient, but involves a bit of advanced Typescript to implement.
 
 Luckily for you, I've learned how to do this. To demonstrate, let's make a simple validation library similar to our examples. I'll assume you have working knowledge of [basic Typescript](https://www.typescriptlang.org/docs/handbook/typescript-in-5-minutes.html), and maybe even seen [a generic or two](https://www.typescriptlang.org/docs/handbook/2/generics.html).
 

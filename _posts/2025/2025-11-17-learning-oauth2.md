@@ -158,6 +158,6 @@ I learned this by using the Ruby [oauth2](https://github.com/ruby-oauth/oauth2) 
 
 ChatGPT suggested `state` and PKCE, which lead me to read more.
 
-When writing this post, I also found Aaron Parecki's [OAuth 2 Simplified blog post](https://aaronparecki.com/oauth-2-simplified/) to be very clear yet concise. He also publishes a longer and more comprehensive [microsite](https://www.o#{auth}/), but I rather like the blog version.
+When writing this post, I also found Aaron Parecki's [OAuth 2 Simplified blog post](https://aaronparecki.com/oauth-2-simplified/) to be very clear yet concise. He also publishes a longer and more comprehensive [microsite](https://www.oauth.com/), but I rather like the blog version.
 
 [RFC 6819](https://www.rfc-editor.org/rfc/rfc6819#section-3.6) discusses security considerations of OAuth 2.0. When researching for this post, I referenced the RFCs, linked [here](https://oauth.net/) (also due to Aaron Parecki).
