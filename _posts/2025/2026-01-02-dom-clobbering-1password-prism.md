@@ -155,7 +155,7 @@ You may be (rightfully) concerned about other ways 1Password could be DOM clobbe
 
 In fact, I learned about DOM clobbering when checking the security implications of this leak. 
 
-[CVE-2024-53382](https://nvd.nist.gov/vuln/detail/CVE-2024-53382) for Prism.js 1.29.0 describes an XSS using DOM clobbering. The [original report](https://gist.github.com/jackfromeast/aeb128e44f05f95828a1a824708df660) gives a great summary of the vulnerability. At a high level, Prism's autoloader plugin uses `document.currentScript` to dynamically load language definitions, but an attacker could clobber to load their own script in an `<img>`. It was patched in 1.30 by checking if `document.currentScript.tagName` equals `'SCRIPT'`.
+[CVE-2024-53382](https://nvd.nist.gov/vuln/detail/CVE-2024-53382) for Prism.js 1.29.0 describes an XSS using DOM clobbering. The [original report](https://gist.github.com/jackfromeast/aeb128e44f05f95828a1a824708df660) gives a great summary of the vulnerability. At a high level, Prism's autoloader plugin uses `document.currentScript` to dynamically load language definitions that an attacker could clobber to load their own script. It was patched in 1.30 by checking if `document.currentScript.tagName` equals `'SCRIPT'`.
 
 As far as I could tell, the version deployed by 1Password is not vulnerable to XSS via Prism. The `manual` parameter is designed to be overridden, which inadvertently allows for DOM clobbering. Other things on Prism don't appear to be clobberable.
 
@@ -167,11 +167,11 @@ The bigger question is what this signals about 1Password, the company.
 
 I've historically trusted 1Password over other password managers due to their [secret key](https://support.1password.com/secret-key-security/) based security model and nicer design (especially over [LastPass](https://en.wikipedia.org/wiki/LastPass#Security_Criticism), which regularly has security incidents).
 
-This incident has made me reconsider. I don't think it should have been addressed so slowly (2+ weeks), nor should it have been made it past code review. Adding stuff to the content script is a pretty big deal for extension development.
+This incident has made me reconsider. I don't think it should have been addressed so slowly (2+ weeks), nor should it have passed code review. Adding stuff to the content script is a pretty big deal for extension development.
 
-Security is largely a function of [organizational culture](https://google.github.io/building-secure-and-reliable-systems/raw/ch21.html) and this does not reflect well on that culture. We'll find out more if/when they publish the postmortem.
+Security is largely a function of [organizational culture](https://google.github.io/building-secure-and-reliable-systems/raw/ch21.html) and this does not reflect well on that. We'll find out more if/when they publish the postmortem.
 
-Let's hope I'm wrong. Trust is easy to lose and hard to gain back.
+Let's hope I'm wrong. Trust is easy to lose but hard to gain back.
 
 ---
 
