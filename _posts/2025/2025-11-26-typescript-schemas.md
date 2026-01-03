@@ -89,7 +89,7 @@ if (isValid(validated)) {
 
 As you can see, the validator returns either the typed validated object or returns a list of `Error`s. 
 
-If you want preview the finished code, [⏩ click here skip ahead to the end](#all-together-now).
+If you want preview the finished code, [click here](#all-together-now) to skip ahead ↓.
 
 ## Validator literal type with `const` and generics
 
@@ -522,7 +522,7 @@ As an exercise to the reader, how would we change this to allow nested validator
 
 Hope you found this helpful. I myself learned a lot about Typescript writing this!
 
-Did you skip ahead? [⏮️ Click here](#making-of-a-typed-validator) to go back to the start.
+Did you skip ahead? [Click here](#making-of-a-typed-validator) to go back to the start ↑.
 
 ```typescript
 /// <reference lib="esnext" />
