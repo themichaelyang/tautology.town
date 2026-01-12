@@ -74,7 +74,7 @@ irb(main):001* class A
 irb(main):002> end
 => nil
 irb(main):003> a = A.new
-=> #<A:0x0000000132451b58>
+=> #<A:0x0000000105017dd0>
 irb(main):004> a.class
 => A
 ```
@@ -99,8 +99,8 @@ irb(main):002> end
 irb(main):003* class B < A
 irb(main):004> end
 => nil
-irb(main):005> A.ancestors
-=> [A, B, Object, JSON::Ext::Generator::GeneratorMethods::Object, PP::ObjectMixin, Kernel, BasicObject]
+irb(main):005> B.ancestors
+=> [B, A, Object, Kernel, BasicObject]
 ```
 
 #### Method resolution
@@ -113,17 +113,17 @@ irb(main):002*   def say
 irb(main):003*     "aye"
 irb(main):004*   end
 irb(main):005> end
-=> nil
+=> :say
 irb(main):006* class B < A
 irb(main):007*   def say
 irb(main):008*     "bye"
 irb(main):009*   end
 irb(main):010> end
-=> nil
+=> :say
 irb(main):011> A.ancestors
-=> [A, B, Object, JSON::Ext::Generator::GeneratorMethods::Object, PP::ObjectMixin, Kernel, BasicObject]
+=> [A, Object, Kernel, BasicObject]
 irb(main):012> B.ancestors
-=> [B, Object, JSON::Ext::Generator::GeneratorMethods::Object, PP::ObjectMixin, Kernel, BasicObject]
+=> [B, A, Object, Kernel, BasicObject]
 ```
 
 Every class inherits from `Object`. The root of every class heirarchy is `BasicObject`. These define the most basic methods every object (everything) can call.
@@ -155,11 +155,11 @@ The `class` keyword is just one way to give a `Class` a name.
 
 ```ruby
 irb(main):001> Class.new
-=> #<Class:0x000000011e21ee30>
+=> #<Class:0x00000001009b8678>
 irb(main):002> A = Class.new
 => A
 irb(main):003> a = A.new
-=> #<A:0x0000000128d3e360>
+=> #<A:0x0000000100997c20>
 ```
 
 The class of `Class` is ... itself. Because it's a class!
@@ -180,7 +180,7 @@ irb(main):002> Class.instance_of? Class
 
 ```ruby
 irb(main):001> Class.ancestors
-=> [Class, Module, Object, JSON::Ext::Generator::GeneratorMethods::Object, PP::ObjectMixin, Kernel, BasicObject]
+=> [Class, Module, Object, Kernel, BasicObject]
 ```
 
 It turns out all classes inherit from `Module`.
@@ -230,11 +230,11 @@ irb(main):001* class A
 irb(main):002> end
 => nil
 irb(main):003> a = A.new
-=> #<A:0x000000012275ded8>
+=> #<A:0x0000000104e67d00>
 irb(main):004> a.singleton_class
-=> #<Class:#<A:0x000000012275ded8>>
+=> #<Class:#<A:0x0000000104e67d00>>
 irb(main):005> a.singleton_class.ancestors
-=> [#<Class:#<A:0x000000012275ded8>>, A, Object, JSON::Ext::Generator::GeneratorMethods::Object, PP::ObjectMixin, Kernel, BasicObject]
+=> [#<Class:#<A:0x0000000104e67d00>>, A, Object, Kernel, BasicObject]
 ```
 
 Importantly, because this singleton class is created per instance, any methods set on the object's singleton class do not modify the object's regular class. 
@@ -250,9 +250,9 @@ irb(main):001* class A
 irb(main):002> end
 => nil
 irb(main):003> a1 = A.new
-=> #<A:0x0000000160650688>
+=> #<A:0x00000001052774e0>
 irb(main):004> a2 = A.new
-=> #<A:0x000000012f65aad8>
+=> #<A:0x0000000105277260>
 irb(main):005* def a1.hello
 irb(main):006*   "hi"
 irb(main):007> end
@@ -268,15 +268,15 @@ irb(main):013> a1.hello
 irb(main):014> a2.bye
 => "cya"
 irb(main):015> a2.hello
-(irb):15:in '<main>': undefined method 'hello' for #<A:0x000000012f65aad8> (NoMethodError)
+undefined method 'hello' for #<A:0x0000000105277260> (NoMethodError)
 irb(main):016> a3 = A.new
-=> #<A:0x000000012f2d9620>
+=> #<A:0x0000000105276568>
 irb(main):017> a3.hello
-(irb):17:in '<main>': undefined method 'hello' for #<A:0x000000012f2d9620> (NoMethodError)
+undefined method 'hello' for an instance of A (NoMethodError)
 irb(main):018> a1.bye
-(irb):18:in '<main>': undefined method 'bye' for #<A:0x0000000160650688> (NoMethodError)
+undefined method 'bye' for #<A:0x00000001052774e0> (NoMethodError)
 irb(main):019> a3.bye
-(irb):19:in '<main>': undefined method 'bye' for #<A:0x000000012f2d9620> (NoMethodError)
+undefined method 'bye' for an instance of A (NoMethodError)
 ```
 
 ### Class methods
@@ -315,8 +315,8 @@ irb(main):005*   def self.on_the_class_singleton
 irb(main):006*     "yes"
 irb(main):007*   end
 irb(main):008> end
-irb(main):009> 
-irb(main):010> A.singleton_class.instance_methods.include?(:on_the_class_singleton)
+=> :on_the_class_singleton
+irb(main):009> A.singleton_class.instance_methods.include?(:on_the_class_singleton)
 => true
 ```
 
@@ -331,20 +331,9 @@ irb(main):003> class B < A; end
 irb(main):004> B.singleton_class
 => #<Class:B>
 irb(main):005> B.singleton_class.ancestors
-=> 
-[#<Class:B>,
- #<Class:A>,
- #<Class:Object>,
- #<Class:BasicObject>,
- Class,
- Module,
- Object,
- JSON::Ext::Generator::GeneratorMethods::Object,
- PP::ObjectMixin,
- Kernel,
- BasicObject]
+=> [#<Class:B>, #<Class:A>, #<Class:Object>, #<Class:BasicObject>, Class, Module, Object, Kernel, BasicObject]
 irb(main):006> B.new.singleton_class.ancestors
-=> [#<Class:#<B:0x000000011ef7e2b0>>, B, A, Object, JSON::Ext::Generator::GeneratorMethods::Object, PP::ObjectMixin, Kernel, BasicObject]
+=> [#<Class:#<B:0x00000001054b72a0>>, B, A, Object, Kernel, BasicObject]
 ```
 
 Because every class is an object, class singletons are also an object, so this chain of inheritance repeats infinitely. Ruby lazily creates singleton classes, so does not repeat infinitely in practice, although you could access them infinitely.
@@ -354,60 +343,17 @@ irb(main):001* class A
 irb(main):002> end
 => nil
 irb(main):003> a = A.new
-=> #<A:0x0000000123a97d78>
+=> #<A:0x0000000104917a30>
 irb(main):004> a.singleton_class.ancestors
-=> [#<Class:#<A:0x0000000123a97d78>>, A, Object, JSON::Ext::Generator::GeneratorMethods::Object, PP::ObjectMixin, Kernel, BasicObject]
-=> nil
+=> [#<Class:#<A:0x0000000104917a30>>, A, Object, Kernel, BasicObject]
 irb(main):005> A.singleton_class.ancestors
-=> 
-[#<Class:A>,
- #<Class:Object>,
- #<Class:BasicObject>,
- Class,
- Module,
- Object,
- JSON::Ext::Generator::GeneratorMethods::Object,
- PP::ObjectMixin,
- Kernel,
- BasicObject]
+=> [#<Class:A>, #<Class:Object>, #<Class:BasicObject>, Class, Module, Object, Kernel, BasicObject]
 irb(main):006> A.singleton_class.singleton_class
 => #<Class:#<Class:A>>
 irb(main):007> A.singleton_class.singleton_class.ancestors
-=> 
-[#<Class:#<Class:A>>,
- #<Class:#<Class:Object>>,
- #<Class:#<Class:BasicObject>>,
- #<Class:Class>,
- #<Class:Module>,
- #<Class:Object>,
- #<Class:BasicObject>,
- Class,
- Module,
- Object,
- JSON::Ext::Generator::GeneratorMethods::Object,
- PP::ObjectMixin,
- Kernel,
- BasicObject]
+=> [#<Class:#<Class:A>>, #<Class:#<Class:Object>>, #<Class:#<Class:BasicObject>>, #<Class:Class>, #<Class:Module>, #<Class:Object>, #<Class:BasicObject>, Class, Module, Object, Kernel, BasicObject]
 irb(main):008> A.singleton_class.singleton_class.singleton_class.ancestors
-=> 
-[#<Class:#<Class:#<Class:A>>>,
- #<Class:#<Class:#<Class:Object>>>,
- #<Class:#<Class:#<Class:BasicObject>>>,
- #<Class:#<Class:Class>>,
- #<Class:#<Class:Module>>,
- #<Class:#<Class:Object>>,
- #<Class:#<Class:BasicObject>>,
- #<Class:Class>,
- #<Class:Module>,
- #<Class:Object>,
- #<Class:BasicObject>,
- Class,
- Module,
- Object,
- JSON::Ext::Generator::GeneratorMethods::Object,
- PP::ObjectMixin,
- Kernel,
- BasicObject]
+=> [#<Class:#<Class:#<Class:A>>>, #<Class:#<Class:#<Class:Object>>>, #<Class:#<Class:#<Class:BasicObject>>>, #<Class:#<Class:Class>>, #<Class:#<Class:Module>>, #<Class:#<Class:Object>>, #<Class:#<Class:BasicObject>>, #<Class:Class>, #<Class:Module>, #<Class:Object>, #<Class:BasicObject>, Class, Module, Object, Kernel, BasicObject]
 ```
 
 `#<Class:A>` is the singleton class of class `A` (not the singleton class of an instance of `A`).
