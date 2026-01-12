@@ -87,6 +87,7 @@ class RubyMarkdownEvaluator
     code_snippets.each_with_index do |snippet, idx|
       result.concat(snippet[:lines])
       result << "#{outputs[idx]}\n" if outputs[idx]
+      result << "\n"  # Add blank line between statements
     end
     
     # Remove trailing blank lines from the result
@@ -110,7 +111,7 @@ class RubyMarkdownEvaluator
           puts __result_#{idx}.inspect
         rescue => e
           puts "___ERROR_#{idx}___"
-          puts "\#{e.message} (\#{e.class})"
+          puts "\#{e.class}: \#{e.message}"
         end
       RUBY
     end

@@ -61,6 +61,7 @@ The class is available in the `class` method, which returns the class of an obje
 ```ruby
 irb(main):001> "hello world".class
 => String
+
 irb(main):002> 123.class
 => Integer
 ```
@@ -73,8 +74,10 @@ We can define our own classes with the `class` keyword. Then make an instance of
 irb(main):001* class A
 irb(main):002> end
 => nil
+
 irb(main):003> a = A.new
-=> #<A:0x0000000105017dd0>
+=> #<A:0x0000000101197e20>
+
 irb(main):004> a.class
 => A
 ```
@@ -96,9 +99,11 @@ object -- has a --> a class
 irb(main):001* class A
 irb(main):002> end
 => nil
+
 irb(main):003* class B < A
 irb(main):004> end
 => nil
+
 irb(main):005> B.ancestors
 => [B, A, Object, Kernel, BasicObject]
 ```
@@ -114,14 +119,17 @@ irb(main):003*     "aye"
 irb(main):004*   end
 irb(main):005> end
 => :say
+
 irb(main):006* class B < A
 irb(main):007*   def say
 irb(main):008*     "bye"
 irb(main):009*   end
 irb(main):010> end
 => :say
+
 irb(main):011> A.ancestors
 => [A, Object, Kernel, BasicObject]
+
 irb(main):012> B.ancestors
 => [B, A, Object, Kernel, BasicObject]
 ```
@@ -145,8 +153,10 @@ Even classes are objects. So they have a class too. They are objects with class 
 irb(main):001* class A
 irb(main):002> end
 => nil
+
 irb(main):003> A.class
 => Class
+
 irb(main):004> A.instance_of? Class
 => true
 ```
@@ -155,11 +165,13 @@ The `class` keyword is just one way to give a `Class` a name.
 
 ```ruby
 irb(main):001> Class.new
-=> #<Class:0x00000001009b8678>
+=> #<Class:0x0000000102778488>
+
 irb(main):002> A = Class.new
 => A
+
 irb(main):003> a = A.new
-=> #<A:0x0000000100997c20>
+=> #<A:0x00000001026e7c80>
 ```
 
 The class of `Class` is ... itself. Because it's a class!
@@ -190,9 +202,11 @@ It turns out all classes inherit from `Module`.
 ```ruby
 irb(main):001> Module.class
 => Class
+
 irb(main):002* module B
 irb(main):003> end
 => nil
+
 irb(main):004> B.class
 => Module
 ```
@@ -229,12 +243,15 @@ When you create an object from a class, the object creates and stores an anonymo
 irb(main):001* class A
 irb(main):002> end
 => nil
+
 irb(main):003> a = A.new
-=> #<A:0x0000000104e67d00>
+=> #<A:0x00000001032e7da0>
+
 irb(main):004> a.singleton_class
-=> #<Class:#<A:0x0000000104e67d00>>
+=> #<Class:#<A:0x00000001032e7da0>>
+
 irb(main):005> a.singleton_class.ancestors
-=> [#<Class:#<A:0x0000000104e67d00>>, A, Object, Kernel, BasicObject]
+=> [#<Class:#<A:0x00000001032e7da0>>, A, Object, Kernel, BasicObject]
 ```
 
 Importantly, because this singleton class is created per instance, any methods set on the object's singleton class do not modify the object's regular class. 
@@ -249,34 +266,45 @@ We can use the `def {obj}.{method_name}` or `class << {obj}` syntax to define a 
 irb(main):001* class A
 irb(main):002> end
 => nil
+
 irb(main):003> a1 = A.new
-=> #<A:0x00000001052774e0>
+=> #<A:0x00000001010976b0>
+
 irb(main):004> a2 = A.new
-=> #<A:0x0000000105277260>
+=> #<A:0x0000000101097430>
+
 irb(main):005* def a1.hello
 irb(main):006*   "hi"
 irb(main):007> end
 => :hello
+
 irb(main):008* class << a2
 irb(main):009*   def bye
 irb(main):010*     "cya"
 irb(main):011*   end
 irb(main):012> end
 => :bye
+
 irb(main):013> a1.hello
 => "hi"
+
 irb(main):014> a2.bye
 => "cya"
+
 irb(main):015> a2.hello
-undefined method 'hello' for #<A:0x0000000105277260> (NoMethodError)
+NoMethodError: undefined method 'hello' for #<A:0x0000000101097430>
+
 irb(main):016> a3 = A.new
-=> #<A:0x0000000105276568>
+=> #<A:0x0000000101096738>
+
 irb(main):017> a3.hello
-undefined method 'hello' for an instance of A (NoMethodError)
+NoMethodError: undefined method 'hello' for an instance of A
+
 irb(main):018> a1.bye
-undefined method 'bye' for #<A:0x00000001052774e0> (NoMethodError)
+NoMethodError: undefined method 'bye' for #<A:0x00000001010976b0>
+
 irb(main):019> a3.bye
-undefined method 'bye' for an instance of A (NoMethodError)
+NoMethodError: undefined method 'bye' for an instance of A
 ```
 
 ### Class methods
@@ -308,14 +336,17 @@ All classes are objects, all objects have singletons, so class `A` (which is an 
 irb(main):001* class A
 irb(main):002> end
 => nil
+
 irb(main):003> A.singleton_class
 => #<Class:A>
+
 irb(main):004* class A
 irb(main):005*   def self.on_the_class_singleton
 irb(main):006*     "yes"
 irb(main):007*   end
 irb(main):008> end
 => :on_the_class_singleton
+
 irb(main):009> A.singleton_class.instance_methods.include?(:on_the_class_singleton)
 => true
 ```
@@ -326,14 +357,18 @@ The class singleton class always inherits from the singleton classes of its ance
 irb(main):001* class A
 irb(main):002> end
 => nil
+
 irb(main):003> class B < A; end
 => nil
+
 irb(main):004> B.singleton_class
 => #<Class:B>
+
 irb(main):005> B.singleton_class.ancestors
 => [#<Class:B>, #<Class:A>, #<Class:Object>, #<Class:BasicObject>, Class, Module, Object, Kernel, BasicObject]
+
 irb(main):006> B.new.singleton_class.ancestors
-=> [#<Class:#<B:0x00000001054b72a0>>, B, A, Object, Kernel, BasicObject]
+=> [#<Class:#<B:0x0000000100f47378>>, B, A, Object, Kernel, BasicObject]
 ```
 
 Because every class is an object, class singletons are also an object, so this chain of inheritance repeats infinitely. Ruby lazily creates singleton classes, so does not repeat infinitely in practice, although you could access them infinitely.
@@ -342,16 +377,22 @@ Because every class is an object, class singletons are also an object, so this c
 irb(main):001* class A
 irb(main):002> end
 => nil
+
 irb(main):003> a = A.new
-=> #<A:0x0000000104917a30>
+=> #<A:0x00000001003a7b58>
+
 irb(main):004> a.singleton_class.ancestors
-=> [#<Class:#<A:0x0000000104917a30>>, A, Object, Kernel, BasicObject]
+=> [#<Class:#<A:0x00000001003a7b58>>, A, Object, Kernel, BasicObject]
+
 irb(main):005> A.singleton_class.ancestors
 => [#<Class:A>, #<Class:Object>, #<Class:BasicObject>, Class, Module, Object, Kernel, BasicObject]
+
 irb(main):006> A.singleton_class.singleton_class
 => #<Class:#<Class:A>>
+
 irb(main):007> A.singleton_class.singleton_class.ancestors
 => [#<Class:#<Class:A>>, #<Class:#<Class:Object>>, #<Class:#<Class:BasicObject>>, #<Class:Class>, #<Class:Module>, #<Class:Object>, #<Class:BasicObject>, Class, Module, Object, Kernel, BasicObject]
+
 irb(main):008> A.singleton_class.singleton_class.singleton_class.ancestors
 => [#<Class:#<Class:#<Class:A>>>, #<Class:#<Class:#<Class:Object>>>, #<Class:#<Class:#<Class:BasicObject>>>, #<Class:#<Class:Class>>, #<Class:#<Class:Module>>, #<Class:#<Class:Object>>, #<Class:#<Class:BasicObject>>, #<Class:Class>, #<Class:Module>, #<Class:Object>, #<Class:BasicObject>, Class, Module, Object, Kernel, BasicObject]
 ```
