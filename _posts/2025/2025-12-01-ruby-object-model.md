@@ -428,34 +428,36 @@ In summary:
 
 I think this explains what an eigenclass is, the entire infinitely recurring diagram from the beginning, as well as the rest of Ruby's object model.
 
-Here is my extension to the diagram:
+Here is my version of the diagram (where `bob = Dog.new` and `class Dog < Animal`):
 
 ```
-                         +---------+             +-...
-                         |         |             |
-         BasicObject--e--|-->(BasicObject)-------|-...
-             ^           |         ^             |
-             |           |         |             |
-          Object--eigen--|----->(Object)---------|-...
-             ^           |         ^             |
-             |           |         |             |
-             +-------+   |         +--------+    |
-             |       |   |         |        |    |
-             |    Module-|---------|--->(Module)-|-...
-             |       ^   |         |        ^    |
-             |       |   |         |        |    |
-             |     Class-|---------|---->(Class)-|-...
-             |       ^   |         |        ^    |
-             |       +---+         |        +----+
-             |                     |
-           Animal----eigen----->(Animal)-----------...
-             ^                     ^
-             |                     |
-   bob----->Dog------eigen------>(Dog)------------...
-    |        ^
-    V        |
-   eigenbob -+
+                      +---------+             +-...
+                      |         |             |
+      BasicObject-----|-->(BasicObject)-------|-...
+          ^           |         ^             |
+          |           |         |             |
+      Object----------|----->(Object)---------|-...
+          ^           |         ^             |
+          |           |         |             |
+          +-------+   |         +--------+    |
+          |       |   |         |        |    |
+          |    Module-|---------|--->(Module)-|-...
+          |       ^   |         |        ^    |
+          |       |   |         |        |    |
+          |     Class-|---------|---->(Class)-|-...
+          |       ^   |         |        ^    |
+          |       +---+         |        +----+
+          |                     |
+        Animal-------------->(Animal)-----------...
+          ^                     ^
+          |                     |
+         Dog----------------->(Dog)-------------...
+          ^
+          |
+bob--->"eigen-bob"
 ```
+
+Vertical lines represent inheritance, horizontal lines represent singleton classes, and parentheses represent metaclasses.
 
 ## References
 
