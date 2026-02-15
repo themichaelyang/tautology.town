@@ -23,7 +23,7 @@ There are two ways to cook: direct heat, and indirect heat. The "two-zone" techn
 
 For temperature control, the grill has a bottom and a top vent that can be adjusted to control airflow. Open vents will pull more oxygen and the charcoal will faster and hotter.
 
-Generally, [try to keep the lid on](https://www.weber.com/IE/en/blog/grill-on/its-all-about-the-lid/weber-169764.html) to keep the grill hot and prevent flare ups. If there's flare up, put the lid on and reduce the top vent. There may be too much grease. In fact, the distinctive smokey flavor comes from fat drippings hitting the charcoal and turning to smoke.
+Generally, [try to keep the lid on](https://www.weber.com/IE/en/blog/grill-on/its-all-about-the-lid/weber-169764.html) to control temperatures and prevent flare ups. If there's flare up, put the lid on and reduce the top vent. Remove some food; it may be dripping too much grease. Interestingly, the distinctive smokey flavor comes from fat drippings hitting the charcoal and turning to smoke.
 
 There will be hotter and cooler spots you'll notice as you cook. Flip and move the food around with tongs and a spatula. I use the [OXO turner and tongs](https://www.oxo.com/grilling-tongs-and-turner-set.html).
 
