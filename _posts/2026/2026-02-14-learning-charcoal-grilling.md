@@ -3,15 +3,15 @@ layout: post
 title: "Learning how to charcoal grill"
 ---
 
-I got a charcoal grill. A portable, no-frills, [Weber Jumbo Joe](https://www.weber.com/US/en/portable-grills/jumbo-joe/). It is a cute, round, and pleasingly-shaped little thing. Contrary to its name, "Jumbo" Joe is one of the smaller grills you can get. (Smaller yet is "Smokey" Joe. Who is Joe?)
+I got a charcoal grill. A portable, no-frills, [Weber Jumbo Joe](https://www.weber.com/US/en/portable-grills/jumbo-joe/).
 
-You can get one used very cheaply.
+It is a cute, round, and pleasingly-shaped little thing. You can get one used very cheaply. Contrary to its name, "Jumbo" Joe is one of the smaller grills you can get. (Smaller yet is "Smokey" Joe. Who is Joe?)
 
 There was a Reddit comment I saw that just made me get up and go do it, which I had been hemming and hawing about before. I couldn't find the comment again, but it went something like this:
 
-> was going to end it all on x-mas. my daughter in law gifted me a weber jumbo joe. grilling 15 years since
+> was going to end it all on x-mas. my daughter in law gifted me a weber jumbo joe. been grilling 15 years since, never looked back
 
-I got my Jumbo Joe the very next day.
+What a testimonial! I got my Jumbo Joe the very next day.
 
 I've grilled on it four times, a little less than once a week since setting it up. There are more detailed guides online, but the absolute basics are quite simple.
 
@@ -51,10 +51,8 @@ As I'm just getting started, I have a lot to learn: smoking meats for a long tim
 
 Charcoal grilling is essentially a more sophisticated form of the most ancient form of cooking, cooking over a fire. It is [innately human](https://en.wikipedia.org/wiki/Control_of_fire_by_early_humans#The_cooking_hypothesis); we are practically born to do it.
 
+I have long maintained that man has [long known](https://en.wikipedia.org/wiki/Lindy_effect) the ways to a good life, and that they are simple and should be easy to do. This includes good food, good company, and good times. Grilling can save lives.
+
 <span style="hyphens: none;">
-It is intuitive, it is forgiving (cut off the burnt parts), it is delicious, it is fun, and it is even better with others.
+It is intuitive, it is forgiving (cut off the burnt parts), it is delicious, it is fun, and it is even better with others. You should grill too!
 </span>
-
-I have long maintained that man has [long known](https://en.wikipedia.org/wiki/Lindy_effect) the ways to a good life, and that they are simple and easy to do. This includes good food, good company, and good times. Grilling, too, can save lives.
-
-You should grill too!
