@@ -54,5 +54,5 @@ Charcoal grilling is essentially a more sophisticated form of the most ancient f
 I have long maintained that man has [long known](https://en.wikipedia.org/wiki/Lindy_effect) the ways to a good life, and that they are simple and should be easy to do. This includes good food, good company, and good times. Grilling can save lives.
 
 <span style="hyphens: none;">
-It is intuitive, it is forgiving (cut off the burnt parts), it is delicious, it is fun, and it is even better with others. You should grill too!
+It is intuitive, it is forgiving (cut off the burnt parts), it is delicious, it is fun, and it is even better with others. You should grill too.
 </span>
