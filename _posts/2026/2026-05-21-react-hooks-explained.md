@@ -5,11 +5,11 @@ title: "How React hooks associate functions with state"
 
 How do React hooks know which component instance is being called, without being passed a stable identifier?
 
-There are many high quality answers online. For me, they either focus too much on React internals ([Fibers](https://stackoverflow.com/a/53730788/7971276), [render cycle](https://eliav2.github.io/how-react-hooks-work/), [ReactFiberHooks](https://stackoverflow.com/a/53980190/7971276)), or they are too high level and miss some key ideas (["it's just arrays"](https://medium.com/@ryardley/react-hooks-not-magic-just-arrays-cd4f1857236e), closures, call order). 
+There are many high quality answers online. For me, they either focus too much on React internals ([Fibers](https://stackoverflow.com/a/53730788/7971276), [render cycle](https://eliav2.github.io/how-react-hooks-work/), [ReactFiberHooks](https://stackoverflow.com/a/53980190/7971276)), or are too high level (["it's just arrays"](https://medium.com/@ryardley/react-hooks-not-magic-just-arrays-cd4f1857236e), closures, call order). 
 
 Here is an answer, written for and by me:
 
-*React uses the relative position of a component in the virtual DOM tree to store state for a component. [The Rules of Hooks](https://react.dev/reference/rules/rules-of-hooks) requires hooks for a component to have a fixed order, so the call order can be used to index an individual hook's state.*
+*React stores state for a component by using its relative position in the "virtual DOM" tree. [The Rules of Hooks](https://react.dev/reference/rules/rules-of-hooks) requires hooks for a component to have a fixed order, so the call order can be used to index an individual hook's state.*
 
 This is alluded to in the [React docs](https://react.dev/learn/preserving-and-resetting-state):
 
@@ -17,35 +17,36 @@ This is alluded to in the [React docs](https://react.dev/learn/preserving-and-re
 > ...  
 > When you give a component state, you might think the state “lives” inside the component. But the state is actually held inside React. React associates each piece of state it’s holding with the correct component by where that component sits in the render tree.
 
-We can think of this as keeping a second state tree that mirrors the structure of the UI tree. On a render (updating the UI tree), it walks through both the UI tree and state tree nodes at the same positions. Before each functional component is evaluated, its state is pulled from the corresponding node in the state tree to be used implicitly by the hooks.
+Imagine keeping a second state tree that mirrors the shape of the UI tree. When we evaluate the UI tree, we walk through the UI tree and state tree at the same positions. Before a functional component is evaluated, its state is loaded from the corresponding state tree node to be used implicitly by its hooks.
 
-This is how you might implement a bare bones `useState`:
+Here is how you might implement a bare bones `useState`:
 
 ```javascript
-let context = {hookState: [], hookIndex: 0} // hook "context"
-// unrelated to React Context API
+let context = {hookState: [], hookIndex: 0} // global hook "context"
+// (unrelated to React Context API)
 
 // 0. on first render, stateNode tree copies vnode (virtual DOM) tree structure
 // visit() will be called per component instance/node when rendering 
 function visit(vnode, stateNode) {
-  context = stateNode // 1. set up the context
+  // 1. before a functional component is called, load in its context
+  context = stateNode
   context.hookIndex = 0 // reset for the current component
-  renderStuff(vnode) // 2. calls the functional component
+  renderStuff(vnode) // 2. evaluates the functional component, calling its hooks
   vnode.children.forEach((child, i) => visit(child, stateNode.children[i]))
 }
 
-// 3. when the functional component is called the correct context is set
+// called by functional component
 function useState(initial) {
-  // within a component, keep track of which hook index is being called
+  // 3. keep track of which hook is being called within the component
   const index = context.hookIndex // copy to closure
   context.hookIndex += 1
 
-  // 4. if there is no prior state, initialize it!
+  // 4. if there is no prior state, this is the first render. initialize!
   if (index >= context.hookState.length) context.hookState[index] = initial
 
   return [
-    () => context.hookState[index], // getter
-    (value) => { // setter
+    context.hookState[index], // current value
+    (value) => { // and setter
       context.hookState[index] = value
       queueRender()
     }
@@ -151,6 +152,7 @@ _jsxs(Parent, {
 - [Hooks FAQ: How does React associate hook calls with components (legacy React docs)](https://legacy.reactjs.org/docs/hooks-faq.html#how-does-react-associate-hook-calls-with-components): this is the former "official" answer, but it's very high level.
 - [Preserving and Resetting State (React docs)](https://react.dev/learn/preserving-and-resetting-state): mostly helpful, but a bit handwavey around "UI tree". Its conditional rendering example hides the second, not first, `Counter()`, which hides that the conditional expression is in the UI tree. 
 - [Reconciliation (legacy React docs)](https://legacy.reactjs.org/docs/reconciliation.html)
+- [Virtual DOM and Internals (legacy React docs)](https://legacy.reactjs.org/docs/faq-internals.html): clarifies the virtual DOM terminology
 
 ---
 
