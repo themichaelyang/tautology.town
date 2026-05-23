@@ -66,7 +66,9 @@ You are sick and tired of oats. You happily trade vast sums of oats for modern i
 
 But oats have become so commonplace that the oat-rate for these luxuries has reached the hundreds, even thousands, of bushels (this is called Inflation). This is too much for you to carry around, and far too many oats for anyone to eat at once.
 
-Of course, you are Clever, so you devise a Genius Scheme: instead of sending buschels of oats directly, you mark down on a clay tablet how many oats you owe to who in a ledger (in doing so, you invent Numbers and Writing). Oat creditors could redeem their oats as needed in smaller, more consumable quantities. The oats remain safe and dry in a warehouse. You figure out that you can even gamble and plant the still unclaimed oats to have even more for next year.
+Of course, you are Clever, so you devise a Genius Scheme: instead of sending buschels of oats directly, you mark down on a clay tablet how many oats you owe to who in a ledger (in doing so, you invent Numbers and Writing). Oat creditors can redeem their oats as needed in smaller, more consumable quantities. The oats remain safe and dry in a warehouse. 
+
+You figure out that you can even gamble and plant the still unclaimed oats to have even more for next year.
 
 <div class="pause"></div>
 
@@ -90,7 +92,7 @@ And this is called: Cash.
 
 Okay, we've been having too much fun. Let's break down what we've discovered:
 
-1. Money can be a number, like the "money of account".
+1. Money can be a number, like "money of account".
 2. Money can be a thing, like cash (or oats).
 
 And, in fact, a number is much more portable than a thing.

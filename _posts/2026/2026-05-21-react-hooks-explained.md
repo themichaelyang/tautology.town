@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "How React hooks associate functions with state"
+title: "How do React hooks associate functions with state?"
 ---
 
 How do React hooks know which component instance is being called, without being passed a stable identifier?
