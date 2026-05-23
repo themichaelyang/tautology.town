@@ -19,8 +19,62 @@ This is alluded to in the [React docs](https://react.dev/learn/preserving-and-re
 
 ## Conditionally rendered elements
 
-Something that initially escaped me was how this works for conditionally rendered elements. If the element is not rendered, then wouldn't it "lose its place" in the rendering tree?
+How does this work for conditionally rendered elements? If the element is not rendered, then wouldn't it lose its place in the rendering tree, messing up the rest of the tree?
 
+My own confusion around this stemmed from the convenient representation of JSX.
+
+JSX tags are transformed into function calls like this:
+
+<style>
+.side-by-side {
+  display: flex;
+  gap: 1rem;
+  align-items: stretch;
+}
+.side-by-side div {
+  flex: 1;
+  min-width: auto;
+}
+@media (max-width: 600px) {
+  .side-by-side { flex-direction: column; }
+}
+</style>
+
+<div class="side-by-side" markdown="1">
+
+```jsx
+<Parent name="example">
+  {showA && <A/>}
+  <B/>
+  <C/>
+</Parent>
+```
+
+```javascript
+_jsxs(Parent, {
+  name: "example",
+  children: [
+    showA && _jsx(A, {}), 
+    _jsx(B, {}),
+    _jsx(C, {})
+  ]
+});
+```
+
+</div>
+
+## The long answer
+
+1. Each JSX tag is transformed into a `_jsx` function call, passing in the tag name as a string, properties as an object. A tag's child tags are passed as an array of expressions.
+2. React executes this function call and constructs a "virtual DOM" tree describing the intended DOM structure. React knows how to efficiently update the real DOM from the virtual DOM.
+3. React stores local state for each component in a tree mirroring the virtual DOM. When state is updated, uses the position within the tree to load the right state for hooks.
+5. Hooks within the same component are distinguished by call order in that component. This is possible because of the [Rules of Hooks](https://react.dev/reference/rules/rules-of-hooks)
+6. This works with a conditionally rendered component (i.e. `{hasAnnouncement && <Annoucement>}) because the entire conditional expression is included in the children array of its parent, so the index of the component is stable. 
+7. Lists of components need keys because the entire list expression occupies a single index in the children array of its parent, so they need their own stable identifier.
+
+
+
+For a conditionally rendered element, the entire conditional expression is passed into the JSX
 
 
 
@@ -28,13 +82,6 @@ Something that initially escaped me was how this works for conditionally rendere
 
 
 Here is my long answer:
-
-1. Each JSX tag is transformed into a `_jsx` function call, passing in the tag name as a string, properties as an object. A tag's child tags are passed as an array of expressions.
-2. React executes this function call and constructs a "virtual DOM" tree describing the intended DOM structure. React knows how to efficiently update the real DOM from the virtual DOM.
-3. React stores local state for each component in a  tree mirroring the virtual DOM. When state is updated, uses the position within the tree to load the right state for hooks.
-5. Hooks within the same component are distinguished by call order in that component. This is possible because of the [Rules of Hooks](https://react.dev/reference/rules/rules-of-hooks)
-6. This works with a conditionally rendered component (i.e. `{hasAnnouncement && <Annoucement>}) because the entire conditional expression is included in the children array of its parent, so the index of the component is stable. 
-7. Lists of components need keys because the entire list expression occupies a single index in the children array of its parent, so they need their own stable identifier.
 
 I found this fact very surprising, because of conditionally rendered elements. 
 
@@ -44,18 +91,42 @@ In the chapter "Preserving and Resetting State" it gives the example of two adja
 <Counter />
 {showB && <Counter />}
 ```
+
 <div id="counter-demo"></div>
 
-<script type="text/babel" data-type="module">
-  import { useState } from 'https://esm.sh/react@18';
-  import { createRoot } from 'https://esm.sh/react-dom@18/client';
+<script type="module">
+  import { html, render, useState } from '{{ "/assets/2026/preact-htm.js" | relative_url }}';
 
   function Counter() {
     const [n, setN] = useState(0);
-    return <button onClick={() => setN(n + 1)}>count: {n}</button>;
+    return html`<button onClick=${() => setN(n + 1)}>count: ${n}</button>`;
   }
 
-  createRoot(document.getElementById('counter-demo')).render(<Counter/>);
+  function App() {
+    const [showA, setShowA] = useState(true);
+    const [showB, setShowB] = useState(true);
+    return html`
+      <div>
+        ${showA && html`<${Counter}/>`}${showB && html`<${Counter}/>`}
+      </div>
+      <label>
+        <input
+          type="checkbox"
+          checked=${showA}
+          onChange=${e => setShowA(e.target.checked)}
+        /> show A
+      </label>
+      <label>
+        <input
+          type="checkbox"
+          checked=${showB}
+          onChange=${e => setShowB(e.target.checked)}
+        /> show B
+      </label>
+    `;
+  }
+
+  render(html`<${App}/>`, document.getElementById('counter-demo'));
 </script>
 
 If you update the second counter, then toggle it, it resets the second counter.
