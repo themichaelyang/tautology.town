@@ -9,7 +9,7 @@ There are many high quality answers online. For me, they either focus too much o
 
 Here is an answer, written for and by me:
 
-*React stores state for a component by using its relative position in the "virtual DOM" tree. [The Rules of Hooks](https://react.dev/reference/rules/rules-of-hooks) requires hooks for a component to have a fixed order, so the call order can be used to index an individual hook's state.*
+*React stores state for a component instance by using its relative position in the "virtual DOM" tree. [The Rules of Hooks](https://react.dev/reference/rules/rules-of-hooks) requires hooks for a component to have a fixed order, so the call order can then be used to index an individual hook's state.*
 
 This is alluded to in the [React docs](https://react.dev/learn/preserving-and-resetting-state):
 
