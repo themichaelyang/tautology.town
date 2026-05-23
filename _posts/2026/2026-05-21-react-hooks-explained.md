@@ -131,7 +131,7 @@ _jsxs(Parent, {
 ```
 </div>
 
-## The long answer[^i-am-not-ai]
+## In summary[^i-am-not-ai]
 
 1. Each JSX tag is transformed into a `_jsx` function call, passing in the tag name as a string, properties as an object. A tag's child tags are passed as an array of expressions.
 2. React executes this function call and constructs a "virtual DOM" tree describing the intended DOM structure. React knows how to efficiently update the real DOM from the virtual DOM.
