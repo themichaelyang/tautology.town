@@ -154,14 +154,14 @@ Shuffling this amount of money around and timing everything right is no easy fea
 
 The key to this whole arrangement are the fees required to participate in the network, largely set by the network.
 
-Let's walk through a typical credit card transaction in the US:
+Let's walk through an average credit card transaction in the US:
 
-1. A cardholder pays for a product at a merchant.
-2. The merchant pays 2.5% of the transaction to their payment processor or merchant acquirer. The 2.5% is the **merchant discount rate** or MDR.
-3. The payment processor keeps 0.35%, then pays 2% to the cardholder's issuing bank and 0.15% to card network. The 2% is the *interchange fee*, commonly known as **interchange**. The 0.15% is the **network assessment fee**. [^interchange-name]
-4. The issuing bank keeps 2%!
+1. A cardholder pays for a product at a merchant for $100.00.
+2. The merchant pays 2.5% ($2.50) of the transaction to their payment processor or merchant acquirer. The 2.5% is the **merchant discount rate** or MDR.
+3. The payment processor keeps 0.35% ($0.35), then pays 2% ($2.00) to the cardholder's issuing bank and 0.15% ($0.15) to Visa. The 2% is the *interchange fee*, commonly known as **interchange**. The 0.15% is the **network assessment fee**. [^interchange-name]
+4. The issuing bank keeps 2% ($2.00)!
 
-Surprisingly, the issuing bank keeps most and the network takes the least, by an order of magnitude! This is because the issuer is traditionally considered to take on most of the risk (although merchants are likely to disagree).
+Surprisingly, the issuing bank keeps most and the network takes the least, by an order of magnitude! This is because for the tranasction, the issuer is traditionally considered to take on most of the risk (although merchants are likely to disagree).
 
 In addition to [regulatory requirements](https://www.consumerfinance.gov/rules-policy/regulations/1005/6/), Visa and Mastercard offer zero-liability protection. This means that the issuing bank, not the cardholder, is liable for any charges made on a card if it is lost or stolen.[^friendly-fraud] The issuing bank also takes on [credit risk](https://en.wikipedia.org/wiki/Credit_risk), and must always pay for an approved transaction even if a cardholder cannot pay off their balance.
 
@@ -171,7 +171,9 @@ In addition to [regulatory requirements](https://www.consumerfinance.gov/rules-p
 
 Because of how much is given to the issuers, there are a lot of incentives for issuers to acquire customers and fund lavish rewards programs to encourage spending. This split also explains the recent rise of **issuing processors**, which make it easier for neobanks and fintechs to issue cards to access a more lucrative end of the market.
 
-Why do merchants pay this fee? The idea is that accepting card payments yields higher spending and increased volume, in part due to credit card rewards.
+Why are merchants willing to pay this fee?[^surcharge] The idea is that accepting card payments nets more customers and higher spending, due to convenience, consumer protections, and credit card rewards.
+
+[^surcharge]: Some merchants add a surcharge on card transactions to pass through the fee to customers, but this is actually against Visa's rules.
 
 <figure>
 <pre class="mermaid wide">
@@ -200,7 +202,7 @@ graph LR
 <figcaption>The virtuous cycle of spending</figcaption>
 </figure>
 
-Out of these, the network sets the interchange and network assessment fee. Interchange fees vary dramatically based on the kind of card, category of spend, and even the metadata attached to a transaction. The networks goal is to set fees that incentivize desired behaviors on their network, including using more secure payment methods (lowering interchange fees for merchants), or for companies to do more business spending (higher interchange fees on commercial credit cards).
+Out of these, the network sets the interchange and network assessment fee. Interchange fees vary dramatically based on the kind of card, category of spend, and even the metadata attached to a transaction. The network's goal is to set fees that incentivize desired behaviors on their network, including using more secure payment methods (lowering interchange fees for merchants), or for companies to do more business spending (higher interchange fees on commercial credit cards).
 
 More cards means more merchants, more merchants mean more cards. In theory, the network benefits through fees, the merchants benefit through more purchases, and the consumer benefits through convenience.
 
@@ -208,29 +210,5 @@ In the EU, [interchange fees are restricted to 0.3%](https://www.psr.org.uk/our-
 
 # 4. Set rules and handle disputes
 
-
-
-
-
-
-
-In another article, they claim to have [a moat](https://web.archive.org/web/20120330102616/https://www.usatoday.com/tech/news/story/2012-03-25/visa-data-center/53774904/1/) protecting the data center.
-
-
-
-
-
-> "Inside the pods, 376 servers, 277 switches, 85 routers and 42 firewalls--all connected by 3,000 miles of cable--hum around the clock, enabling transactions around the globe in near real-time and keeping Visa's business running."
-
-> "Inside the pods, 376 servers, 277 switches, 85 routers and 42 firewalls--all connected by 3,000 miles of cable--hum around the clock, enabling transactions around the globe in near real-time and keeping Visa's business running."
-
-[Top secret Visa data center banks on security, even has moat (USA Today, 2013)](https://web.archive.org/web/20120330102616/https://www.usatoday.com/tech/news/story/2012-03-25/visa-data-center/53774904/1/)
-
-the crux of their operation is an electronic one, and
-
-
-In a typical transaction, the merchant pays 2.5% of the transaction to the payment processor. This actually the **merchant discount rate**, and includes the payment processor's cut on top of the interchange.
-
-The payment processor keeps 0.35%, then pays 2.15% 
 
 https://www.complexsystemspodcast.com/episodes/credit-card-rewards-interchange/
