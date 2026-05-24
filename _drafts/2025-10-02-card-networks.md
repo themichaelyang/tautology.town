@@ -13,19 +13,22 @@ A few things they don’t do[^dont-do]:
 
 [^dont-do]: Nowadays they may have product offerings for some of these, or own subsidiaries that do some of these, but these are not core to the business of being a card network.
 
-- They aren’t the company that provides the card. Nor are they a bank, though the card you have is probably issued by one (Chase, Capital One, BofA, etc). Those are called **“card issuers”**.
+- They aren’t the company that issues the card. Those are called **card issuers**.
+- They aren't a bank, though the cards you have are probably issued by one (Chase, Capital One, BofA, etc).
 - They don’t distribute point of sale methods or online checkouts, which are done by **payment processors**.
-- They aren’t responsible for onboarding or underwriting stores and merchants. That is typically done by payment processors and banks, called **“merchant acquirers”**.
+- They aren’t responsible for onboarding or underwriting stores and merchants, known as **merchant acquiring**. This is done by banks offering merchant accounts, but increasingly offered by modern payment processors (Stripe, Square, Adyen)[^payfac].
 - They don’t manufacture or print cards.
 - Nor do they manufacture the point of sale hardware.
 
 Instead, Visa and Mastercard are **card networks**[^card-network-name], facilitating card transactions by connecting the cardholders and issuers to the merchants and acquirers.
 
+[^payfac]: Technically, these are "payment facilitators". A bank underwites the payment company, and the payment company underwrites their merchants. The different roles in payments have historically been meaningful, but companies are increasingly blurring the lines, so these distinctions and terms are less interesting today.
+
 [^card-network-name]: To be precise, we use "card networks" to colloqially refer to the companies operating their own card payment networks / schemes. For example, *VisaNet* is technically the network, Visa is the company/brand. Mastercard's network is called *Banknet*. Both companies also own and operate specialized subsidiary networks for things like debit cards and ATMs, like Visa's Interlink and Plus, or Mastercard's Cirrus and Maestro, although technically VisaNet and Banknet can process debit (this is a story for another time). There are further terms to distinguish the telecommunications network with the bank network, and even subsets of each. Visa even thinks of itself as a ["network of networks"](https://annualreport.visa.com/business-overview/default.aspx#:~:text=Our%20network%20of%20networks%20strategy,transactions%2C%20no%20matter%20the%20network.). Turtles all the way down.
 
 This forms a [two-sided market](https://en.wikipedia.org/wiki/Two-sided_market) of all the participants in a transaction[^or-four]:
 
-[^or-four]: Or [four](https://www.marqeta.com/uk/demystifying-cards-guide/card-payments-ecosystem), depending on how you count.
+[^or-four]: Or [four or more](https://www.marqeta.com/uk/demystifying-cards-guide/card-payments-ecosystem), depending on how you count.
 
 <figure>
 <pre class="mermaid wide" id="key-players">
@@ -61,7 +64,7 @@ window.addEventListener('load', () => {
 <figcaption>The key players in a card transaction.</figcaption>
 </figure>
 
-The card network's job is to enable card transactions, and also to spread the use of their card brands. 
+The card network's job is to enable card transactions, and also to grow participation in their networks.
 
 This boils down to four key responsibilities:
 1. Run the telecommunications network to route transaction messages.
@@ -69,17 +72,13 @@ This boils down to four key responsibilities:
 3. Set the incentives to encourage the use of the network.
 4. Set and enforce rules of the network, including a mechanism for disputes.
 
-For the rest of the discussion, we'll focus on Visa, as it's what I'm most familiar with, although the role of Mastercard is analogous.
+For the rest of the discussion, we'll focus on Visa, as it's what I'm most familiar with. Mastercard is more or less the same, with different names for things.
 
 # 1. Run the telecommunications network
 
 When we talk about networks, we think of the Internet, computers connected together by fiber and [deep sea cables](https://www.submarinecablemap.com/).
 
-Card networks are not so different. They maintain data centers and lease fiber optics cables that connect issuers and acquirers electronically.
-
-During a 
-
-When a card is used, the card network is responsible for routing transaction request messages, known as **authorizations**. Similar to IP addresses,[^pan-exhaustion] card numbers, also known as Primary Account Numbers (PANs) are used to route requests from the merchant's checkout to the issuer, where the authorization is approved or declined. The first 6 to 8 digits of the PAN is called a Bank Identification Number, or BIN, which identifies the issuing bank.
+Card networks, being telecommunication networks, are no different. They maintain data centers and lease fiber optics cables to connect issuers and acquirers electronically. At their most basic technical level, Visa's responsibility is routing transaction messages between its participating issuers and acquirers. Mastercard calls this activity "[switching](https://www.mastercard.com/eea/switching-services/our-technology/transaction.html)", seeing itself as a network switch.
 
 <!-- TODO: support sidenotes/asides https://kau.sh/blog/jekyll-footnote-tufte-sidenote/ -->
 [^pan-exhaustion]: Similar to IPv4, 16 digit PANs are rapidly exhausting due to the use of anonymized "token" PANs used by things like Apple/Google Pay and saved payment details.
@@ -90,13 +89,23 @@ Visa takes its data centers very seriously. They are highly secure, redundant, a
 
 > "Not surprisingly, the facility, which is also designed to withstand earthquakes and gale-force winds up to 170 miles per hour, is locked down like a digital Fort Knox. The roads entering the complex have hydraulic bollards that can shoot up fast enough to stop a vehicle traveling up to 50 miles per hour dead in its tracks. (The road is too curvy to drive safely at higher speeds.) Visitors must pass through a security gate, be cleared by roving security teams, and then be subjected to a biometric scan before being admitted."
 
-[Another article](https://web.archive.org/web/20120330102616/https://www.usatoday.com/tech/news/story/2012-03-25/visa-data-center/53774904/1/) claims Visa's OCE is guarded by a a moat.
+And a 2012 headline from [USA Today](https://web.archive.org/web/20120330102616/https://www.usatoday.com/tech/news/story/2012-03-25/visa-data-center/53774904/1/):
+
+> Top secret Visa data center banks on security, even has moat
 
 That top secret location? In [Ashburn, Virginia](https://maps.app.goo.gl/tPEDWcTiY621sZz37), conveniently located by Trader Joe's and Topgolf.
 
 <div>
 {% include image.html url="/assets/2025/visa-oce-satellite.png" description='I think the "moat" is the pool of water on the top center-left.' %}
 </div>
+
+When a card is used, the card network routes a transaction request, known as an **authorization**. Card numbers, also known as **Primary Account Numbers (PANs)** are used like IP addresses,[^pan-exhaustion] to route the authorization. The first 6 to 8 digits of the PAN called a **Bank Identification Number (BIN)**, identifies the card issuer, who approves or declines the request.
+
+An approved authorization places a temporary hold on the account for the amount of the transaction. Later, the merchant initiates a **capture** on the authorization to their processor. This sends another message through the card network with a final transaction amount (for example, including tips) that will transfer the money, known as **clearing**.
+
+Consider: before this was done by computers, this was done by people via phone calls[^verbal-authorization] and mail.
+
+[^verbal-authorization]: Known as a "[voice authorization](https://web.mit.edu/ecommerce/www/verbal-auth.html)". You might be able to get one today, although I don't know if banks are staffing operators to field calls.
 
 # 2. Coordinate the banking network
 
