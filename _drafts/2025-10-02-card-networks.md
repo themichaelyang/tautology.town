@@ -78,7 +78,7 @@ For the rest of the discussion, we'll focus on Visa, as it's what I'm most famil
 
 When we talk about networks, we think of the Internet, computers connected together by fiber and [deep sea cables](https://www.submarinecablemap.com/).
 
-Card networks, being telecommunication networks, are no different. They maintain data centers and lease fiber optics cables to connect issuers and acquirers electronically. At their most basic technical level, Visa's responsibility is routing transaction messages between its participating issuers and acquirers. Mastercard calls this activity "[switching](https://www.mastercard.com/eea/switching-services/our-technology/transaction.html)", seeing itself as a network switch.
+Card networks, being telecommunication networks, are no different. They maintain data centers and lease fiber optics cables to connect issuers and acquirers electronically. At their most basic technical level, Visa's responsibility is forwarding transaction messages between its participating issuers and acquirers. Mastercard calls this activity "[switching](https://www.mastercard.com/eea/switching-services/our-technology/transaction.html)", seeing itself as a network switch.
 
 <!-- TODO: support sidenotes/asides https://kau.sh/blog/jekyll-footnote-tufte-sidenote/ -->
 [^pan-exhaustion]: Similar to IPv4, 16 digit PANs are rapidly exhausting due to the use of anonymized "token" PANs used by things like Apple/Google Pay and saved payment details.
@@ -99,9 +99,9 @@ That top secret location? In [Ashburn, Virginia](https://maps.app.goo.gl/tPEDWcT
 {% include image.html url="/assets/2025/visa-oce-satellite.png" description='I think the "moat" is the pool of water on the top center-left.' %}
 </div>
 
-When a card is used, the card network routes a transaction request, known as an **authorization**. Card numbers, also known as **Primary Account Numbers (PANs)** are used like IP addresses,[^pan-exhaustion] to route the authorization. The first 6 to 8 digits of the PAN called a **Bank Identification Number (BIN)**, identifies the card issuer, who approves or declines the request.
+When a card is used, the card network routes a transaction request, known as an **authorization**, from the merchant to the issuer. Card numbers, also known as **Primary Account Numbers (PANs)** are used like IP addresses,[^pan-exhaustion]. The first 6 to 8 digits of the PAN called a **Bank Identification Number (BIN)**, identifies the card issuer, who approves or declines the request.
 
-An approved authorization places a temporary hold on the account for the amount of the transaction. Later, the merchant initiates a **capture** on the authorization to their processor. This sends another message through the card network with a final transaction amount (for example, including tips) that will transfer the money, known as **clearing**.
+An approved authorization places a temporary hold on the account for the amount of the transaction. Later, the merchant submits a **capture** on the authorization to their processor. This sends another message through the card network to finalize the transaction amount (adding tips written on receipts, for example) and initiate the transfer the money, known as **clearing**.
 
 Consider: before this was done by computers, this was done by people via phone calls[^verbal-authorization] and mail.
 
@@ -109,15 +109,17 @@ Consider: before this was done by computers, this was done by people via phone c
 
 # 2. Coordinate the banking network
 
-After a transaction is approved, money on both ends must move to fulfill the transaction, known as **settlement**. 
+In addition to a telecom network, Visa has a *financial* network of banks.
 
-Visa's second job as a router is to *route money* for settlement, which it does by having a banking relationship with each party: collecting money from one and transfering to another. 
+After a transaction is finalized, money on both ends must move to fulfill the transaction, known as **settlement**.
 
-To be more efficient, Visa does "net settlement". Every day, each network participant's debits and credits are totalled, and at the end of the day the net money is moved once, to or from each participant.
+Visa's second job is to *route money* for settlement by having financial relationships with each party. It can collect money from one and transfer to another. 
+
+To be efficient, Visa does **net settlement**. Every day, each network participant's debits and credits are totalled, and at the end of the day the net money is moved to or from each participant once.
 
 For domestic transactions, moving money is [relatively straightforward, thanks to central banks](https://gendal.me/2013/11/24/a-simple-explanation-of-how-money-moves-around-the-banking-system/).
 
-Crucially, Visa is also able to settle internationally, even [handling currency conversion](https://usa.visa.com/travel-with-visa/dynamic-currency-conversion.html). Visa acts as an [adapter between banking systems](https://www.bis.org/cpmi/publ/d213.pdf) with its global banking relationships. This greatly simplifies international money movement for participants in the network -- without Visa, each participant would need to manage their own international banking relationships.
+Crucially, Visa is also able to settle internationally, even [handling currency conversion](https://usa.visa.com/travel-with-visa/dynamic-currency-conversion.html). Visa acts as an [adapter between banking systems](https://www.bis.org/cpmi/publ/d213.pdf) with its global banking relationships. This greatly simplifies international money movement for participants in its network --- without Visa, each participant would need to manage their own international banking relationships.
 
 <figure>
 <pre class="mermaid wide">
