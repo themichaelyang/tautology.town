@@ -238,7 +238,6 @@ Arbitration is not a fair system, but it is an efficient one.[^fraud]
 
 # Conclusion
 
-
-
+I hope you have gained some appreciation for the important role of card networks and some reasons for why cards are as popular as they are today. Use this knowledge to topple the V/MC duopoly, design your own payment method, or think about while you spend your money.
 
 ----
