@@ -220,19 +220,21 @@ For issuers and acquirers who interact with the network, violating these rules c
 
 For cardholders and merchants, who interact with each other, networks provide a mechanism for resolving disputes between them. This could mean a fraudulent transaction, the product was not as promised, or a number of other possible reasons detailed in the rules. This is the process that happens behind the scenes when you call your bank to report fraud or request a chargeback.
 
-When a payment method doesn't have a dedicated dispute mechanism, the legal system is used to settle disputes. There are some [amusing cases](https://arstechnica.com/tech-policy/2021/02/citibank-just-got-a-500-million-lesson-in-the-importance-of-ui-design/) of this, and a part of why bank payments aren't more widely used.
+When a payment method doesn't have a dedicated dispute mechanism, the legal system is used to settle disputes. This is awful, and part of why bank payments aren't more widely used[^legal-system-chargeback]. 
 
 Visa is not actually involved directly in resolving most disputes. The rules essentially impose forced arbitration[^forced-arbitration]. The issuer of the cardholder and acquirer of the merchant send evidence back and forth until one party yields and accepts liability for the transaction. 
 
 If both parties refuse to yield, then Visa reviews the dispute, charging a whopping $600 ($1000 for appeals) makes a decision based on the evidence provided (signature, security footage, receipts, etc) and a strict reading of the Visa rules. 
 
-The losing party pays the original transaction amount plus the review fee, so both parties have a lot of incentive to resolve it between themselves. Issuers often refund the cardholder themselves and write off the loss[^friendly-fraud]. Merchants proactively refund dissatisfied customers since they are charged a $15-30 processing fee by the acquirer upon receiving any dispute, even if they win.
+The losing party pays the original transaction amount plus the review fee, so both parties have a lot of incentive to resolve it between themselves. Issuers often refund the cardholder themselves and write off the loss. Merchants proactively refund dissatisfied customers since they are charged a $15-30 processing fee by the acquirer upon receiving any dispute, even if they win.
 
-Arbitration is not a fair system, but it is an efficient one.
+Arbitration is not a fair system, but it is an efficient one.[^fraud]
+
+[^legal-system-chargeback]: There are some [amusing cases](https://arstechnica.com/tech-policy/2021/02/citibank-just-got-a-500-million-lesson-in-the-importance-of-ui-design/) of this at work in large transactions, where the legal fees are much more in proportion with the transaction costs.
 
 [^forced-arbitration]: Not that you asked, but the expansion of forced arbitration and confidential settlements are bad for society. Back in the day, you could sue your bank (for example) for doing bad stuff, but now contracts for everything include a clause for arbitration, waiving your rights as a consumer. The company pays for the arbitration, not you, so you can guess the outcome of that. Famously, Disney tried to use a forced arbitration clause in the Disney+ streaming agreement to prevent a wrongful death suit from a allergic reaction in a Disney restaurant. In the Visa case, the dispute process means the consumer tends to benefit, at the cost of the issuer and the merchant.
 
-[^friendly-fraud]: This opens the door to **friendly fraud**, which is when the cardholder is defrauding their issuing bank by requesting a chargeback on a legitimate transaction to get a refund. This is [a growing problem](https://www.cnbc.com/2024/07/25/retailers-are-losing-100-billion-a-year-from-friendly-fraud-report-finds-.html).
+[^fraud]: The system is designed to [encourage transactions rather than stopping fraud](https://www.bitsaboutmoney.com/archive/optimal-amount-of-fraud/). It opens the door to fraud, especially friendly fraud, as explained in another footnote. Friendly fraud is [a growing problem](https://www.cnbc.com/2024/07/25/retailers-are-losing-100-billion-a-year-from-friendly-fraud-report-finds-.html). 
 
 # Conclusion
 
