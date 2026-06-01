@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "What do Visa and Mastercard do? A primer on card networks"
+title: "What do Visa and Mastercard do? An intro to card networks"
 ---
 
 <script src="https://unpkg.com/mermaid@11.12.0/dist/mermaid.min.js"></script>
