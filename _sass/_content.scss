@@ -185,7 +185,6 @@ sup {
 .card {
   border: var(--card-border-width) solid var(--card-border-color);
   padding: $spacing-unit * 1.5 $spacing-unit * 2;
-  padding-bottom: $spacing-unit * 0.75;
   border-radius: 8px; /* see code blocks */
   @extend %vertical-rhythm;
   box-shadow: 2px 2px 2px var(--card-shadow);
