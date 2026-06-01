@@ -68,7 +68,7 @@ The card network's job is to enable card transactions, and also to grow particip
 
 This boils down to four key responsibilities:
 1. Run the telecommunications network to route transaction messages.
-2. Coordinate the banking network to route money and settle transactions.
+2. Coordinate the banking network to move money and settle transactions.
 3. Set the incentives to encourage the use of the network.
 4. Set and enforce rules of the network, including a mechanism for disputes.
 
@@ -101,7 +101,7 @@ That top secret location? In [Ashburn, Virginia](https://maps.app.goo.gl/tPEDWcT
 
 ## Authorization and clearing messages
 
-When a card is used, the card network routes a transaction request, known as an **authorization**, from the merchant to the issuer. Card numbers, also known as **Primary Account Numbers (PANs)** are used like IP addresses,[^pan-exhaustion]. The first 6 to 8 digits of the PAN called a **Bank Identification Number (BIN)**, identifies the card issuer, who approves or declines the request.
+When a card is used, the card network routes a transaction request, known as an **authorization**, from the merchant to the issuer. The issuer then approves or declines the request in a response. Card numbers, also known as **Primary Account Numbers (PANs)**, are used like IP addresses[^pan-exhaustion]. The first 6 to 8 digits of the PAN identifies the card issuer and is called the **Bank Identification Number (BIN)**
 
 An approved authorization places a temporary hold on the account for the amount of the transaction. Later, the merchant submits the final transaction amount (for example, adding tips written on receipts or voiding the transaction) to initiate the transfer of money, known as **clearing**[^capture].
 
@@ -215,9 +215,9 @@ In the EU, [interchange fees are restricted to 0.3%](https://www.psr.org.uk/our-
 
 # 4. Set rules and handle disputes
 
-Aside from incentivizing good behavior, card networks also need to regulate bad behavior on their networks. These rules are detailed "Visa Core Rules and Visa Product and Service Rules", a 923 page volume that is [publically available](https://usa.visa.com/dam/VCOM/download/about-visa/visa-rules-public.pdf).
+Aside from incentivizing good behavior, card networks also need to regulate bad behavior on their networks. These rules are detailed in "Visa Core Rules and Visa Product and Service Rules", a 923 page volume that is [publically available](https://usa.visa.com/dam/VCOM/download/about-visa/visa-rules-public.pdf). This is a tome detailing things like appropriate use of the Visa brand mark, detailed interchange data requirements, transaction processing timelines requirements, requirements and procedures for specific Visa services, and features issuers/acquirers should support.
 
-For issuers and acquirers who interact with the network, violating these rules could affect interchange rates, incur fines, or risk suspension from the network.
+For issuers and acquirers, who interact with the network, violating these rules could affect interchange rates, incur non-compliance fines (anywhere from $25k to $1M per month), or risk suspension from the network.
 
 For cardholders and merchants, who interact with each other, networks provide a mechanism for resolving disputes between them. This could mean a fraudulent transaction, the product was not as promised, or a number of other possible reasons detailed in the rules. This is the process that happens behind the scenes when you call your bank to report fraud or request a chargeback.
 
@@ -225,7 +225,7 @@ When a payment method doesn't have a dedicated dispute mechanism, the legal syst
 
 Visa is not actually involved directly in resolving most disputes. The rules essentially impose forced arbitration[^forced-arbitration]. The issuer of the cardholder and acquirer of the merchant send evidence back and forth until one party yields and accepts liability for the transaction. 
 
-If both parties refuse to yield, then Visa reviews the dispute, charging a whopping $600 ($1000 for appeals) makes a decision based on the evidence provided (signature, security footage, receipts, etc) and a strict reading of the Visa rules. 
+If both parties refuse to yield, then Visa reviews the dispute, charging a whopping $600 ($1000 for appeals) makes a decision based on the evidence provided (signature, security footage, receipts, etc) and the guidelines listed in the Visa Product and Service Rules.
 
 The losing party pays the original transaction amount plus the review fee, so both parties have a lot of incentive to resolve it between themselves. Issuers often refund the cardholder themselves and write off the loss. Merchants proactively refund dissatisfied customers since they are charged a $15-30 processing fee by the acquirer upon receiving any dispute, even if they win.
 
