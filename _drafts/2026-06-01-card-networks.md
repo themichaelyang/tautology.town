@@ -72,7 +72,7 @@ This boils down to four key responsibilities:
 3. Set the incentives to encourage the use of the network.
 4. Set and enforce rules of the network, including a mechanism for disputes.
 
-For the rest of the discussion, we'll focus on Visa, as it's what I'm most familiar with. Mastercard is more or less the same, with different names for things.
+For the rest of the discussion, we'll focus on Visa, as it's what I'm most familiar with from my years in the payment industry. Mastercard is more or less the same, with different names for things.
 
 # 1. Run the telecommunications network
 
@@ -177,7 +177,7 @@ Because of how much is given to the issuers, there are a lot of incentives for i
 
 Why are merchants willing to pay this fee?[^surcharge] The idea is that accepting card payments nets more customers and higher spending, due to convenience, consumer protections, and credit card rewards.
 
-[^surcharge]: Some merchants add a surcharge on card transactions to pass through the fee to customers, but this is actually against Visa's rules.
+[^surcharge]: Some merchants add a surcharge on card transactions to pass through the fee to customers. This used to be against Visa's rules (and [California state law](https://oag.ca.gov/consumers/general/credit-card-surcharges)) but lawsuits have challenged that. The surcharge amount is also [only supposed](https://usa.visa.com/dam/VCOM/download/merchants/surcharging-faq-by-merchants.pdf) to be the amount the merchant pays on a card transaction, but I suspect that many small merchants charge more.
 
 <figure>
 <pre class="mermaid wide">
@@ -193,7 +193,7 @@ config:
     useMaxWidth: true
 ---
 graph LR
-    I[Issuers get more interchange] --> R["Issuers more rewards and cards"]
+    I[Issuers get more interchange] --> R["Issuers issue more cards and give more rewards"]
     R --> C
     C[People spend more on cards] --> M[More merchants accept cards]
     M --> I
@@ -203,7 +203,7 @@ graph LR
     R ~~~ I
     R ~~~ C
 </pre>
-<figcaption>The virtuous cycle of spending</figcaption>
+<figcaption>The virtuous cycle of card spend.</figcaption>
 </figure>
 
 Out of these, the network sets the interchange and network assessment fee. Interchange fees vary dramatically based on the kind of card, category of spend, and even the metadata attached to a transaction. The network's goal is to set fees that incentivize desired behaviors on their network, including using more secure payment methods (lowering interchange fees for merchants), or for companies to do more business spending (higher interchange fees on commercial credit cards).
@@ -214,5 +214,29 @@ In the EU, [interchange fees are restricted to 0.3%](https://www.psr.org.uk/our-
 
 # 4. Set rules and handle disputes
 
+Aside from incentivizing good behavior, card networks also need to regulate bad behavior on their networks. These rules are detailed "Visa Core Rules and Visa Product and Service Rules", a 923 page volume that is [publically available](https://usa.visa.com/dam/VCOM/download/about-visa/visa-rules-public.pdf).
 
-https://www.complexsystemspodcast.com/episodes/credit-card-rewards-interchange/
+For issuers and acquirers who interact with the network, violating these rules could affect interchange rates, incur fines, or risk suspension from the network.
+
+For cardholders and merchants, who interact with each other, networks provide a mechanism for resolving disputes between them. This could mean a fraudulent transaction, the product was not as promised, or a number of other possible reasons detailed in the rules. This is the process that happens behind the scenes when you call your bank to report fraud or request a chargeback.
+
+When a payment method doesn't have a dedicated dispute mechanism, the legal system is used to settle disputes. There are some [amusing cases](https://arstechnica.com/tech-policy/2021/02/citibank-just-got-a-500-million-lesson-in-the-importance-of-ui-design/) of this, and a part of why bank payments aren't more widely used.
+
+Visa is not actually involved directly in resolving most disputes. The rules essentially impose forced arbitration[^forced-arbitration]. The issuer of the cardholder and acquirer of the merchant send evidence back and forth until one party yields and accepts liability for the transaction. 
+
+If both parties refuse to yield, then Visa reviews the dispute, charging a whopping $600 ($1000 for appeals) makes a decision based on the evidence provided (signature, security footage, receipts, etc) and a strict reading of the Visa rules. 
+
+The losing party pays the original transaction amount plus the review fee, so both parties have a lot of incentive to resolve it between themselves. Issuers often refund the cardholder themselves and write off the loss[^friendly-fraud]. Merchants proactively refund dissatisfied customers since they are charged a $15-30 processing fee by the acquirer upon receiving any dispute, even if they win.
+
+Arbitration is not a fair system, but it is an efficient one.
+
+[^forced-arbitration]: Not that you asked, but the expansion of forced arbitration and confidential settlements are bad for society. Back in the day, you could sue your bank (for example) for doing bad stuff, but now contracts for everything include a clause for arbitration, waiving your rights as a consumer. The company pays for the arbitration, not you, so you can guess the outcome of that. Famously, Disney tried to use a forced arbitration clause in the Disney+ streaming agreement to prevent a wrongful death suit from a allergic reaction in a Disney restaurant. In the Visa case, the dispute process means the consumer tends to benefit, at the cost of the issuer and the merchant.
+
+[^friendly-fraud]: This opens the door to **friendly fraud**, which is when the cardholder is defrauding their issuing bank by requesting a chargeback on a legitimate transaction to get a refund. This is [a growing problem](https://www.cnbc.com/2024/07/25/retailers-are-losing-100-billion-a-year-from-friendly-fraud-report-finds-.html).
+
+# Conclusion
+
+
+
+
+----
