@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "(Draft) Card networks primer: What do Visa and Mastercard do?"
+title: "What do Visa and Mastercard do? A primer on card networks"
 ---
 
 <script src="https://unpkg.com/mermaid@11.12.0/dist/mermaid.min.js"></script>
@@ -93,19 +93,23 @@ And a 2012 headline from [USA Today](https://web.archive.org/web/20120330102616/
 
 > Top secret Visa data center banks on security, even has moat
 
-That top secret location? In [Ashburn, Virginia](https://maps.app.goo.gl/tPEDWcTiY621sZz37), conveniently located by Trader Joe's and Topgolf.
+That top secret location? In [Ashburn, Virginia](https://maps.app.goo.gl/tPEDWcTiY621sZz37), conveniently located by Topgolf and Trader Joe's.
 
 <div>
 {% include image.html url="/assets/2025/visa-oce-satellite.png" description='I think the "moat" is the pool of water on the top center-left.' %}
 </div>
 
+## Authorization and clearing messages
+
 When a card is used, the card network routes a transaction request, known as an **authorization**, from the merchant to the issuer. Card numbers, also known as **Primary Account Numbers (PANs)** are used like IP addresses,[^pan-exhaustion]. The first 6 to 8 digits of the PAN called a **Bank Identification Number (BIN)**, identifies the card issuer, who approves or declines the request.
 
-An approved authorization places a temporary hold on the account for the amount of the transaction. Later, the merchant submits a **capture** on the authorization to their processor. This sends another message through the card network to finalize the transaction amount (adding tips written on receipts, for example) and initiate the transfer the money, known as **clearing**.
+An approved authorization places a temporary hold on the account for the amount of the transaction. Later, the merchant submits the final transaction amount (for example, adding tips written on receipts or voiding the transaction) to initiate the transfer of money, known as **clearing**[^capture].
 
 Consider: before this was done by computers, this was done by people via phone calls[^verbal-authorization] and mail.
 
 [^verbal-authorization]: Known as a "[voice authorization](https://web.mit.edu/ecommerce/www/verbal-auth.html)". You might be able to get one today, although I don't know if banks are staffing operators to field calls.
+
+[^capture]: [Clearing](https://en.wikipedia.org/wiki/Clearing_(finance)) includes finalizing/committing the payment and reconciliation against the authorization. "Capturing a payment" is what this is called from the merchant's perspective.
 
 # 2. Coordinate the banking network
 
@@ -115,11 +119,11 @@ After a transaction is finalized, money on both ends must move to fulfill the tr
 
 Visa's second job is to *route money* for settlement by having financial relationships with each party. It can collect money from one and transfer to another. 
 
-To be efficient, Visa does **net settlement**. Every day, each network participant's debits and credits are totalled, and at the end of the day the net money is moved to or from each participant once.
+To be efficient, Visa does **net settlement**: every day, each network participant's debits and credits are totalled, and at the end of the day the net money is moved to or from each participant once.
 
 For domestic transactions, moving money is [relatively straightforward, thanks to central banks](https://gendal.me/2013/11/24/a-simple-explanation-of-how-money-moves-around-the-banking-system/).
 
-Crucially, Visa is also able to settle internationally, even [handling currency conversion](https://usa.visa.com/travel-with-visa/dynamic-currency-conversion.html). Visa acts as an [adapter between banking systems](https://www.bis.org/cpmi/publ/d213.pdf) with its global banking relationships. This greatly simplifies international money movement for participants in its network --- without Visa, each participant would need to manage their own international banking relationships.
+Importantly, Visa is also able to settle internationally, even [handling currency conversion](https://usa.visa.com/travel-with-visa/dynamic-currency-conversion.html). Visa acts as an [adapter between banking systems](https://www.bis.org/cpmi/publ/d213.pdf) with its global banking relationships. This greatly simplifies international money movement for participants in its network --- without Visa, each participant would need to manage their own international banking relationships.
 
 <figure>
 <pre class="mermaid wide">
@@ -204,7 +208,7 @@ graph LR
 
 Out of these, the network sets the interchange and network assessment fee. Interchange fees vary dramatically based on the kind of card, category of spend, and even the metadata attached to a transaction. The network's goal is to set fees that incentivize desired behaviors on their network, including using more secure payment methods (lowering interchange fees for merchants), or for companies to do more business spending (higher interchange fees on commercial credit cards).
 
-More cards means more merchants, more merchants mean more cards. In theory, the network benefits through fees, the merchants benefit through more purchases, and the consumer benefits through convenience.
+More cards means more merchants, more merchants mean more cards, and more of everything is good for the network. In theory, the network benefits through fees, the merchants benefit through more purchases, and the consumer benefits through convenience.
 
 In the EU, [interchange fees are restricted to 0.3%](https://www.psr.org.uk/our-work/card-payments/the-ifr/), which explains the lack of rewards cards and wider acceptance of alternative payment methods like bank payments.
 

@@ -12,7 +12,8 @@ ul, ol, dl, figure, table,
 }
 
 p {
-  hyphens: auto;
+  /* hyphens: auto; */
+  hyphens: none;
   /* https://designforhackers.com/blog/justify-text-html-css/ */
   /* text-align: justify; */
   /* text-justify: inter-word; */
@@ -188,4 +189,8 @@ sup {
   border-radius: 8px; /* see code blocks */
   @extend %vertical-rhythm;
   box-shadow: 2px 2px 2px var(--card-shadow);
+}
+
+strong {
+  font-weight: 800;
 }
