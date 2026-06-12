@@ -31,10 +31,10 @@ $solarized-cyan:    #2aa198;
 $solarized-green:   #859900;
 
 // Light theme (standard with Solarized code)
-$light-bg: white;
+$light-bg: rgba(#FFFAEB, 0.6);
 $light-text: black;
-$light-text-secondary: #aaa;
-$light-link: #2a7ae2;
+$light-text-secondary: #999;
+$light-link: oklch(0.6657 0.2066 31.83 / 0.82);
 $light-code-bg: $solarized-base3;
 
 // Dark theme (Solarized Dark)
