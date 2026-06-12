@@ -93,7 +93,7 @@ hr {
 
 footer {
   @extend %container--centered;
-  padding-top: $navbar-height;
+  padding-top: $navbar-height * 1.5;
   padding-bottom: 6vh;
   font-size: $small-font-size;
   color: var(--text-color-secondary);
