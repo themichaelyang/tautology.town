@@ -18,7 +18,14 @@
 <body>
   <nav class="navbar">
     <ul class="navbar__inner">
-      <li><a href="/"><img id="logo-map" src="/assets/map.svg" /></a></li>
+      <li>
+        <a href="/">
+          <picture>
+            <source srcset="/assets/map-dark.svg" media="(prefers-color-scheme: dark)">
+            <img id="logo-map" src="/assets/map.svg" />
+          </picture>
+        </a>
+      </li>
       <li class="navbar__item"><a class="navbar__text" href="/">Home</a></li>
       <li class="navbar__item"><a class="navbar__text" href="/about">About</a></li>
     </ul>
