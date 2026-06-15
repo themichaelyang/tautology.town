@@ -173,9 +173,11 @@ In addition to [regulatory requirements](https://www.consumerfinance.gov/rules-p
 
 [^interchange-name]: Although *interchange* is short for *interchange fee*, technically *interchange* refers to the payment messages being routed by the card networks, and the fee is provided for that data. But, you almost never hear *interchange* used to mean payment messages except in technical specs. 
 
+Out of these, the network sets the interchange and network assessment fee. Interchange fees vary dramatically based on the kind of card, category of spend, and even the metadata attached to a transaction. The network's goal is to set fees that incentivize desired behaviors on their network, including using more secure payment methods (lowering interchange fees for merchants), or for companies to do more business spending (higher interchange fees on commercial credit cards).
+
 Because of how much is given to the issuers, there are a lot of incentives for issuers to acquire customers and fund lavish rewards programs to encourage spending. This split also explains the recent rise of **issuing processors**, which make it easier for neobanks and fintechs to issue cards to access a more lucrative end of the market.
 
-Why are merchants willing to pay this fee?[^surcharge] The idea is that accepting card payments nets more customers and higher spending, due to convenience, consumer protections, and credit card rewards.
+Why are merchants willing to pay this fee?[^surcharge] The idea is that accepting card payments nets more customers and higher spending, due to convenience, consumer protections, and credit card rewards. More cards means more merchants, more merchants mean more cards, and more of everything is good for the network. In theory, the network benefits through fees, the merchants benefit through more purchases, and the consumer benefits through convenience.
 
 [^surcharge]: Some merchants add a surcharge on card transactions to pass through the fee to customers. This used to be against Visa's rules (and [California state law](https://oag.ca.gov/consumers/general/credit-card-surcharges)) but lawsuits have challenged that. The surcharge amount is also [only supposed](https://usa.visa.com/dam/VCOM/download/merchants/surcharging-faq-by-merchants.pdf) to be the amount the merchant pays on a card transaction, but I suspect that many small merchants charge more.
 
@@ -207,10 +209,6 @@ graph LR
 <figcaption>The virtuous cycle of card spend.</figcaption>
 </figure>
 
-Out of these, the network sets the interchange and network assessment fee. Interchange fees vary dramatically based on the kind of card, category of spend, and even the metadata attached to a transaction. The network's goal is to set fees that incentivize desired behaviors on their network, including using more secure payment methods (lowering interchange fees for merchants), or for companies to do more business spending (higher interchange fees on commercial credit cards).
-
-More cards means more merchants, more merchants mean more cards, and more of everything is good for the network. In theory, the network benefits through fees, the merchants benefit through more purchases, and the consumer benefits through convenience.
-
 In the EU, [interchange fees are restricted to 0.3%](https://www.psr.org.uk/our-work/card-payments/the-ifr/), which explains the lack of rewards cards and wider acceptance of alternative payment methods like bank payments.
 
 # 4. Set rules and handle disputes
@@ -221,7 +219,9 @@ For issuers and acquirers, who interact with the network, violating these rules 
 
 For cardholders and merchants, who interact with each other, networks provide a mechanism for resolving disputes between them. This could mean a fraudulent transaction, the product was not as promised, or a number of other possible reasons detailed in the rules. This is the process that happens behind the scenes when you call your bank to report fraud or request a chargeback.
 
-When a payment method doesn't have a dedicated dispute mechanism, the legal system is used to settle disputes. This is awful, and part of why bank payments aren't more widely used[^legal-system-chargeback]. 
+When a payment method doesn't have a dedicated dispute mechanism, the legal system is used to settle disputes[^legal-system-chargeback]. This a problem with cash or bank payments that cards don't have. 
+
+## Arbitration
 
 Visa is not actually involved directly in resolving most disputes. The rules essentially impose forced arbitration[^forced-arbitration]. The issuer of the cardholder and acquirer of the merchant send evidence back and forth until one party yields and accepts liability for the transaction. 
 
