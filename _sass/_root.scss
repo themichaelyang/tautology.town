@@ -74,6 +74,9 @@ $dark-code-bg: $solarized-base03;
   --code-type: #{$solarized-red};
   --code-function: #{$solarized-blue};
   --code-builtin: #{$solarized-yellow};
+
+  --run-code-shadow: #{color.adjust($light-code-bg, $lightness: -50%)};
+  --run-code-text: #{color.adjust($light-code-bg, $lightness: -75%)};
 }
 
 @media (prefers-color-scheme: dark) {
@@ -99,6 +102,8 @@ $dark-code-bg: $solarized-base03;
     --code-type: #{$solarized-red};
     --code-function: #{$solarized-blue};
     --code-builtin: #{$solarized-yellow};
+
+    --run-code-shadow: #{color.adjust($dark-code-bg, $lightness: -50%)};
   }
 }
 

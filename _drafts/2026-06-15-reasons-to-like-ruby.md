@@ -31,6 +31,7 @@ const template = (index, snippet) => `
 ${snippet}
 `
 
+
 let editors = []
 let consoles = []
 
@@ -40,6 +41,7 @@ function putsOverride(i, text) {
 
 function run(i) {
   consoles[i].style.display = 'block'
+  consoles[i].style.animation = 'slide-left 0.1s ease-in'
   consoles[i].textContent = ''
   try {
     Opal.eval(template(i, editors[i].getValue()))
@@ -81,6 +83,20 @@ window.onload = () => {
       viewportMargin: Infinity
     })
 
+    const setTheme = () => {
+      let isDark = window.matchMedia('(prefers-color-scheme: dark)').matches
+      let theme = (isDark) ? 'solarized dark' : 'solarized light'
+      editors.map(ed => ed.setOption('theme', theme))
+    }
+
+    window.matchMedia('(prefers-color-scheme: dark)')
+      .addEventListener('change', () => editors.map(ed => {
+        setTheme()
+      })
+    )
+
+    setTheme()
+
     const button = document.createElement('button')
     button.className = 'run-button'
     button.textContent = 'Run'
@@ -98,18 +114,28 @@ window.onload = () => {
 
 <style>
 
+@keyframes slide-left {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0%);
+  }
+}
+
 .playground {
   display: flex;
   flex-direction: column;
   margin: 1.5rem 0;
-  gap: 0.25rem;
+  gap: 0.5rem;
 }
 
 .playground-row {
   display: flex;
   align-items: stretch;
-  gap: 0.25rem;
+  gap: 0.5rem;
   font-size: 0.9em;
+  overflow: hidden;
 }
 
 /* Ruby snippet */
@@ -120,6 +146,7 @@ window.onload = () => {
   flex-direction: column;
   border-radius: 4px;
   overflow: hidden;
+  border: 1px solid var(--code-border);
 }
 
 .playground .editor .CodeMirror {
@@ -127,7 +154,6 @@ window.onload = () => {
   height: auto;
   box-shadow: none;
   padding: 0.5rem;
-  border: 1px solid var(--code-border);
 }
 
 /* console */
@@ -140,6 +166,7 @@ window.onload = () => {
   border: none;
   border-radius: 4px;
   border: 1px solid var(--code-border);
+  white-space: pre-wrap;
 }
 
 @media (max-width: 600px) {
@@ -149,14 +176,21 @@ window.onload = () => {
 .run-button {
   font-family: inherit;
   border: 1px solid var(--code-border);
+  box-shadow: inset -1px -1px 2px var(--run-code-shadow);
   background: var(--code-border);
+  color: var(--run-code-text);
   border-radius: 4px;
   font-weight: bold;
-  color: inherit;
+  /*color: inherit;*/
+  /*opacity: 0.8;*/
   font-size: 1rem;
   padding: 0.5rem 1rem;
   cursor: pointer; 
   flex: 1;
+}
+
+.run-button:active {
+  box-shadow: inset 1px 1px 2px var(--run-code-shadow);
 }
 
 </style>
@@ -174,7 +208,7 @@ For the uninitiated, here are a few reasons to like Ruby.
 
 ## Before we begin
 
-All the code snippets in this post can be run locally thanks to [Opal](https://opalrb.com). You can edit them too.
+All the code snippets in this post can be run locally thanks to [Opal](https://opalrb.com). You can edit them too. Note that there are some [differences](https://github.com/opal/opal/blob/abf15821c36dbc0fbc04ad53226deeb156c669d8/docs/unsupported_features.md?plain=1#L9) between Opal and Ruby, including some of the standard libraries.
 
 Also, it's okay if you don't know any Ruby -- you should be able to follow if you know any mainstream language of today. I hope you get a better sense of what it's like to use Ruby and convince you to give it a try.
 
@@ -251,7 +285,7 @@ end
 
 ## 5. Block syntax for cleaner lambdas
 
-Ruby has more than first class functions, it has dedicated and elegant syntax for lambdas. This is the `method_name do |variable| ... end` and `method_name { |variable| ... }` above, and is called a block. It creates a "block" of code that is passed like a lambda into `method_name` to be invoked.
+Ruby has more than first class functions, it has dedicated and elegant syntax for lambdas. This is the `method_name do |variable| ... end` and `method_name { |variable| ... }` used above, and is called a block. It creates a "block" of code (a closure) that is passed like a lambda into `method_name` to be invoked within.
 
 In the loop examples above, we've been passing blocks into loop methods that are invoked once per iteration.
 
@@ -261,16 +295,44 @@ In my opinion, blocks are much cleaner than Javascript arrow functions, which ha
 
 ```
 
+Blocks [go beyond](https://tech.stonecharioteer.com/posts/2025/ruby-blocks/) lambdas, too. They make it natural to implement patterns like domain specific languages (Ruby's testing libraries use blocks), context management (`with` in Python) and middleware.
+
+
 ## 6. Enumerable
 
-Enumerable methods (`String`s, `Array`s, `Hash` maps) have excellent methods like `each`, `map`, `with_index`, `count`, `tally`, `select`, `reject`, `any?`, `all?`, `take`, etc. These methods are designed to be chained by returning another Enumerable. For example, `lazy` can be chained to switch an iterator to lazy evaluation.
+Enumerable methods (`Array`s, `Range`, `Hash` maps, even `Prime`s) have excellent methods like `each`, `map`, `with_index`, `count`, `tally`, `select`, `reject`, `any?`, `all?`, `take`, `each_cons`, `max`, `min`, `sort`, etc.
+
+These methods are designed to be chained by returning another Enumerable. For example, `lazy` can be chained to switch an iterator to lazy evaluation.
 
 ```ruby
+years = (1980..2025).map do |yr|
+  [yr, yr % 4 == 0 && yr % 100 == 0 && yr % 400 == 0]
+end
+
+days = years.sum { |_, leap| leap ? 356 : 355 }
+puts days
 ```
 
 ## 7. Method pipelines
 
-One of the popular parts of Javascript is method chaining. Ruby does this even better: everything is an object (and returns an object), way more useful methods, blocks simplify lambdas, punctuation can be omitted. Ruby methods chain well into pipelines of operations.
+One of the popular parts of Javascript is method chaining. Ruby does this even better: everything is an object (and returns an object), way more useful methods, blocks simplify lambdas, punctuation can be omitted. Pipe everything through a series of composable, high-level methods.
+
+It's concise and powerful, yet stays readable.
+
+```ruby
+pan = "The quick brown fox jumps over the lazy dog"
+puts cfreq = pan.downcase.delete(" ").chars.tally
+
+bigrams = pan.downcase.split.flat_map do |word|
+  # every 2 conseq char in the words
+  word.chars.each_cons(2).to_a
+end
+
+# hashmap sorted as a list of pairs, sorted by last item (the value)
+top_bigram = bigrams.tally.sort_by(&:last).last
+
+puts "top: #{top_bigram.first}, #{top_bigram.last} times"
+```
 
 ## 8. Single line if
 
@@ -285,6 +347,21 @@ end
 
 puts fib(10)
 puts fib(-1)
+```
+
+## 9. Modules as namespaces
+
+Namespaces are always a good idea. As are fully-qualified-names.
+
+## 10. until
+
+In addition to `while`, Ruby has `until` which is much nicer to read for traversals.
+
+## 11. Combinatorics
+
+You can shuffle, permute, and combine.
+
+```ruby
 ```
 
 ----
