@@ -8,33 +8,83 @@ title: "A few reasons to like Ruby"
 <script src="https://cdn.opalrb.com/opal/1.8.3/native.js"></script>
 <script src="https://cdn.opalrb.com/opal/current/opal-parser.js"></script>
 
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/theme/solarized.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/ruby/ruby.min.js"></script>
+
 <script>
 
 const template = (index, snippet) => `
   require 'native'
-  
-  def puts(s)
+
+  def puts(*s)
     $$.putsOverride(${index}, s)
   end
-  
+
 ${snippet}
 `
 
+let editors = []
 let consoles = []
 
 function putsOverride(i, text) {
   consoles[i].appendChild(document.createTextNode(text + "\n"))
 }
 
-window.onload = () => {
-  const pres = Array.from(document.querySelectorAll('pre'))
+function run(i) {
+  consoles[i].style.display = 'block'
+  consoles[i].textContent = ''
+  try {
+    Opal.eval(template(i, editors[i].getValue()))
+  } catch (e) {
+    consoles[i].appendChild(document.createTextNode((e && e.message || e) + "\n"))
+  }
+}
 
-  pres.map((pre, i) => {
-    const code = pre.textContent
+window.onload = () => {
+  const blocks = Array.from(document.querySelectorAll('div.highlight'))
+
+  blocks.forEach((block, i) => {
+    const code = block.textContent.replace(/\n+$/, '')
+
+    const playground = document.createElement('div')
+    playground.className = 'playground'
+    block.parentNode.replaceChild(playground, block)
+
+    const row = document.createElement('div')
+    row.className = 'playground-row'
+    playground.appendChild(row)
+
+    const editorHost = document.createElement('div')
+    editorHost.className = 'editor'
+    row.appendChild(editorHost)
+
     const consoleElement = document.createElement('pre')
-    pre.parentNode.appendChild(consoleElement)
-    consoles.push(consoleElement)
-    Opal.eval(template(i, code))
+    consoleElement.className = 'console'
+    row.appendChild(consoleElement)
+    consoles[i] = consoleElement
+
+    editors[i] = CodeMirror(editorHost, {
+      value: code,
+      mode: 'ruby',
+      theme: 'solarized dark',
+      lineNumbers: true,
+      tabSize: 2,
+      indentUnit: 2,
+      viewportMargin: Infinity,
+    })
+
+    const button = document.createElement('button')
+    button.className = 'run'
+    button.textContent = 'Run'
+    button.onclick = () => run(i)
+    playground.prepend(button)
+
+    // hide before run first timer
+    consoleElement.style.display = 'none'
+
+    // run(i)
   })
 }
 
@@ -42,26 +92,49 @@ window.onload = () => {
 
 <style>
 
-.side-by-side div {
-  display: flex;
-  gap: 0.5rem;
-  align-items: stretch;
+.playground {
+  margin: 1.5rem 0;
 }
 
-/* console */
-.side-by-side div pre {
-  flex: 1;
-  min-width: auto;
+.playground-row {
+  display: flex;
+  align-items: stretch;
+  border-radius: 4px;
+  overflow: hidden;
 }
 
 /* Ruby snippet */
-.side-by-side div .highlight {
+.playground .editor {
   flex: 3;
-  min-width: auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.playground .editor .CodeMirror {
+  flex: 1;
+  height: auto;
+  box-shadow: none;
+}
+
+/* console */
+.playground .console {
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+  padding: 0.5rem;
+  overflow: auto;
+  border: none;
+  border-radius: 0;
+}
+
+.playground .run {
+  margin-top: 0.5rem;
+  cursor: pointer;
 }
 
 @media (max-width: 600px) {
-  .side-by-side { flex-direction: column; }
+  .playground-row { flex-direction: column; }
 }
 
 </style>
