@@ -40,9 +40,31 @@ window.onload = () => {
 
 </script>
 
-<script type="text/ruby">
-  puts "hi"
-</script>
+<style>
+
+.side-by-side div {
+  display: flex;
+  gap: 0.5rem;
+  align-items: stretch;
+}
+
+/* console */
+.side-by-side div pre {
+  flex: 1;
+  min-width: auto;
+}
+
+/* Ruby snippet */
+.side-by-side div .highlight {
+  flex: 3;
+  min-width: auto;
+}
+
+@media (max-width: 600px) {
+  .side-by-side { flex-direction: column; }
+}
+
+</style>
 
 
 [Ruby](https://www.ruby-lang.org/en/) is my favorite programming language.
@@ -91,11 +113,17 @@ In this example, assigning once makes the program's intent clearer than setting 
 
 There are many nice ways to loop.
 
+<div class="side-by-side" markdown="1">
+
 ```ruby
 3.times do |i|
   puts i
 end
 ```
+
+</div>
+
+<div class="side-by-side" markdown="1">
 
 ```ruby
 (0..2).each do |i|
@@ -103,24 +131,37 @@ end
 end
 ```
 
+</div>
+
+<div class="side-by-side" markdown="1">
+
 ```ruby
 [0, 1, 2].each do |x|
   puts x
 end
 ```
 
+</div>
+
+<div class="side-by-side" markdown="1">
+
 ```ruby
-[0, 1, 2].each_with_index do |x, i|
-  puts i
-  puts x
+["a", "b", "c"].each_with_index do |x, i|
+  puts "#{x}, #{i}"
 end
 ```
+
+</div>
+
+<div class="side-by-side" markdown="1">
 
 ```ruby
 0.upto(2) do |i|
   puts i
 end
 ```
+
+</div>
 
 ## Single line if
 
