@@ -18,8 +18,10 @@ title: "A few reasons to like Ruby"
 const template = (index, snippet) => `
   require 'native'
 
-  def puts(*s)
-    $$.putsOverride(${index}, s)
+  def puts(*args)
+    lines = args.empty? ? [""] : args.flatten.map { |a| a.to_s }
+    text = lines.map { |l| l.end_with?("\\n") ? l : l + "\\n" }.join
+    $$.putsOverride(${index}, text)
   end
 
 ${snippet}
@@ -29,7 +31,7 @@ let editors = []
 let consoles = []
 
 function putsOverride(i, text) {
-  consoles[i].appendChild(document.createTextNode(text + "\n"))
+  consoles[i].appendChild(document.createTextNode(text))
 }
 
 function run(i) {
@@ -69,7 +71,7 @@ window.onload = () => {
       value: code,
       mode: 'ruby',
       theme: 'solarized dark',
-      lineNumbers: true,
+      lineNumbers: false,
       tabSize: 2,
       indentUnit: 2,
       viewportMargin: Infinity,
@@ -99,8 +101,7 @@ window.onload = () => {
 .playground-row {
   display: flex;
   align-items: stretch;
-  border-radius: 4px;
-  overflow: hidden;
+  gap: 0.25rem;
 }
 
 /* Ruby snippet */
@@ -109,12 +110,16 @@ window.onload = () => {
   min-width: 0;
   display: flex;
   flex-direction: column;
+  border-radius: 4px;
+  overflow: hidden;
 }
 
 .playground .editor .CodeMirror {
   flex: 1;
   height: auto;
   box-shadow: none;
+  padding: 0.5rem;
+  border: 1px solid var(--code-border);
 }
 
 /* console */
@@ -125,7 +130,8 @@ window.onload = () => {
   padding: 0.5rem;
   overflow: auto;
   border: none;
-  border-radius: 0;
+  border-radius: 4px;
+  border: 1px solid var(--code-border);
 }
 
 .playground .run {
