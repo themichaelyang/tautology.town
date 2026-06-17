@@ -24,6 +24,10 @@ const template = (index, snippet) => `
     $$.putsOverride(${index}, text)
   end
 
+  def p(*args)
+    puts(args.map { |arg| arg.is_a?(Array) ? arg.to_s : arg })
+  end
+
 ${snippet}
 `
 
@@ -74,14 +78,14 @@ window.onload = () => {
       lineNumbers: false,
       tabSize: 2,
       indentUnit: 2,
-      viewportMargin: Infinity,
+      viewportMargin: Infinity
     })
 
     const button = document.createElement('button')
-    button.className = 'run'
+    button.className = 'run-button'
     button.textContent = 'Run'
     button.onclick = () => run(i)
-    playground.prepend(button)
+    playground.appendChild(button)
 
     // hide before run first timer
     consoleElement.style.display = 'none'
@@ -95,13 +99,17 @@ window.onload = () => {
 <style>
 
 .playground {
+  display: flex;
+  flex-direction: column;
   margin: 1.5rem 0;
+  gap: 0.25rem;
 }
 
 .playground-row {
   display: flex;
   align-items: stretch;
   gap: 0.25rem;
+  font-size: 0.9em;
 }
 
 /* Ruby snippet */
@@ -134,13 +142,21 @@ window.onload = () => {
   border: 1px solid var(--code-border);
 }
 
-.playground .run {
-  margin-top: 0.5rem;
-  cursor: pointer;
-}
-
 @media (max-width: 600px) {
   .playground-row { flex-direction: column; }
+}
+
+.run-button {
+  font-family: inherit;
+  border: 1px solid var(--code-border);
+  background: var(--code-border);
+  border-radius: 4px;
+  font-weight: bold;
+  color: inherit;
+  font-size: 1rem;
+  padding: 0.5rem 1rem;
+  cursor: pointer; 
+  flex: 1;
 }
 
 </style>
@@ -150,33 +166,164 @@ window.onload = () => {
 
 I have worked in Python, Javascript (Typescript also), and Go. I have written C, C++, Java, and Racket. Consistently, Ruby is the language I enjoy the most.
 
-It's rare to find others who feel the same. Ruby has [fallen](https://trends.google.com/explore?q=%2Fm%2F06ff5&date=all&geo=US) from the zeigeist, and developers aren't as interested in learning it anymore. At [Recurse Center](https://www.recurse.com) last year, I was the only one writing any Ruby. 
-
 I like Ruby because it feels "good in the hand". It is hard to explain, as are all matters of taste, or beauty. I believe Ruby should still have wide appeal as something well crafted, in the same way people obsess over a really nice pen or mechanical keyboards.
 
-Here are a few reasons to like Ruby.
+It's rare to find others who feel the same. Ruby has [fallen](https://trends.google.com/explore?q=%2Fm%2F06ff5&date=all&geo=US) from the zeigeist, and developers aren't as interested in learning it anymore. At [Recurse Center](https://www.recurse.com) last year, I was the only one writing any Ruby. 
 
-## Ruby wants you to be happy
+For the uninitiated, here are a few reasons to like Ruby.
+
+## Before we begin
+
+All the code snippets in this post can be run locally thanks to [Opal](https://opalrb.com). You can edit them too.
+
+Also, it's okay if you don't know any Ruby -- you should be able to follow if you know any mainstream language of today. I hope you get a better sense of what it's like to use Ruby and convince you to give it a try.
+
+## 0. Ruby wants you to be happy
 
 > For me, the purpose of life is, at least partly, to have joy. Programmers often feel joy when they can concentrate on the creative side of programming, so Ruby is designed to make programmers happy.
 >
 > – Matz, the creator of Ruby, in [2000](https://web.archive.org/web/20080220073029/http://www.informit.com/articles/article.aspx?p=18225)
 
-Ruby is designed to make you happy. This is in contrast to languages that have pragmatic goals or technical constraints, like memory safety, concurrency, or mathematical purity. 
+Languages are, in part, philosophical endeavours and are imbued with their creators' values. Ruby is designed to make you happy. 
 
-It's a worthy and inspiring goal.
+This is in contrast to languages that have pragmatic goals or technical constraints, like memory safety, concurrency, or mathematical purity. Rails' take on this is [worth a read](https://rubyonrails.org/doctrine#optimize-for-programmer-happiness).
 
-## Everything is an expression
+It's a worthy and inspiring goal, and the single best reason for trying out Ruby.
 
-Ruby is inspired by Lisp. Everything evaluates to a value, including `if`. For example, you can do this:
+## 1. Expressions everywhere
+
+Ruby is inspired by Lisp. Everything evaluates to a value, including `if`-`else`. For example, you can do this:
 
 ```ruby
+# <- hashes start comments
+# functions return their last expression
 def ordinal(n)
-  suffix = if n == 1
+  suffix = if n == 1 && n != 11
     "st"
-  elsif n == 2
+  elsif n == 2 && n != 12
     "nd"
-  elsif n == 3
+  elsif n == 3 && n != 13
+    "rd"
+  else
+    "th"
+  end
+
+  "#{n}#{suffix}"
+end
+
+puts ordinal(3) # puts is Ruby for print
+```
+
+
+Assigning `suffix` once makes the program's intent clearer than setting it multiple times. 
+
+## 2. Punctuation in method names
+
+Question marks `?` are a nice touch for methods that return booleans, and read nicely in English.
+
+```ruby
+planets = [
+  "Mercury", "Venus", "Earth", "Mars", 
+  "Jupiter", "Saturn", "Uranus", "Neptune"
+]
+
+puts planets.include? "Pluto"
+puts planets.empty?
+puts planets.any? { |p| p.downcase.include?("y") }
+puts planets.any? { |p| p.downcase.include?("z") }
+```
+
+Exclamation points `!` are used for methods that modify an object in-place or throw errors.
+
+## 4. Looping with numbers
+
+Numbers are objects and expose some wonderful methods for looping.
+
+```ruby
+3.times do |i|
+  puts i
+end
+
+0.upto(2) do |i|
+  puts i
+end
+```
+
+## 5. Block syntax for cleaner lambdas
+
+Ruby has more than first class functions, it has dedicated and elegant syntax for lambdas. This is the `method_name do |variable| ... end` and `method_name { |variable| ... }` above, and is called a block. It creates a "block" of code that is passed like a lambda into `method_name` to be invoked.
+
+In the loop examples above, we've been passing blocks into loop methods that are invoked once per iteration.
+
+In my opinion, blocks are much cleaner than Javascript arrow functions, which have so much visual noise from unnecessary punctuation.
+
+```ruby
+
+```
+
+## 6. Enumerable
+
+Enumerable methods (`String`s, `Array`s, `Hash` maps) have excellent methods like `each`, `map`, `with_index`, `count`, `tally`, `select`, `reject`, `any?`, `all?`, `take`, etc. These methods are designed to be chained by returning another Enumerable. For example, `lazy` can be chained to switch an iterator to lazy evaluation.
+
+```ruby
+```
+
+## 7. Method pipelines
+
+One of the popular parts of Javascript is method chaining. Ruby does this even better: everything is an object (and returns an object), way more useful methods, blocks simplify lambdas, punctuation can be omitted. Ruby methods chain well into pipelines of operations.
+
+## 8. Single line if
+
+You can use a trailing `if` to conditionally execute a line (one of the few statements in Ruby). This can be used for compact function guards that read nicely by emphasizing early returns.
+
+```ruby
+def fib(n)
+  return [0, n].max if n <= 1
+
+  fib(n - 1) + fib(n - 2)
+end
+
+puts fib(10)
+puts fib(-1)
+```
+
+----
+
+Links
+- https://web.archive.org/web/20070209033558/http://www.linuxdevcenter.com/pub/a/linux/2001/11/29/ruby.html
+- http://clojurescriptmadeeasy.com/blog/ruby-got-it-right.html
+- https://eliseshaffer.com/2023/12/18/i-love-ruby/
+- https://news.learnenough.com/ruby-optimized-for-programmer-happiness
+- https://rubyonrails.org/doctrine
+- https://twobithistory.org/2017/11/19/the-ruby-story.html#fn:2
+- https://learnxinyminutes.com/ruby/
+
+<!--There are many nice methods for looping on objects.
+
+```ruby
+# 0..2 is a range from 0 to 2, inclusive
+(0..2).each do |i|
+  puts i
+end
+```
+
+Exclamations `!` is the convention for methods that mutate an object in-place, or error. They're often paired with non in-place variants (without `!`).
+
+```ruby
+a = [1, 2, 3]
+p a
+```
+
+```ruby
+# <- hashes start comments
+# functions return last expression
+def ordinal(n)
+  
+  suffix = if n == 1 && n != 11
+    "st"
+  elsif n == 2 && n != 12
+    "nd"
+  elsif n == 3 && n != 13
     "rd"
   else
     "th"
@@ -184,134 +331,8 @@ def ordinal(n)
   
   "#{n}#{suffix}"
 end
+
+puts ordinal(3)
 ```
 
-In this example, assigning once makes the program's intent clearer than setting it multiple times.
-
-## Nice ways to loop
-
-There are many nice ways to loop.
-
-<div class="side-by-side" markdown="1">
-
-```ruby
-3.times do |i|
-  puts i
-end
-```
-
-</div>
-
-<div class="side-by-side" markdown="1">
-
-```ruby
-(0..2).each do |i|
-  puts i
-end
-```
-
-</div>
-
-<div class="side-by-side" markdown="1">
-
-```ruby
-[0, 1, 2].each do |x|
-  puts x
-end
-```
-
-</div>
-
-<div class="side-by-side" markdown="1">
-
-```ruby
-["a", "b", "c"].each_with_index do |x, i|
-  puts "#{x}, #{i}"
-end
-```
-
-</div>
-
-<div class="side-by-side" markdown="1">
-
-```ruby
-0.upto(2) do |i|
-  puts i
-end
-```
-
-</div>
-
-## Single line if
-
-You can use `if`  
-
-```ruby
-# def 
-```
-
-## Single line guards
-
-## Block syntax is a nicer lambda
-
-## Loop methods
-
-## Method chaining
-
-
-
-----
-
-
-https://web.archive.org/web/20070209033558/http://www.linuxdevcenter.com/pub/a/linux/2001/11/29/ruby.html
-
-Part of me gets it. It took me a while to enjoy Ruby. 
-
-You can ship code in any language, but 
-
-If you like programming, I think you will like Ruby.
-
-
-![Ruby in dropping popularity in Google Trends](/assets/2026/ruby-google-trends.png)
-
-People are often perplexed when I tell them this. They are even more perplexed when I tell them I have never used [Ruby on Rails](https://rubyonrails.org), that I enjoy Ruby on its own.
-
-Still, I like Ruby.
-
-- http://clojurescriptmadeeasy.com/blog/ruby-got-it-right.html
-- https://eliseshaffer.com/2023/12/18/i-love-ruby/
-- https://news.learnenough.com/ruby-optimized-for-programmer-happiness
-- https://rubyonrails.org/doctrine
-- https://twobithistory.org/2017/11/19/the-ruby-story.html#fn:2
-<!--
-```python
-# Python
-suffix = "th"
-
-if n is 1:
-  suffix = "st"
-elif n is 2:
-  suffix = "nd"
-elif n is 3:
-  suffix = "rd"
-```
-
-<style>
-.side-by-side {
-  display: flex;
-  gap: 1rem;
-  align-items: stretch;
-}
-.side-by-side div {
-  flex: 1;
-  min-width: auto;
-}
-@media (max-width: 600px) {
-  .side-by-side { flex-direction: column; }
-}
-</style>
-
-<div class="side-by-side" markdown="1">
-
-
-</div>-->
+-->
