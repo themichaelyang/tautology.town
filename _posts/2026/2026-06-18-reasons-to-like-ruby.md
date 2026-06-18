@@ -107,7 +107,7 @@ I have worked in Python, Javascript (Typescript also), and Go. I have written C,
 I like Ruby because it feels "good in the hand". It is hard to explain, as are all matters of taste, or beauty. I believe Ruby ought to be appreciated like anything else well crafted, the way people obsess over a really nice pen or mechanical keyboards.
 
 
-It's rare to find others who feel the same. Ruby has [fallen](https://trends.google.com/explore?q=%2Fm%2F06ff5&date=all&geo=US) from the zeigeist, and developers aren't as interested in learning it anymore. At [Recurse Center](https://www.recurse.com) last year, I was the only one writing any Ruby. 
+It's rare to find others who feel the same. Ruby has [fallen](https://trends.google.com/explore?q=%2Fm%2F06ff5&date=all&geo=US) from the zeitgeist, and developers aren't as interested in learning it anymore. At [Recurse Center](https://www.recurse.com) last year, I was the only one writing any Ruby. 
 
 For the unacquainted, here are a few reasons to like Ruby:
 
@@ -130,7 +130,7 @@ For the unacquainted, here are a few reasons to like Ruby:
 
 ## Run the code
 
-All the code snippets in this post can be run locally thanks to [Opal](https://opalrb.com). You can edit them too. Note that there are [differences](https://github.com/opal/opal/blob/abf15821c36dbc0fbc04ad53226deeb156c669d8/docs/unsupported_features.md?plain=1#L9) between Opal and Ruby, but they shouldn't matter here.
+All the code snippets in this post run in your browser thanks to [Opal](https://opalrb.com). You can edit them too. Note that there are [differences](https://github.com/opal/opal/blob/abf15821c36dbc0fbc04ad53226deeb156c669d8/docs/unsupported_features.md?plain=1#L9) between Opal and Ruby, but they shouldn't matter here.
 
 It's okay if you don't know any Ruby (and even better if you're new). You should be able to follow along if you know any modern mainstream language. More important than the language rules, I hope you get a sense of what Ruby is *like*.
 
@@ -197,7 +197,7 @@ end
 
 ## [3. Better lambdas with blocks](#3-better-lambdas-with-blocks)
 
-Also [inspired by Lisp](https://www.artima.com/articles/blocks-and-closures-in-ruby), Ruby has a dedicated and elegant syntax for lambdas. This is the `method_name do |variables| ... end` and the abreviated `method_name { |variables| ... }` above. It's a "block" of code (a closure) that is passed like a lambda into `method_name` to be invoked within. `|variables|` can be omitted if the block takes no arguments. 
+Also [inspired by Lisp](https://www.artima.com/articles/blocks-and-closures-in-ruby), Ruby has a dedicated and elegant syntax for lambdas. This is the `method_name do |variables| ... end` and the abbreviated `method_name { |variables| ... }` above. It's a "block" of code (a closure) that is passed like a lambda into `method_name` to be invoked within. `|variables|` can be omitted if the block takes no arguments. 
 
 In the loop examples above, we've been passing blocks into loop methods that are invoked once per iteration.
 
@@ -220,7 +220,7 @@ end
 
 arr, duration = stopwatch do 
   10000.times.map do
-    (Random.random_number * 100).floor
+    rand(100)
   end
 end
 
@@ -271,7 +271,6 @@ Blocks are very natural to incorporate and use.
 
 ## [4. Enumerating is easy](#4-enumerating-is-easy)
 
-<!--Enumerable methods (`Array`s, `Range`, `Hash` maps, even `Prime`s) have excellent methods like `each`, `map`, `with_index`, `count`, `tally`, `select`, `reject`, `any?`, `all?`, `take`, `each_cons`, `each_chunk`, `max`, `min`, `sort`, etc. `lazy` switches an iterator to lazy evaluation.-->
 [Enumerables](https://docs.ruby-lang.org/en/master/Enumerable.html) (`Array`s, `Range`s, `Hash`maps, even `Prime`s) have excellent methods, many of which take blocks:
 - `tally`: tallies the number of each item, my personal favorite. What a great method name!
 - `map`, `reduce`: classic map/reduce
@@ -280,7 +279,7 @@ Blocks are very natural to incorporate and use.
 - `sort`, `sort_by`: passing a block can change what it sorts with
 - `take(n)`: takes `n` elements
 - `each_cons(n)`: sliding window of `n` elements
-- `each_chunk(n)`: tumbling window of `n` elements
+- `each_slice(n)`: tumbling window of `n` elements
 - `chunk`: takes a block and groups each chunk by the return value
 - `lazy` switches an iterator to lazy evaluation
 
@@ -329,7 +328,7 @@ he told me, \"just remember that all the people in this world
 haven't had the advantages that you’ve had.\""
 
 bigrams = gatsby.delete("\'\".\n").downcase.split.flat_map do |word|
-  # every 2 conseq char in the words
+  # every 2 consecutive char in the words
   word.chars.each_cons(2).to_a
 end
 
@@ -472,7 +471,7 @@ You could do this with `while stack.length > 0` but `until stack.empty?` reads s
 
 ## [11. Do what works for you](#11-do-what-works-for-you)
 
-Ruby deliberately lets you do things many different ways so you can do what maps better to your mental model. It wants to fit your thinking, rather than wanting you to think in terms of it.
+Ruby deliberately lets you do things many different ways so you can do what maps better to your mental model. This goes as far as making it easy to introspect and modify the language. It wants to fit your thinking, rather than wanting you to think in terms of it.
 
 Give [Ruby a try](https://try.ruby-lang.org)!
 
@@ -534,6 +533,12 @@ function run(i) {
 
 window.onload = () => {
   const blocks = Array.from(document.querySelectorAll('div.highlight'))
+  
+  const setTheme = () => {
+    let isDark = window.matchMedia('(prefers-color-scheme: dark)').matches
+    let theme = (isDark) ? 'solarized dark' : 'solarized light'
+    editors.map(ed => ed.setOption('theme', theme))
+  }
 
   blocks.forEach((block, i) => {
     const code = block.textContent.replace(/\n+$/, '')
@@ -564,19 +569,7 @@ window.onload = () => {
       indentUnit: 2,
       viewportMargin: Infinity
     })
-
-    const setTheme = () => {
-      let isDark = window.matchMedia('(prefers-color-scheme: dark)').matches
-      let theme = (isDark) ? 'solarized dark' : 'solarized light'
-      editors.map(ed => ed.setOption('theme', theme))
-    }
-
-    window.matchMedia('(prefers-color-scheme: dark)')
-      .addEventListener('change', () => editors.map(ed => {
-        setTheme()
-      })
-    )
-
+    
     setTheme()
 
     const button = document.createElement('button')
@@ -587,9 +580,14 @@ window.onload = () => {
 
     // hide before run first timer
     consoleElement.style.display = 'none'
-
-    // run(i)
   })
+
+  window.matchMedia('(prefers-color-scheme: dark)')
+    .addEventListener('change', () => editors.map(ed => {
+      setTheme()
+    })
+  )
+
 }
 
 </script>
