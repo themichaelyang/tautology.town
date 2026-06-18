@@ -148,7 +148,7 @@ It's a worthy and inspiring goal, and the single best reason to try out Ruby.
 
 ## [1. Expressions everywhere](#1-expressions-everywhere)
 
-Ruby is inspired by Lisp (everyone admires Lisp, right?). Everything evaluates to a value, including `if`-`else`. Functions return their last expression. 
+Ruby is inspired by Lisp (everyone admires Lisp, right?). Everything evaluates to a value, including `if`-`else`. Functions return their last expression, like in math (and Lisp). No unnecessary `return`s!
 
 For example, you can do this:
 
@@ -197,9 +197,9 @@ end
 
 ## [3. Better lambdas with blocks](#3-better-lambdas-with-blocks)
 
-Also [inspired by Lisp](https://www.artima.com/articles/blocks-and-closures-in-ruby), Ruby has a dedicated and elegant syntax for lambdas. This is the `method_name do |variables| ... end` and the abbreviated `method_name { |variables| ... }` above. It's a "block" of code (a closure) that is passed like a lambda into `method_name` to be invoked within. `|variables|` can be omitted if the block takes no arguments. 
+Also [inspired by Lisp](https://www.artima.com/articles/blocks-and-closures-in-ruby), Ruby has a dedicated and elegant syntax for lambdas. This is the `method_name do |variables| ... end` and the abbreviated `method_name { |variables| ... }` above. It's a "block" of code (a closure) that is passed like a lambda into `method_name` to be invoked within by `yield`. `|variables|` can be omitted if the block takes no arguments. 
 
-In the loop examples above, we've been passing blocks into loop methods that are invoked once per iteration.
+In the loop examples above, we've been passing blocks into loop methods that are invoked once per iteration. The returning last expression choice works well since blocks are usually short.
 
 You can use them for:
 - context and resource management (`with` in Python)
@@ -267,7 +267,7 @@ test "subtraction" do
 end
 ```
 
-Blocks are very natural to incorporate and use. 
+Blocks are very natural to incorporate and use.
 
 ## [4. Enumerating is easy](#4-enumerating-is-easy)
 
@@ -473,7 +473,7 @@ You could do this with `while stack.length > 0` but `until stack.empty?` reads s
 
 Ruby deliberately lets you do things many different ways so you can do what maps better to your mental model. This goes as far as making it easy to introspect and modify the language. It wants to fit your thinking, rather than wanting you to think in terms of it.
 
-Give [Ruby a try](https://try.ruby-lang.org)!
+Give [Ruby a try today](https://try.ruby-lang.org) and find your own reasons to like Ruby.
 
 
 # Links
