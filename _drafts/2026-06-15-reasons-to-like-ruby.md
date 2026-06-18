@@ -64,6 +64,7 @@ title: "A few reasons to like Ruby"
 
 @media (max-width: 600px) {
   .playground-row { flex-direction: column; }
+  .toc { columns: 1; }
 }
 
 .run-button {
@@ -86,6 +87,16 @@ title: "A few reasons to like Ruby"
   box-shadow: inset 1px 1px 2px var(--run-code-shadow);
 }
 
+.toc {
+  columns: 2;
+}
+
+.toc ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
 </style>
 
 
@@ -100,18 +111,22 @@ It's rare to find others who feel the same. Ruby has [fallen](https://trends.goo
 
 For the unacquainted, here are a few reasons to like Ruby:
 
-- Ruby wants you to be happy
-- Expressions everywhere
-- Looping with numbers
-- Better lambdas with blocks
-- Enumerating is easy
-- Method pipelines
-- Combinatorics
-- Single line if
-- Meaningful punctuation
-- Modules are namespaces
-- `Until`
-- Do what works for you
+<div class="toc" markdown="1">
+
+- [0. Ruby wants you to be happy](#0-ruby-wants-you-to-be-happy)
+- [1. Expressions everywhere](#1-expressions-everywhere)
+- [2. Looping with numbers](#2-looping-with-numbers)
+- [3. Better lambdas with blocks](#3-better-lambdas-with-blocks)
+- [4. Enumerating is easy](#4-enumerating-is-easy)
+- [5. Method pipelines](#5-method-pipelines)
+- [6. Combinatorics](#6-combinatorics)
+- [7. Single line if](#7-single-line-if)
+- [8. Meaningful punctuation](#8-meaningful-punctuation)
+- [9. Modules are namespaces](#9-modules-are-namespaces)
+- [10. `until`](#10-until)
+- [11. Do what works for you](#11-do-what-works-for-you)
+
+</div>
 
 ## Before we begin
 
@@ -119,7 +134,7 @@ All the code snippets in this post can be run locally thanks to [Opal](https://o
 
 It's okay if you don't know any Ruby (and even better if you're new). You should be able to follow along if you know any modern mainstream language. More important than the language rules, I hope you get a sense of what Ruby is *like*.
 
-## 0. Ruby wants you to be happy
+## [0. Ruby wants you to be happy](#0-ruby-wants-you-to-be-happy)
 
 > For me, the purpose of life is, at least partly, to have joy. Programmers often feel joy when they can concentrate on the creative side of programming, so Ruby is designed to make programmers happy.
 >
@@ -131,7 +146,7 @@ This is in contrast to languages that have pragmatic goals or technical constrai
 
 It's a worthy and inspiring goal, and the single best reason to try out Ruby.
 
-## 1. Expressions everywhere
+## [1. Expressions everywhere](#1-expressions-everywhere)
 
 Ruby is inspired by Lisp (everyone admires Lisp, right?). Everything evaluates to a value, including `if`-`else`. Functions return their last expression. 
 
@@ -162,7 +177,7 @@ puts ordinal(4)
 
 Assigning `suffix` once makes the program's intent clearer than setting it multiple times. 
 
-## 2. Looping with numbers
+## [2. Looping with numbers](#2-looping-with-numbers)
 
 Numbers are objects and expose some wonderful methods for looping.
 
@@ -177,7 +192,7 @@ end
 ```
 
 
-## 3. Better lambdas with blocks
+## [3. Better lambdas with blocks](#3-better-lambdas-with-blocks)
 
 Also [inspired by Lisp](https://www.artima.com/articles/blocks-and-closures-in-ruby), Ruby has a dedicated and elegant syntax for lambdas. This is the `method_name do |variables| ... end` and the abreviated `method_name { |variables| ... }` above. It's a "block" of code (a closure) that is passed like a lambda into `method_name` to be invoked within. `|variables|` can be omitted if the block takes no arguments. 
 
@@ -251,7 +266,7 @@ end
 
 Blocks are very natural to incorporate and use. 
 
-## 4. Enumerating is easy
+## [4. Enumerating is easy](#4-enumerating-is-easy)
 
 <!--Enumerable methods (`Array`s, `Range`, `Hash` maps, even `Prime`s) have excellent methods like `each`, `map`, `with_index`, `count`, `tally`, `select`, `reject`, `any?`, `all?`, `take`, `each_cons`, `each_chunk`, `max`, `min`, `sort`, etc. `lazy` switches an iterator to lazy evaluation.-->
 [Enumerables](https://docs.ruby-lang.org/en/master/Enumerable.html) (`Array`s, `Range`s, `Hash`maps, even `Prime`s) have excellent methods, many of which take blocks:
@@ -282,7 +297,7 @@ days = years.map { |hash| hash[:leap] }
 puts "#{days} days"
 ```
 
-## 5. Method pipelines
+## [5. Method pipelines](#5-method-pipelines)
 
 A nice part of Javascript is method chaining. This is a good style for data being piped through a series of transforms. Ruby does this even better because: 
 - everything is an object
@@ -322,7 +337,7 @@ puts "most common bigram: \"#{top_bigram.first.join}\""
 puts "seen #{top_bigram.last} times"
 ```
 
-## 6. Combinatorics
+## [6. Combinatorics](#6-combinatorics)
 
 There are even methods to shuffle, permute, combine, and sample.
 
@@ -355,7 +370,7 @@ puts "that is 1 of #{ways[outcome.tally]} ways " \
  + "to get that number of heads and tails"
 ```
 
-## 7. Single line if
+## [7. Single line if](#7-single-line-if)
 
 A trailing `if` conditionally executes a line. Guards read nicely and emphasize early returns.
 
@@ -372,7 +387,7 @@ puts fib(10)
 
 Most things in Ruby are expressions, but this is a statement. Ruby is flexible, not dogmatic!
 
-## 8. Meaningful punctuation
+## [8. Meaningful punctuation](#8-meaningful-punctuation)
 
 Question marks `?` are a nice touch for methods that return booleans, and read nicely in English.
 
@@ -392,7 +407,7 @@ Exclamation points `!` are used for methods that modify an object in-place or th
 
 Meanwhile parentheses are optional which is great for keeping straightforward method calls visually clean.
 
-## 9. Modules are namespaces
+## [9. Modules are namespaces](#9-modules-are-namespaces)
 
 Namespaces are always a good idea.
 
@@ -419,7 +434,7 @@ puts Cave::ANIMALS.include?(Baseball::Bat)
 ```
 
 
-## 10. `until`
+## [10. `until`](#10-until)
 
 In addition to `while` loops, Ruby has its opposite `until` that is much nicer to read for traversals.
 
@@ -452,7 +467,7 @@ end
 
 You could do this with `while stack.length > 0` but `until stack.empty?` reads so much better.
 
-## 11. Do what works for you
+## [11. Do what works for you](#11-do-what-works-for-you)
 
 Ruby deliberately lets you do things many different ways so you can do what reads and maps better to your mental model.
 
