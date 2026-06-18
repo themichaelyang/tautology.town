@@ -473,7 +473,7 @@ You could do this with `while stack.length > 0` but `until stack.empty?` reads s
 
 Ruby deliberately lets you do things many different ways so you can do what maps better to your mental model. This goes as far as making it easy to introspect and modify the language. It wants to fit your thinking, rather than wanting you to think in terms of it.
 
-Give [Ruby a try today](https://try.ruby-lang.org) and find your own reasons to like Ruby.
+Give [Ruby a try today](https://try.ruby-lang.org).
 
 
 # Links
