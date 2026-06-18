@@ -412,7 +412,7 @@ Meanwhile parentheses are optional which is great for keeping straightforward me
 
 ## [9. Modules are namespaces](#9-modules-are-namespaces)
 
-Namespaces are always a good idea.
+Namespaces are always a good idea. Names resolve relative to modules or you can fully qualify names.
 
 ```ruby
 module Baseball
