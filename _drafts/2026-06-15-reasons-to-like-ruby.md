@@ -457,72 +457,13 @@ You could do this with `while stack.length > 0` but `until stack.empty?` reads s
 Ruby deliberately lets you do things many different ways so you can do what reads and maps better to your mental model.
 
 
-----
+# Links
+- Rails' take on programmer happiness is [worth a read](https://rubyonrails.org/doctrine#optimize-for-programmer-happiness), as is the rest of its principles: [The Rails Doctrine](https://rubyonrails.org/doctrine)
+- Matz discusses Ruby's philosophy in a series of interviews from 2003: [The Philosophy of Ruby: A Conversation with Yukihiro Matsumoto, Part I](https://www.artima.com/articles/the-philosophy-of-ruby)
+- More reasons to like Ruby: [I Love Ruby (Elise Shaffer)](https://eliseshaffer.com/2023/12/18/i-love-ruby/)
+- Nice tour of Ruby: [Learn Ruby in Y minutes](https://learnxinyminutes.com/ruby/)
+- [About Ruby](https://www.ruby-lang.org/en/about/) in the official Ruby docs
 
-Links
-- https://web.archive.org/web/20070209033558/http://www.linuxdevcenter.com/pub/a/linux/2001/11/29/ruby.html
-- http://clojurescriptmadeeasy.com/blog/ruby-got-it-right.html
-- https://eliseshaffer.com/2023/12/18/i-love-ruby/
-- https://news.learnenough.com/ruby-optimized-for-programmer-happiness
-- https://rubyonrails.org/doctrine
-- https://twobithistory.org/2017/11/19/the-ruby-story.html#fn:2
-- https://learnxinyminutes.com/ruby/
-- https://www.ruby-lang.org/en/about/
-- https://www.artima.com/articles/the-philosophy-of-ruby
-- https://www.artima.com/articles/matz-on-craftsmanship
-- https://www.artima.com/articles/blocks-and-closures-in-ruby
-- Rails' take on this is [worth a read](https://rubyonrails.org/doctrine#optimize-for-programmer-happiness).
-
-<!--There are many nice methods for looping on objects.
-
-```ruby
-# 0..2 is a range from 0 to 2, inclusive
-(0..2).each do |i|
-  puts i
-end
-```
-
-Exclamations `!` is the convention for methods that mutate an object in-place, or error. They're often paired with non in-place variants (without `!`).
-
-```ruby
-a = [1, 2, 3]
-p a
-```
-
-```ruby
-# <- hashes start comments
-# functions return last expression
-def ordinal(n)
-  
-  suffix = if n == 1 && n != 11
-    "st"
-  elsif n == 2 && n != 12
-    "nd"
-  elsif n == 3 && n != 13
-    "rd"
-  else
-    "th"
-  end
-  
-  "#{n}#{suffix}"
-end
-
-puts ordinal(3)
-```
-Blocks [go beyond](https://tech.stonecharioteer.com/posts/2025/ruby-blocks/) callbacks:
-# puts cfreq = pan.downcase.delete(" ").chars.tally
-colors = {
-  "spade" => "black",
-  "heart" => "red",
-  "club" => "black",
-  "diamond" => "red"
-}
-
- case suit
- when "spade", "club" then "black"
- when "heart", "diamond" then "red"
- end
--->
 
 <!-- TODO: vendor these! -->
 <script src="https://cdn.opalrb.com/opal/current/opal.js"></script>
