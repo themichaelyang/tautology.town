@@ -128,7 +128,7 @@ For the unacquainted, here are a few reasons to like Ruby:
 
 </div>
 
-## Before we begin
+## Run the code
 
 All the code snippets in this post can be run locally thanks to [Opal](https://opalrb.com). You can edit them too. Note that there are [differences](https://github.com/opal/opal/blob/abf15821c36dbc0fbc04ad53226deeb156c669d8/docs/unsupported_features.md?plain=1#L9) between Opal and Ruby, but they shouldn't matter here.
 
@@ -173,6 +173,9 @@ puts ordinal(1) # puts is Ruby for print
 puts ordinal(2)
 puts ordinal(3)
 puts ordinal(4)
+# all the code snippets are editable! 
+# uncomment me and run again
+# puts ordinal(5)
 ```
 
 Assigning `suffix` once makes the program's intent clearer than setting it multiple times. 
@@ -469,7 +472,9 @@ You could do this with `while stack.length > 0` but `until stack.empty?` reads s
 
 ## [11. Do what works for you](#11-do-what-works-for-you)
 
-Ruby deliberately lets you do things many different ways so you can do what reads and maps better to your mental model.
+Ruby deliberately lets you do things many different ways so you can do what maps better to your mental model. It wants to fit your thinking, rather than wanting you to think in terms of it.
+
+Give [Ruby a try](https://try.ruby-lang.org)!
 
 
 # Links
