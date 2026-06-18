@@ -77,7 +77,7 @@ window.onload = () => {
       value: code,
       mode: 'ruby',
       theme: 'solarized dark',
-      lineNumbers: false,
+      lineNumbers: true,
       tabSize: 2,
       indentUnit: 2,
       viewportMargin: Infinity
@@ -134,7 +134,6 @@ window.onload = () => {
   display: flex;
   align-items: stretch;
   gap: 0.5rem;
-  font-size: 0.9em;
   overflow: hidden;
 }
 
@@ -153,7 +152,9 @@ window.onload = () => {
   flex: 1;
   height: auto;
   box-shadow: none;
+  font-size: 0.8em;
   padding: 0.5rem;
+  font-family: var(--code-font);
 }
 
 /* console */
@@ -222,7 +223,7 @@ Languages are, in part, philosophical endeavours and are imbued with their creat
 
 This is in contrast to languages that have pragmatic goals or technical constraints, like memory safety, concurrency, or mathematical purity. Rails' take on this is [worth a read](https://rubyonrails.org/doctrine#optimize-for-programmer-happiness).
 
-It's a worthy and inspiring goal, and the single best reason for trying out Ruby.
+It's a worthy and inspiring goal, and the single best reason to try out Ruby.
 
 ## 1. Expressions everywhere
 
@@ -245,7 +246,10 @@ def ordinal(n)
   "#{n}#{suffix}"
 end
 
-puts ordinal(3) # puts is Ruby for print
+puts ordinal(1) # puts is Ruby for print
+puts ordinal(2)
+puts ordinal(3)
+puts ordinal(4)
 ```
 
 
@@ -285,18 +289,88 @@ end
 
 ## 5. Block syntax for cleaner lambdas
 
-Ruby has more than first class functions, it has dedicated and elegant syntax for lambdas. This is the `method_name do |variable| ... end` and `method_name { |variable| ... }` used above, and is called a block. It creates a "block" of code (a closure) that is passed like a lambda into `method_name` to be invoked within.
+Ruby has more than first class functions, it has dedicated and elegant syntax for lambdas. This is the `method_name do |variables| ... end` and the abreviated `method_name { |variables| ... }` above. It's a "block" of code (a closure) that is passed like a lambda into `method_name` to be invoked within. `|variables|` can be omitted if the block takes no arguments. 
 
 In the loop examples above, we've been passing blocks into loop methods that are invoked once per iteration.
 
-In my opinion, blocks are much cleaner than Javascript arrow functions, which have so much visual noise from unnecessary punctuation.
+You can use them for:
+- context and resource management (`with` in Python)
+- [middlewares](https://github.com/rack/rack)
+- iterators/generators
+- domain specific languages (DSL)
+
+For example, a helper to [benchmark](https://github.com/ruby/benchmark) code:
 
 ```ruby
+def timed(&blk) # &blk means accept a block
+  start = Time.now
+  ret = yield # yield runs the block!
+  finish = Time.now
 
+  [ret, finish - start]
+end
+
+arr, timing = timed do 
+  10000.times.map do
+    (Random.random_number * 100).floor
+  end
+end
+
+puts "array of #{arr.length} random numbers"
+puts "took #{timing} seconds"
+puts "first five: #{arr.take(5)}"
 ```
 
-Blocks [go beyond](https://tech.stonecharioteer.com/posts/2025/ruby-blocks/) lambdas, too. They make it natural to implement patterns like domain specific languages (Ruby's testing libraries use blocks), context management (`with` in Python) and middleware.
+Or a compact DSL for [testing](https://github.com/minitest/minitest):
 
+```ruby
+module Testing
+  def test(desc, &blk)
+    @in_test = true
+    @cases, @failures = 0, []
+    yield 
+
+    puts "Test: #{desc}"
+    if @failures.empty?
+      puts "All #{@cases} passed!"
+    else
+      puts "#{@failures.length} / #{@cases} failed!"
+      @failures.each { |f| puts f }
+    end
+    puts ""
+    @in_test = false
+  end
+
+  def expect(expected, actual)
+    raise "not a test" unless @in_test
+    if expected != actual
+      @failures << "> Case #{@cases + 1}: " + \
+        "#{actual} should be #{expected}"
+    end
+    @cases += 1
+  end
+end
+
+# And in use:
+include Testing
+
+test "Array#any?" do
+  expect([false, false, false].any?, false)
+  expect([false, false, true].any?, true)
+end
+
+test "Array#all?" do
+  expect([true, true, true].all?, true)
+  expect([true, true, false].all?, false)
+end
+
+test "a is b" do
+  expect("a", "a")
+  expect("a", "b")
+end
+```
+
+Blocks are very natural to incorporate and use. 
 
 ## 6. Enumerable
 
@@ -305,11 +379,11 @@ Enumerable methods (`Array`s, `Range`, `Hash` maps, even `Prime`s) have excellen
 These methods are designed to be chained by returning another Enumerable. For example, `lazy` can be chained to switch an iterator to lazy evaluation.
 
 ```ruby
-years = (1980..2025).map do |yr|
-  [yr, yr % 4 == 0 && yr % 100 == 0 && yr % 400 == 0]
+years = (2020..2025).map do |yr|
+  [yr, (yr % 4 == 0 && yr % 100 != 0) || yr % 400 == 0]
 end
 
-days = years.sum { |_, leap| leap ? 356 : 355 }
+days = years.sum { |_yr, leap| leap ? 366 : 365 }
 puts days
 ```
 
@@ -374,6 +448,7 @@ Links
 - https://rubyonrails.org/doctrine
 - https://twobithistory.org/2017/11/19/the-ruby-story.html#fn:2
 - https://learnxinyminutes.com/ruby/
+- https://www.ruby-lang.org/en/about/
 
 <!--There are many nice methods for looping on objects.
 
@@ -411,5 +486,5 @@ end
 
 puts ordinal(3)
 ```
-
+Blocks [go beyond](https://tech.stonecharioteer.com/posts/2025/ruby-blocks/) callbacks:
 -->

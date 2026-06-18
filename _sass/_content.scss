@@ -134,7 +134,7 @@ code {
   border-radius: 3px;
   background-color: var(--code-bg);
   color: var(--code-text);
-  font-family: Menlo, Consolas, Monaco, monospace;
+  font-family: var(--code-font);
   tab-size: 2;
 }
 

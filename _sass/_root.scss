@@ -63,6 +63,8 @@ $dark-code-bg: $solarized-base03;
   --card-border-width: 1px;
   --card-shadow: rgba(0, 0, 0, 0.14);
 
+  --code-font: Menlo, Consolas, Monaco, monospace;
+
   // Solarized Light code
   --code-bg: #{$light-code-bg};
   --code-text: #{$light-text};
@@ -103,7 +105,8 @@ $dark-code-bg: $solarized-base03;
     --code-function: #{$solarized-blue};
     --code-builtin: #{$solarized-yellow};
 
-    --run-code-shadow: #{color.adjust($dark-code-bg, $lightness: -50%)};
+    --run-code-shadow: #{color.adjust($dark-code-bg, $lightness: -5%)};
+    --run-code-text: var(--code-text);
   }
 }
 
