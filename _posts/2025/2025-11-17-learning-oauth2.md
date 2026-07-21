@@ -78,6 +78,8 @@ get "/" do
 end
 
 get "/login-with" do
+  # store the url that redirected to login page
+  session[:return_to] = request.referer
   redirect client.auth_code.authorize_url
 end
 
@@ -89,7 +91,8 @@ get REDIRECT_PATH do
   # make API calls with `access.token` or use `access.get/post` helpers
   session[:access_token] = access.token
 
-  redirect back
+  # go back to original page that was redirected to login
+  redirect session.delete(:return_to) || "/"
 end
 
 get "/logout" do
