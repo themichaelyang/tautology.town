@@ -95,11 +95,17 @@ hr {
 footer {
   @extend %container--centered;
   padding-top: $navbar-height * 1.5;
-  padding-bottom: 6vh;
+  padding-bottom: 2vh;
   font-size: $small-font-size;
   color: var(--text-color-secondary);
   display: flex;
   // justify-content: center;
+}
+
+.rc-footer {
+  padding-top: 0;
+  padding-bottom: 6vh;
+  justify-content: center;
 }
 
 #footer-blurb {
