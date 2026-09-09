@@ -69,10 +69,10 @@ window.addEventListener('load', () => {
 The card network's job is to enable card transactions, and also to grow participation in their networks.
 
 This boils down to four key responsibilities:
-1. Run the telecommunications network to route transaction messages.
-2. Coordinate the banking network to move money and settle transactions.
-3. Set the incentives to encourage the use of the network.
-4. Set and enforce rules of the network, including a mechanism for disputes.
+1. [Run the telecommunications network](#1-run-the-telecommunications-network) to route transaction messages.
+2. [Coordinate the banking network](#2-coordinate-the-banking-network) to move money and settle transactions.
+3. [Set incentives](#3-set-incentives) to encourage the use of the network.
+4. [Set and enforce rules](#4-set-rules-and-handle-disputes) of the network, including a mechanism for disputes.
 
 For the rest of the discussion, we'll focus on Visa, as it's what I'm most familiar with from my years in the payment industry. Mastercard is more or less the same, with different names for things.
 
@@ -101,7 +101,7 @@ That top secret location? In [Ashburn, Virginia](https://maps.app.goo.gl/tPEDWcT
 {% include image.html url="/assets/2025/visa-oce-satellite.png" description='I think the "moat" is the pool of water on the top center-left.' %}
 </div>
 
-## Authorization and clearing messages
+## Authorization and clearing
 
 When a card is used, the card network routes a transaction request, known as an **authorization**, from the merchant to the issuer. The issuer then approves or declines the request in a response. Card numbers, also known as **Primary Account Numbers (PANs)**, are used like IP addresses[^pan-exhaustion]. The first 6 to 8 digits of the PAN identifies the card issuer and is called the **Bank Identification Number (BIN)**
 
