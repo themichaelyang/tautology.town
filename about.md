@@ -15,3 +15,7 @@ The catch with writing very little is that you don't get very good at writing. I
 To err on the side of do, [tautology.town](https://tautology.town) will be home to drafts, scraps and, of course, tautologies. 
 
 And, I hope, some good stuff too.
+
+----
+
+Subscribe via [RSS](/feed.xml).
