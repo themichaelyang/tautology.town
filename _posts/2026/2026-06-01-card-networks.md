@@ -183,8 +183,10 @@ Why are merchants willing to pay this fee?[^surcharge] The idea is that acceptin
 
 [^surcharge]: Some merchants add a surcharge on card transactions to pass through the fee to customers. This used to be against Visa's rules (and [California state law](https://oag.ca.gov/consumers/general/credit-card-surcharges)) but lawsuits have challenged that. The surcharge amount is also [only supposed](https://usa.visa.com/dam/VCOM/download/merchants/surcharging-faq-by-merchants.pdf) to be the amount the merchant pays on a card transaction, but I suspect that many small merchants charge more.
 
-<!-- TODO: hand draw these diagrams -->
-{% include image.html url="/assets/2025/card-spend.svg" description='The virtuous cycle of card spend.' %}
+<figure class="image wide">
+<img src="/assets/2025/card-spend.svg" alt="The virtuous cycle of card spend: Issuers get more interchange -> Issuers issue more cards and offer more rewards -> People spend more with card -> More merchants accept cards -> Repeat">
+  <figcaption>The virtuous cycle of card spend.</figcaption>
+</figure>
 
 In the EU, [interchange fees are restricted to 0.3%](https://www.psr.org.uk/our-work/card-payments/the-ifr/), which explains the lack of rewards cards and wider acceptance of alternative payment methods like bank payments.
 
