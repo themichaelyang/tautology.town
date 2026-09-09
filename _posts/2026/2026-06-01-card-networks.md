@@ -5,6 +5,8 @@ title: "What do Visa and Mastercard do? An intro to card networks"
 
 <script src="https://unpkg.com/mermaid@11.12.0/dist/mermaid.min.js"></script>
 
+<img src="/assets/2025/card-guy.svg" style="width: 8vw; min-width: 120px; float: right"/>
+
 Most people can recognize the Visa and Mastercard brands. Chances are, you use one of their cards to transact every day. You may have some notion that most places (in the US) take both, but some places only take Visa (e.g. Costco), and vice versa.
 
 So what do they do? [Here's Visa's attempt](https://www.youtube.com/watch?v=lnz2gRPDzrA) to answer that question.
@@ -182,32 +184,7 @@ Why are merchants willing to pay this fee?[^surcharge] The idea is that acceptin
 [^surcharge]: Some merchants add a surcharge on card transactions to pass through the fee to customers. This used to be against Visa's rules (and [California state law](https://oag.ca.gov/consumers/general/credit-card-surcharges)) but lawsuits have challenged that. The surcharge amount is also [only supposed](https://usa.visa.com/dam/VCOM/download/merchants/surcharging-faq-by-merchants.pdf) to be the amount the merchant pays on a card transaction, but I suspect that many small merchants charge more.
 
 <!-- TODO: hand draw these diagrams -->
-<figure>
-<pre class="mermaid wide">
----
-config:
-  theme: 'neutral'
-  fontFamily: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-  nodeSpacing: 10
-  rankSpacing: 100
-  flowchart: 
-    subGraphTitleMargin: {bottom: 20}
-    diagramPadding: 10
-    useMaxWidth: true
----
-graph LR
-    I[Issuers get more interchange] --> R["Issuers issue more cards and give more rewards"]
-    R --> C
-    C[People spend more on cards] --> M[More merchants accept cards]
-    M --> I
-    %% invisible connections to make it more round
-    C ~~~ I
-    R ~~~ M
-    R ~~~ I
-    R ~~~ C
-</pre>
-<figcaption>The virtuous cycle of card spend.</figcaption>
-</figure>
+{% include image.html url="/assets/2025/card-spend.svg" description='The virtual cycle of card spend.' %}
 
 In the EU, [interchange fees are restricted to 0.3%](https://www.psr.org.uk/our-work/card-payments/the-ifr/), which explains the lack of rewards cards and wider acceptance of alternative payment methods like bank payments.
 
