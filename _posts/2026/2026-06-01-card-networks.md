@@ -5,7 +5,7 @@ title: "What do Visa and Mastercard do? An intro to card networks"
 
 <script src="https://unpkg.com/mermaid@11.12.0/dist/mermaid.min.js"></script>
 
-<img src="/assets/2025/card-guy.svg" style="width: 8vw; min-width: 120px; float: right"/>
+<img src="/assets/2026/card-guy.svg" style="width: 8vw; min-width: 120px; float: right"/>
 
 Most people can recognize the Visa and Mastercard brands. Chances are, you use one of their cards to transact every day. You may have some notion that most places (in the US) take both, but some places only take Visa (e.g. Costco), and vice versa.
 
@@ -98,7 +98,7 @@ And a 2012 headline from [USA Today](https://web.archive.org/web/20120330102616/
 That top secret location? In [Ashburn, Virginia](https://maps.app.goo.gl/tPEDWcTiY621sZz37), conveniently located by Topgolf and Trader Joe's.
 
 <div>
-{% include image.html url="/assets/2025/visa-oce-satellite.png" description='I think the "moat" is the pool of water on the top center-left.' %}
+{% include image.html url="/assets/2026/visa-oce-satellite.png" description='I think the "moat" is the pool of water on the top center-left.' %}
 </div>
 
 ## Authorization and clearing
@@ -184,7 +184,7 @@ Why are merchants willing to pay this fee?[^surcharge] The idea is that acceptin
 [^surcharge]: Some merchants add a surcharge on card transactions to pass through the fee to customers. This used to be against Visa's rules (and [California state law](https://oag.ca.gov/consumers/general/credit-card-surcharges)) but lawsuits have challenged that. The surcharge amount is also [only supposed](https://usa.visa.com/dam/VCOM/download/merchants/surcharging-faq-by-merchants.pdf) to be the amount the merchant pays on a card transaction, but I suspect that many small merchants charge more.
 
 <figure class="image wide">
-<img src="/assets/2025/card-spend.svg" alt="The virtuous cycle of card spend: Issuers get more interchange -> Issuers issue more cards and offer more rewards -> People spend more with card -> More merchants accept cards -> Repeat">
+<img src="/assets/2026/card-spend.svg" alt="The virtuous cycle of card spend: Issuers get more interchange -> Issuers issue more cards and offer more rewards -> People spend more with card -> More merchants accept cards -> Repeat">
   <figcaption>The virtuous cycle of card spend.</figcaption>
 </figure>
 
