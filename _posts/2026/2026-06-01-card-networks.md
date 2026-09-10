@@ -5,6 +5,7 @@ title: "What do Visa and Mastercard do? An intro to card networks"
 
 <script src="https://unpkg.com/mermaid@11.12.0/dist/mermaid.min.js"></script>
 
+<!-- TODO: these images are hardcoded for dark mode... is there a better way? -->
 <img src="/assets/2026/card-guy.svg" style="width: 8vw; min-width: 120px; float: right"/>
 
 Most people can recognize the Visa and Mastercard brands. Chances are, you use one of their cards to transact every day. You may have some notion that most places (in the US) take both, but some places only take Visa (e.g. Costco), and vice versa.
